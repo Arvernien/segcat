@@ -33,3 +33,5 @@ TIPOS = (
 class Finca(models.Model):
     refcat = models.CharField(max_length=14)
     TipoFinca = models.CharField(max_length=20, choices=TIPOS, default='PROPIA')
+    def __str__(self):
+        return self.refcat

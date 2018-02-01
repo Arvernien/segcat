@@ -1,0 +1,10 @@
+{% if fincas %}
+    <ul>
+    {% for finca in fincas %}
+        <li><a href="{% url 'polls:detail' finca.id %}">{{ finca.refcat }}</a></li>
+        <li>{{ finca.TipoFinca }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}

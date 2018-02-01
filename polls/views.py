@@ -2,8 +2,19 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
-from .models import Choice, Question
+from .models import Choice, Question, Finca
 from django.views import generic
+
+class CrearFinca(generic.CreateView):
+    model = Finca
+    fields = ['refcat', 'TipoFinca']
+
+class FincaView(generic.ListView):
+    template_name = 'polls/finca.html'
+    context_object_name = 'fincas'
+
+    def get_queryset(self):
+        return Finca.objects.all()
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'

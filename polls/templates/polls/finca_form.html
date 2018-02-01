@@ -1,0 +1,6 @@
+{% for field in form %}
+<form class="form-horizontal" action="" method="post">
+    <div>{{ field.label_tag }}</div>
+    <div>{{ field }}</div>
+</form>
+{% endfor %}
