@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'bootstrap3',
+    'crispy_forms',
     'polls.apps.PollsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
