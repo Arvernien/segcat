@@ -2,6 +2,10 @@ from django.db import models
 from django.utils import timezone
 import datetime
 
+class organismo(models.Model):
+    cod = models.CharField(max_length=5)
+    nombre = models.CharField(max_length=100)
+
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('fecha de publicación')

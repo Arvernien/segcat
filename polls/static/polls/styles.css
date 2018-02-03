@@ -1,0 +1,35 @@
+.nv-custom {
+    background-color: rgb(143,212,0);
+}
+
+/* change the brand and text color */
+.nv-custom .navbar-brand,
+.nv-custom .navbar-text {
+    color: rgba(255,255,255,.8);
+}
+
+/* change the link color */
+.nv-custom .navbar-nav .nav-link {
+    color: rgba(255,255,255,.5);
+}
+
+/* change the color of active or hovered links */
+.nv-custom .nav-item.active .nav-link,
+.nv-custom .nav-item:hover .nav-link {
+    color: #ffffff;
+}
+
+/* for dropdown only - change the color of droodown */
+.nv-custom .dropdown-menu {
+    background-color: #FFFFFF;
+    border: 2px solid rgb(143,212,0);
+}
+.nv-custom .dropdown-item {
+    border-color: rgb(143,212,0);
+    color: #000000;
+}
+.nv-custom .dropdown-item:hover,
+.nv-custom .dropdown-item:focus {
+    color: #333333;
+    background-color: rgba(143,212,0,.5);
+}

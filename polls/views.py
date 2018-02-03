@@ -5,6 +5,7 @@ from django.utils import timezone
 from .models import Choice, Question, Finca
 from django.views import generic
 
+
 class CrearFinca(generic.CreateView):
     model = Finca
     fields = ['refcat', 'TipoFinca']
