@@ -17,12 +17,6 @@ class FincaView(generic.ListView):
     def get_queryset(self):
         return Finca.objects.all()
 
-class LoginView(generic.View):
-    template_name = 'polls/auth.html'
-
-    def __get__(self):
-        return
-
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'latest_question_list'

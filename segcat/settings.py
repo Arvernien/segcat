@@ -84,7 +84,7 @@ DATABASES = {
     }
 }
 
-LOGIN_REDIRECT_URL = '/polls/'
+LOGIN_REDIRECT_URL = 'finca/'
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 

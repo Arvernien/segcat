@@ -46,13 +46,13 @@ body {
     outline: 0 none;
     z-index: 2;
 }
-.form-signin button {
+.form-signin input[type="submit"] {
     min-width: 100px;
     background-color: rgba(143,212,0,.5);
     border: 1px solid rgb(143,212,0);
     color: darkgrey;
 }
-.form-signin button:hover {
+.form-signin input[type="submit"]:hover {
     min-width: 100px;
     background-color: rgba(143,212,0,1);
     border: 1px solid rgb(143,212,0);
