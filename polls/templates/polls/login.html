@@ -4,6 +4,9 @@
 {% block titulo %}SegCat-gtt Login{% endblock %}
 
 {% block cuerpo %}
+{% if form.errors %}
+CAGADA
+{% endif %}
 
 {% if user %}
  {{user.is_authenticated}}, {{user}}
@@ -13,13 +16,11 @@
     {% csrf_token %}
     <img class="mb-4" src="{% static 'img/logo.jpg' %}" alt="" width="200" height="96">
     <h1 class="h3 mb-3 font-weight-normal colorgris">Iniciar sesión</h1>
-    <label for="inputEmail" class="sr-only">Usuario</label>
-    <input type="text" id="inputEmail" class="form-control" placeholder="Usuario" required autofocus>
+    <label for="inputUser" class="sr-only">Usuario</label>
+    <input type="text" id="inputUser" name="username" class="form-control" placeholder="Usuario" required autofocus>
     <label for="inputPassword" class="sr-only">Contraseña</label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="Contraseña" required>
+    <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Contraseña" required>
     <input class="btn btn-sm btn-success" type="submit" value="Login"></input>
 </form>
 </body>
-
-
 {% endblock %}
