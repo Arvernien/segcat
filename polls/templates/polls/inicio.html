@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
-{% if organismos %}
-{{ organismos }}
-{% endif %}
+{% block org_selector %}
+{% for org in organismos %}
+<option>{{org.nombre}}</option>
+{% endfor %}
+{% endblock %}

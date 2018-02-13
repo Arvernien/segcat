@@ -5,6 +5,7 @@ from django.utils import timezone
 from .models import Choice, Question, Finca, organismo
 from django.views import generic
 from django.template import loader
+from django.contrib.auth.models import User
 
 
 class CrearFinca(generic.CreateView):
@@ -29,8 +30,8 @@ class IndexView(generic.ListView):
         ).order_by('-pub_date')[:5]
 
 def Inicio(request):
-    template = loader.get_template('polls/inicio.html')
-    organismos = organismo.objects.all()
+    usuario = User.objects.get(username=request.user)
+    organismos = organismo.objects.filter(grupo__in=usuario.groups.all())
     context = {'organismos': organismos, }
     return render(request, 'polls/inicio.html', context)
 

@@ -1,10 +1,15 @@
 from django.db import models
+from django.contrib.auth.models import Group
 from django.utils import timezone
 import datetime
 
 class organismo(models.Model):
     cod = models.CharField(max_length=5)
     nombre = models.CharField(max_length=100)
+    grupo = models.ForeignKey(Group, on_delete=models.DO_NOTHING, default='')
+
+    def __str__(self):
+        return self.nombre
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
