@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.utils import timezone
-from .models import Choice, Question, Finca
+from .models import Choice, Question, Finca, organismo
 from django.views import generic
+from django.template import loader
 
 
 class CrearFinca(generic.CreateView):
@@ -26,6 +27,12 @@ class IndexView(generic.ListView):
         return Question.objects.filter(
             pub_date__lte=timezone.now()
         ).order_by('-pub_date')[:5]
+
+def Inicio(request):
+    template = loader.get_template('polls/inicio.html')
+    organismos = organismo.objects.all()
+    context = {'organismos': organismos, }
+    return render(request, 'polls/inicio.html', context)
 
 
 class DetailView(generic.DetailView):

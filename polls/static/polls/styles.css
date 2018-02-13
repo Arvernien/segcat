@@ -1,11 +1,21 @@
 .nv-custom {
-    background-color: rgb(143,212,0);
+    /*background-color: rgb(143,212,0);*/
+    background: -webkit-linear-gradient(top, #8fac00 1%,#8fd400 100%);
+    -webkit-box-shadow: 1px -6px 14px 6px rgba(0,0,0,1);
+    -moz-box-shadow: 1px -6px 14px 6px rgba(0,0,0,1);
+    box-shadow: 1px -6px 14px 6px rgba(0,0,0,1);
 }
 
+
 /* change the brand and text color */
-.nv-custom .navbar-brand,
+.nv-custom .navbar-brand {
+    color: rgba(255, 255, 255, 0);
+    font-weight: bold;
+    font-family: Tahoma;
+}
 .nv-custom .navbar-text {
     color: rgba(255,255,255,.8);
+
 }
 
 /* change the link color */
