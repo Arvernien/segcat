@@ -6,6 +6,7 @@ from .models import Choice, Question, Finca, organismo
 from django.views import generic
 from django.template import loader
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 
 class CrearFinca(generic.CreateView):
@@ -28,7 +29,7 @@ class IndexView(generic.ListView):
         return Question.objects.filter(
             pub_date__lte=timezone.now()
         ).order_by('-pub_date')[:5]
-
+@login_required
 def Inicio(request):
     usuario = User.objects.get(username=request.user)
     organismos = organismo.objects.filter(grupo__in=usuario.groups.all())

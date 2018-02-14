@@ -1,5 +1,5 @@
+<!DOCTYPE HTML>
 {% load static %}
-<!doctype html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -11,7 +11,9 @@
     <link rel="stylesheet" type="text/css" href="{% static 'polls/styles.css' %}" />
     <title>SegCat-gtt</title>
       <nav class="navbar navbar-expand-lg nv-custom">
-          <a class="navbar-brand text-white">SegCat-gtt</a>
+          <a class="navbar-brand text-white">
+              <img src="{% static 'img/logo.svg' %}" width="100" height="33">
+          </a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
           </button>
@@ -38,16 +40,26 @@
                   </li>
               </ul>
               <ul class="nav navbar-nav navbar-right">
-                  <form class="form-inline">
-                      <div class="form-group">
-                          <select class="form-control form-control-sm" id="org">
-                              {% block org_selector %}
-                              {% endblock %}
-                          </select>
+                  <!--<form class="form-inline">-->
+                      <!--<div class="form-group">-->
+                          <!--<select class="form-control form-control-sm" id="org">-->
+                              <!--{% block org_selector %}-->
+                              <!--{% endblock %}-->
+                          <!--</select>-->
 
+                      <!--</div>-->
+                    <!--<button type="submit" class="btn btn-primary btn-sm ml-2">Cambiar</button>-->
+                  <!--</form>-->
+                  <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Informes
+                      </a>
+                      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                          <a class="dropdown-item" href="#">Estadillo</a>
+                          <a class="dropdown-item" href="#">Excel</a>
+                          <a class="dropdown-item" href="#">Castaña</a>
                       </div>
-                    <button type="submit" class="btn btn-primary btn-sm ml-2">Cambiar</button>
-                  </form>
+                  </li>
               </ul>
           </div>
         </nav>

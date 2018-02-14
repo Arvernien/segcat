@@ -4,18 +4,17 @@
 {% block titulo %}SegCat-gtt Login{% endblock %}
 
 {% block cuerpo %}
-{% if form.errors %}
-CAGADA
-{% endif %}
 
-{% if user %}
- {{user.is_authenticated}}, {{user}}
-{% endif %}
 <body class="text-center">
 <form class="form-signin" method="post" action="{% url 'polls:login' %}">
     {% csrf_token %}
     <img class="mb-4" src="{% static 'img/logo.jpg' %}" alt="" width="200" height="96">
     <h1 class="h3 mb-3 font-weight-normal colorgris">Iniciar sesión</h1>
+    {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+        Nombre de usuario y/o contraseña incorrectos
+    </div>
+    {% endif %}
     <label for="inputUser" class="sr-only">Usuario</label>
     <input type="text" id="inputUser" name="username" class="form-control" placeholder="Usuario" required autofocus>
     <label for="inputPassword" class="sr-only">Contraseña</label>
