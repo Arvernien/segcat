@@ -4,7 +4,7 @@ from django.utils import timezone
 import datetime
 
 class organismo(models.Model):
-    cod = models.CharField(max_length=2)
+    cod = models.IntegerField()
     nombre = models.CharField(max_length=100)
     grupo = models.ForeignKey(Group, on_delete=models.DO_NOTHING, default='')
 
@@ -12,13 +12,16 @@ class organismo(models.Model):
         return self.nombre
 
 class municipio(models.Model):
-    cod = models.CharField(max_length=3)
+    cod = models.IntegerField()
     nombre = models.CharField(max_length=100)
-    tipo_impositivo = models.DecimalField(max_digits=4, decimal_places=3)
+    tipo_impositivo = models.DecimalField(max_digits=4, decimal_places=3, blank=True, null=True)
     org = models.ForeignKey(organismo, on_delete=models.DO_NOTHING)
 
+    class Meta:
+        unique_together = (('org', 'cod'),)
+
     def __str__(self):
-        return self.cod + '\t - ' + self.nombre
+        return self.cod.__str__() + '\t - ' + self.nombre
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)

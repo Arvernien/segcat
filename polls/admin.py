@@ -32,11 +32,20 @@ class municipioAdmin(admin.ModelAdmin):
         return obj.org.cod
     delegacion.short_description = "DELEGACIÓN"
 
+class organismoAdmin(admin.ModelAdmin):
+    list_display = ('codigo', 'nombre', 'grupo')
+    list_display_links = ('nombre',)
+    search_fields = ('cod', 'nombre')
+
+    def codigo(self, obj):
+        return obj.cod
+    codigo.short_description = "CÓDIGO"
+
 
 
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Finca)
-admin.site.register(organismo)
+admin.site.register(organismo, organismoAdmin)
 admin.site.register(municipio, municipioAdmin)
 
 
