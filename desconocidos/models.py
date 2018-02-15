@@ -26,8 +26,22 @@ class Desconocido(models.Model):
     clave_uso = models.CharField(max_length=25)
     id_fiscal = models.CharField(max_length=10)
     sujeto_pasivo = models.CharField(max_length=60)
+    resuelto = models.BooleanField(default=False)
 
-class actuacion(models.Model):
+    def creaActuacion(self, user, descr):
+        q = actuaciones(desconocido=self, usuario=user, descripcion=descr)
+        q.save()
+
+    def __str__(self):
+        return self.refcat
+
+    class Meta:
+        unique_together = (('fk_muni', 'refcat'),)
+
+class actuaciones(models.Model):
     desconocido = models.ForeignKey(Desconocido, on_delete=models.CASCADE)
     usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     descripcion = models.CharField(max_length=400)
+
+    class Meta:
+        verbose_name_plural = 'Actuaciones'

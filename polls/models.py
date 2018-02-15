@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import Group
+from django.core.validators import MaxValueValidator
 from django.utils import timezone
 import datetime
 
 class organismo(models.Model):
-    cod = models.IntegerField()
+    cod = models.IntegerField(validators=[MaxValueValidator(99),])
     nombre = models.CharField(max_length=100)
     grupo = models.ForeignKey(Group, on_delete=models.DO_NOTHING, default='')
 
@@ -22,6 +23,9 @@ class municipio(models.Model):
 
     def __str__(self):
         return self.cod.__str__() + '\t - ' + self.nombre
+
+    def codigo(self):
+        return self.org.cod * 1000 + self.cod
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
