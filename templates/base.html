@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 {% load static %}
+{% load custom_tags %}
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -19,8 +20,13 @@
           </button>
           <div class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown">
               <ul class="navbar-nav navbar-left">
+                  {% if request.user|enGrupo:"DESCONOCIDOS" %}
                   <li class="nav-item active">
-                      <a class="nav-link" href="#">Expedientes <span class="sr-only">(current)</span></a>
+                      <a class="nav-link" href="/desconocidos/">Desconocidos<span class="sr-only">(current)</span></a>
+                  </li>
+                  {% endif %}
+                  <li class="nav-item active">
+                      <a class="nav-link" href="#">Expedientes<span class="sr-only">(current)</span></a>
                   </li>
                   <li class="nav-item">
                       <a class="nav-link" href="#">Entregas</a>

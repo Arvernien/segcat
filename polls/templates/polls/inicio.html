@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_tags %}
 {% block org_selector %}
 {% for org in organismos %}
 <option>{{org.nombre}}</option>

@@ -62,7 +62,9 @@ class Desconocido(models.Model):
 class actuaciones(models.Model):
     desconocido = models.ForeignKey(Desconocido, on_delete=models.CASCADE)
     usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    fecha = models.DateTimeField(null=True)
     descripcion = models.CharField(max_length=400)
+    agendar = models.DateField(null=True)
 
     class Meta:
         verbose_name_plural = 'Actuaciones'

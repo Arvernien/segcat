@@ -4,6 +4,7 @@ from django.core.validators import MaxValueValidator
 from django.utils import timezone
 import datetime
 
+
 class organismo(models.Model):
     cod = models.IntegerField(validators=[MaxValueValidator(99),])
     nombre = models.CharField(max_length=100)

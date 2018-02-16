@@ -3,11 +3,16 @@ from .models import Desconocido, actuaciones, tipoDesc, usos
 from django.db.models import F
 from decimal import Decimal
 
+class actuacionesInLine(admin.StackedInline):
+    model = actuaciones
+    extra = 1
+
 class DesconocidoAdmin(admin.ModelAdmin):
     list_display = ('delegacion', 'muni', 'refcat', 'cuota_ibi', 'resuelto')
     list_filter = ('fk_muni__org__nombre',)
     list_display_links = ('refcat',)
     search_fields = ('fk_muni__nombre', 'fk_muni__org__nombre', 'refcat')
+    inlines = [actuacionesInLine, ]
 
     def get_queryset(self, request):
         qs = super(DesconocidoAdmin, self).get_queryset(request)
