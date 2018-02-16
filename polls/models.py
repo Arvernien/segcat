@@ -15,7 +15,7 @@ class organismo(models.Model):
 class municipio(models.Model):
     cod = models.IntegerField()
     nombre = models.CharField(max_length=100)
-    tipo_impositivo = models.DecimalField(max_digits=4, decimal_places=3, blank=True, null=True)
+    tipo_impositivo = models.DecimalField(max_digits=5, decimal_places=4, blank=True, null=True)
     org = models.ForeignKey(organismo, on_delete=models.DO_NOTHING)
 
     class Meta:

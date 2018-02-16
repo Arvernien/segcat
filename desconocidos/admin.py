@@ -1,10 +1,11 @@
 from django.contrib import admin
-from .models import Desconocido, actuaciones
+from .models import Desconocido, actuaciones, tipoDesc, usos
 from django.db.models import F
 from decimal import Decimal
 
 class DesconocidoAdmin(admin.ModelAdmin):
     list_display = ('delegacion', 'muni', 'refcat', 'cuota_ibi', 'resuelto')
+    list_filter = ('fk_muni__org__nombre',)
     list_display_links = ('refcat',)
     search_fields = ('fk_muni__nombre', 'fk_muni__org__nombre', 'refcat')
 
@@ -25,6 +26,13 @@ class DesconocidoAdmin(admin.ModelAdmin):
         return str(round(Decimal((obj.b_liquidable/100)) * obj.fk_muni.tipo_impositivo / 100, 2)) + ' €'
     cuota_ibi.short_description = "CUOTA IBI"
 
+class UsosAdmin(admin.ModelAdmin):
+    list_display = ('clave', 'descripcion')
+    list_display_links = ('descripcion',)
+    search_fields = ('descripcion',)
+
 # Register your models here.
 admin.site.register(Desconocido, DesconocidoAdmin)
 admin.site.register(actuaciones)
+admin.site.register(tipoDesc)
+admin.site.register(usos, UsosAdmin)

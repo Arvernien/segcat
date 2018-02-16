@@ -1,5 +1,5 @@
 from polls.models import municipio, organismo
-from .models import Desconocido
+from .models import Desconocido, usos, tipoDesc
 import csv
 
 def carga_ti():
@@ -30,7 +30,15 @@ def cargaDesc():
             try:
                 delegacion = organismo.objects.get(cod=int(row[0])//1000)
                 muni = municipio.objects.get(org=delegacion, cod=row[0][-3:])
-                print(row[2])
+                if row[22] == '':
+                    uso = usos.objects.get(pk='1')
+                else:
+                    uso = usos.objects.get(pk=row[22])
+                if 'EN INVESTIGACION' in row[24]:
+                    tipo = tipoDesc.objects.get(descripcion='EN INVESTIGACIÓN')
+                else:
+                    tipo = tipoDesc.objects.get(descripcion='NIF FICTICIO')
+
                 q = Desconocido(
                     fk_muni=muni,
                     refcat=row[2],
@@ -50,22 +58,23 @@ def cargaDesc():
                     v_suelo=int(row[19]),
                     v_constru=int(row[20]),
                     b_liquidable=int(row[21]),
-                    clave_uso=row[22],
+                    clave_uso=uso,
                     id_fiscal=row[23],
-                    sujeto_pasivo=row[24]
+                    sujeto_pasivo=row[24],
+                    tipo= tipo
                 )
                 q.save()
-                print(muni)
+                print('Cargado desconocido: ' +row[2])
                 i += 1
 
-            except:
+            except Exception as err:
 
-                muni_inexistente = (str(int(row[0])//1000), row[0][-3:], row[1])
+                muni_inexistente = (str(int(row[0])//1000), row[0][-3:], row[1], row[2], err)
                 if muni_inexistente not in muni_fallidos:
                     muni_fallidos.append(muni_inexistente)
 
         print('Cargados ' + str(i) + '/' + str(filas) + ' desconocidos.')
-        print('----- LOS SIGUIENTES MUNICIPIOS NO EXISTEN ------')
-        for deleg, cod_muni, nombre in muni_fallidos:
-            print(deleg, cod_muni, nombre)
+        print('----- LOS SIGUIENTES DESCONOCIDOS NO HAN CARGADO -----')
+        for deleg, cod_muni, nombre, finca, error in muni_fallidos:
+            print(deleg, cod_muni, nombre, finca, error)
 
