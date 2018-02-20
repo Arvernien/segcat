@@ -7,15 +7,15 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   viewBox="0 -256 1792 1792"
-   id="svg3001"
+   height="1792"
+   viewBox="0 0 1792 1792"
+   width="1792"
+   id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   width="100%"
-   height="100%"
-   sodipodi:docname="ok.svg">
+   sodipodi:docname="fail.svg">
   <metadata
-     id="metadata3011">
+     id="metadata10">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -26,7 +26,7 @@
     </rdf:RDF>
   </metadata>
   <defs
-     id="defs3009" />
+     id="defs8" />
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -38,23 +38,17 @@
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
      inkscape:window-height="1018"
-     id="namedview3007"
+     id="namedview6"
      showgrid="false"
      inkscape:zoom="0.13169643"
-     inkscape:cx="-30.372872"
-     inkscape:cy="888.40679"
+     inkscape:cx="-30.372881"
+     inkscape:cy="888.40678"
      inkscape:window-x="-8"
      inkscape:window-y="77"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg3001" />
-  <g
-     transform="matrix(1,0,0,-1,7.5932203,1217.0847)"
-     id="g3003"
-     style="fill:#8fd400;fill-opacity:1">
-    <path
-       d="m 1671,970 q 0,-40 -28,-68 L 919,178 783,42 Q 755,14 715,14 675,14 647,42 L 511,178 149,540 q -28,28 -28,68 0,40 28,68 l 136,136 q 28,28 68,28 40,0 68,-28 l 294,-295 656,657 q 28,28 68,28 40,0 68,-28 l 136,-136 q 28,-28 28,-68 z"
-       id="path3005"
-       inkscape:connector-curvature="0"
-       style="fill:#8fd400;fill-opacity:1" />
-  </g>
+     inkscape:current-layer="svg2" />
+  <path
+     d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"
+     id="path4"
+     style="fill:#ff0000;fill-opacity:1" />
 </svg>
