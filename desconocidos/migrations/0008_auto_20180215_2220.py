@@ -14,9 +14,4 @@ class Migration(migrations.Migration):
             name='actuaciones',
             options={'verbose_name_plural': 'Actuaciones'},
         ),
-        migrations.AddField(
-            model_name='desconocido',
-            name='resuelto',
-            field=models.BooleanField(default=False),
-        ),
     ]

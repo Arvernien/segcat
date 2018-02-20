@@ -49,6 +49,7 @@ class Desconocido(models.Model):
     resuelto = models.BooleanField(default=False)
     tipo = models.ForeignKey(tipoDesc, on_delete=models.DO_NOTHING, default='1')
 
+
     def creaActuacion(self, user, descr):
         q = actuaciones(desconocido=self, usuario=user, descripcion=descr)
         q.save()

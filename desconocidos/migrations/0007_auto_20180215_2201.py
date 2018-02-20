@@ -13,10 +13,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RenameModel(
-            old_name='actuacion',
-            new_name='actuaciones',
-        ),
         migrations.AlterUniqueTogether(
             name='desconocido',
             unique_together={('fk_muni', 'refcat')},
