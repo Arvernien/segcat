@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block contenido %}
+{% if lista_desc %}
+<div class="container-fluid">
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ORGANISMO</th>
+        <th scope="col">MUNICIPIO</th>
+        <th scope="col">REFERENCIA CATASTRAL</th>
+        <th scope="col">TIPO</th>
+        <th scope=""col>RESUELTO</th>
+    </tr>
+  </thead>
+{% for desc in lista_desc %}
+    <tr>
+        <td>{{ desc.fk_muni.org.nombre }}</td>
+        <td>{{ desc.fk_muni.nombre }}</td>
+        <td>{{ desc.refcat }}</td>
+        <td>{{ desc.tipo }}</td>
+        <td><img src="{% static 'img/ok.svg' %}" width="100" height="33"></td>
+    </tr>
+{% endfor %}
+</table>
+</div>
+{% else %}
+{% endif %}
+{% endblock %}

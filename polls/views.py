@@ -7,6 +7,7 @@ from django.views import generic
 from django.template import loader
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 
 class CrearFinca(generic.CreateView):
@@ -35,6 +36,15 @@ def Inicio(request):
     organismos = organismo.objects.filter(grupo__in=usuario.groups.all())
     context = {'organismos': organismos, }
     return render(request, 'polls/inicio.html', context)
+
+
+
+
+
+
+def Logout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('polls:login'))
 
 
 class DetailView(generic.DetailView):

@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{% static 'polls/styles.css' %}" />
     <title>SegCat-gtt</title>
-      <nav class="navbar navbar-expand-lg nv-custom">
+      </head>
+
+      <nav class="navbar nv-custom navbar-expand-lg fixed-top">
           <a class="navbar-brand text-white">
               <img src="{% static 'img/logo.svg' %}" width="100" height="33">
           </a>
@@ -58,30 +60,20 @@
                   <!--</form>-->
                   <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Informes
+                          {{ request.user.first_name }} {{request.user.last_name}}
                       </a>
                       <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                          <a class="dropdown-item" href="#">Estadillo</a>
-                          <a class="dropdown-item" href="#">Excel</a>
-                          <a class="dropdown-item" href="#">Castaña</a>
+                          <a class="dropdown-item" href="/logout/">Finalizar sesión</a>
                       </div>
                   </li>
               </ul>
           </div>
         </nav>
-  </head>
-  <body>
+<body>
     <div class="container-fluid">
-        <div class="row">
-            <div class="col pr-0">
-                {% block head %}
-                {% endblock %}
-            </div>
-            <div class="col-8 pl-1">
-                {% block content %}
-                {% endblock %}
-            </div>
-        </div>
+        {% block contenido %}
+        {% endblock %}
+
     </div>
 
 

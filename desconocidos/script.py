@@ -2,6 +2,35 @@ from polls.models import municipio, organismo
 from .models import Desconocido, usos, tipoDesc
 import csv
 
+def carga_usos():
+    lista = [
+        ('1', '????'),
+        ('V', 'VIVIENDA'),
+        ('J', 'INDUSTRIAL AGRARIO'),
+        ('O', 'OFICINAS'),
+        ('A', 'ALMACÉN'),
+        ('I', 'INDUSTRIAL'),
+        ('K', 'DEPORTIVO'),
+        ('Z', 'AGRARIO'),
+        ('M', 'SOLAR SIN CONSTRUCCIÓN'),
+        ('R', 'RELIGIOSO'),
+        ('C', 'COMERCIAL'),
+        ('T', 'ESPECTÁCULOS'),
+        ('G', 'OCIO Y HOSTELERÍA'),
+        ('Y', 'SANIDAD Y BENEFICENCIA'),
+        ('E', 'ENSEÑANZA'),
+        ('P', 'EDIFICIOS SINGULARES')
+    ]
+    for clave, descripcion in lista:
+        try:
+            a = usos(clave=clave, descripcion=descripcion)
+            a.save()
+        except Exception as ex:
+            print(clave, ex)
+
+
+
+
 def carga_ti():
     with open('desconocidos/TI.txt', newline='') as fichero:
         lector = csv.reader(fichero, delimiter=';')
