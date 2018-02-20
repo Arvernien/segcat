@@ -4,10 +4,9 @@
 {% block contenido %}
 <link rel="stylesheet" type="text/css" href="{% static 'polls/styles.css' %}" />
 <div class="container-fluid text-right mb-2">
-    <form method="post" class="form-inline flex-row-reverse">
-        {% csrf_token %}
+    <form method="get" class="form-inline flex-row-reverse">
         <button type="submit" class="btn btn-primary mb-2 ml-2">Buscar</button>
-        <input type="text" id="idCriterio" name="criterio" class="form-control mb-2 col-3" placeholder="Búsqueda" autofocus>
+        <input type="text" id="idCriterio" name="q" class="form-control mb-2 col-3" placeholder="Búsqueda" autofocus>
     </form>
 </div>
 {% if lista_desc %}
@@ -36,6 +35,47 @@
     </tr>
 {% endfor %}
 </table>
+</div>
+
+<!--<div class="pagination">
+    <span class="step-links">
+        {% if lista_desc.has_previous %}
+            <a href="?pag=1">&laquo; Primera</a>
+            <a href="?pag={{ lista_desc.previous_page_number }}">anterior</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ lista_desc.number }} of {{ lista_desc.paginator.num_pages }}.
+        </span>
+
+        {% if lista_desc.has_next %}
+            <a href="?pag={{ lista_desc.next_page_number }}">siguiente</a>
+            <a href="?pag={{ lista_desc.paginator.num_pages }}">Última &raquo;</a>
+        {% endif %}
+    </span>
+</div>-->
+<div class="container-fluid -mb-6">
+    <nav>
+        <ul class="pagination pagination-sm justify-content-center">
+                {% if lista_desc.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?pag=1&q={{request.GET.q}}">Primera</a></li>
+                    <li><a class="page-link" href="?pag={{ lista_desc.previous_page_number }}&q={{request.GET.q}}">Anterior</a></li>
+                {% endif %}
+
+                {% for i in paginas %}
+
+                    <li {% if lista_desc.number == i %} class="page-item active" {% else %} class="page-item"{% endif %}><a class="page-link" href="?pag={{i}}&q={{request.GET.q}}">{{i}}</a></li>
+                {% endfor %}
+
+                {% if lista_desc.has_next %}
+                    <li class="page-item"><a class="page-link" href="?pag={{ lista_desc.next_page_number }}&q={{request.GET.q}}">Siguiente</a></li>
+                    <li class="page-item"><a class="page-link" href="?pag={{ lista_desc.paginator.num_pages }}&q={{request.GET.q}}">Última</a></li>
+                {% endif %}
+            </ul>
+    </nav>
+</div>
+<div class="container-fluid text-center -mt-6">
+    Mostrando {{inicio}} a {{final}} de {{total}}
 </div>
 {% else %}
 {% endif %}

@@ -6,6 +6,7 @@ body {
 
     /*background-color: rgb(143,212,0);*/
     background: -webkit-linear-gradient(top, #8fac00 1%,#8fd400 100%);
+    background: linear-gradient(to bottom, #8fac00 1%,#8fd400 100%);
     -webkit-box-shadow: 1px -6px 14px 6px rgba(0,0,0,1);
     -moz-box-shadow: 1px -6px 14px 6px rgba(0,0,0,1);
     box-shadow: 1px -6px 14px 6px rgba(0,0,0,1);
