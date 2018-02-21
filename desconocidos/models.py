@@ -63,6 +63,27 @@ class Desconocido(models.Model):
         ibi = str(round(Decimal((self.b_liquidable/100)) * self.fk_muni.tipo_impositivo / 100, 2)) + ' €'
         return ibi
 
+    @property
+    def getVcat(self):
+        vcat = str(round(Decimal(self.v_cat/100),2)) + ' €'
+        return vcat
+
+    @property
+    def getVsuelo(self):
+        vsuelo = str(round(Decimal(self.v_suelo / 100), 2)) + ' €'
+        return vsuelo
+
+    @property
+    def getVcons(self):
+        vcons = str(round(Decimal(self.v_constru / 100), 2)) + ' €'
+        return vcons
+
+    @property
+    def getBliq(self):
+        bliq = str(round(Decimal(self.b_liquidable / 100), 2)) + ' €'
+        return bliq
+
+
 
 
 

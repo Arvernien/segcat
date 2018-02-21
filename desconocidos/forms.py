@@ -9,6 +9,3 @@ class DesconocidoForm(forms.ModelForm):
         model = Desconocido
         fields = '__all__'
 
-    def __init__(self, *args, **kwargs):
-        request = kwargs.pop('request')
-        super(DesconocidoForm).__init__(*args, **kwargs)

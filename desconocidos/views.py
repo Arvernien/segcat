@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import DesconocidoForm
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 @login_required
@@ -49,8 +50,13 @@ def Desconocidos(request):
                }
     return render(request, 'desconocidos/desconocidos.html', context)
 
+
 def detalle(request, pk):
-    a = Desconocido.objects.get(pk=pk)
-    form = DesconocidoForm()
-    context = {'desconocido': a, 'form': form}
+
+    a = get_object_or_404(Desconocido, pk=pk)
+    form = DesconocidoForm(request.POST or None, instance=a)
+    refcat = a.refcat
+    context = {'desconocido': a,
+               'form': form,
+               'refcat': refcat}
     return render(request, 'desconocidos/detalle.html', context)

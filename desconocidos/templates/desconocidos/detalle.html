@@ -2,12 +2,58 @@
 {% load static %}
 {% load custom_tags %}
 {% block contenido %}
-<form action="{{ action }}" method="POST">
-  {% csrf_token %}
-  <ul>
-    {{ form.as_ul }}
-  </ul>
-  <input type="submit" value="Save" />
-</form>
+<div class="card">
+  <div class="card-header clearfix no-gutter">
+  <h5 class="float-left">{{refcat}}</h5>
+    <h5 class="float-right">{{desconocido.tipo}}</h5>
+    </div>
+
+  <div class="card-body no-gutters">
+    <div class="alert bg-light">
+    <h5 class="card-title text-secondary">Datos generales:</h5>
+    <p class="card-text bg-dark">
+
+    <form action="{{ action }}" method="POST">
+      {% csrf_token %}
+      <div class="row no-gutters justify-content-md-center">
+        <label for="municipio" class="col-sm-1 col-form-label text-primary">Municipio:</label>
+        <div class="col-sm-1">
+          <input type="text" readonly class="form-control-plaintext text-secondary" id="municipio" value="{{desconocido.fk_muni.nombre}}">
+        </div>
+        <label for="num_fijo" class="col-sm-1 col-form-label text-primary">Número fijo:</label>
+        <div class="col-sm-1">
+          <input type="text" readonly class="form-control-plaintext text-secondary" id="num_fijo" value="{{desconocido.num_fijo}}">
+        </div>
+      </div>
+      </div>
+    <div class="alert bg-light">
+    <h5 class="card-title mt-2 text-secondary">Datos económicos:</h5>
+      <div class="row no-gutters justify-content-md-center">
+        <label for="vsuelo" class="col-sm-1 col-form-label text-primary">Valor del suelo:</label>
+        <div class="col-sm-1">
+          <input type="text" readonly class="form-control-plaintext text-secondary" id="vsuelo" value="{{desconocido.getVsuelo}}">
+        </div>
+        <label for="vcons" class="col-sm-1 col-form-label text-primary">Valor de la construcción:</label>
+        <div class="col-sm-1">
+          <input type="text" readonly class="form-control-plaintext text-secondary" id="vcons" value="{{desconocido.getVcons}}">
+        </div>
+        <label for="vcat" class="col-sm-1 col-form-label text-primary">Valor catastral:</label>
+        <div class="col-sm-1">
+          <input type="text" readonly class="form-control-plaintext text-secondary" id="vcat" value="{{desconocido.getVcat}}">
+        </div>
+        <label for="bliq" class="col-sm-1 col-form-label text-primary">Base liquidable:</label>
+        <div class="col-sm-1">
+          <input type="text" readonly class="form-control-plaintext text-secondary" id="bliq" value="{{desconocido.getBliq}}">
+        </div>
+        <label for="ibi" class="col-sm-1 col-form-label text-primary">Cuota Ibi:</label>
+        <div class="col-sm-1">
+          <input type="text" readonly class="form-control-plaintext text-secondary" id="ibi" value="{{desconocido.getIbi}}">
+        </div>
+      </div>
+      </div>
+    </p>
+    <a href="#" class="btn btn-primary">Guardar</a>
+  </div>
+</div>
 
 {% endblock %}
