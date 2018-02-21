@@ -28,7 +28,7 @@
         <td>{{forloop.counter0|add:lista_desc.start_index }}</td>
         <td>{{ desc.fk_muni.org.nombre }}</td>
         <td>{{ desc.fk_muni.nombre }}</td>
-        <td><a href="#">{{ desc.refcat }}</a></td>
+        <td><a href="{{desc.pk}}">{{ desc.refcat }}</a></td>
         <td>{{ desc.tipo }}</td>
         <td>{{ desc.getIbi }}</td>
         {% if desc.resuelto == True %}

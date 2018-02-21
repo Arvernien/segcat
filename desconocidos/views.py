@@ -2,7 +2,9 @@ from django.shortcuts import render
 from .models import Desconocido
 from django.db.models import F, Q
 from django.contrib.auth.decorators import login_required
+from django.views import generic
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .forms import DesconocidoForm
 
 # Create your views here.
 @login_required
@@ -46,3 +48,9 @@ def Desconocidos(request):
                'q': q
                }
     return render(request, 'desconocidos/desconocidos.html', context)
+
+def detalle(request, pk):
+    a = Desconocido.objects.get(pk=pk)
+    form = DesconocidoForm()
+    context = {'desconocido': a, 'form': form}
+    return render(request, 'desconocidos/detalle.html', context)

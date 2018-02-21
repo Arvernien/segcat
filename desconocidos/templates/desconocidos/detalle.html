@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block contenido %}
+<form action="{{ action }}" method="POST">
+  {% csrf_token %}
+  <ul>
+    {{ form.as_ul }}
+  </ul>
+  <input type="submit" value="Save" />
+</form>
+
+{% endblock %}
