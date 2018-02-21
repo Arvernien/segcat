@@ -1,6 +1,7 @@
 from django.db import models
 from polls.models import organismo, municipio
 from django.contrib.auth.models import User
+from decimal import Decimal
 
 
 # Create your models here.
@@ -25,7 +26,7 @@ class tipoDesc(models.Model):
         verbose_name_plural = 'Tipos de desconocido'
 
 class Desconocido(models.Model):
-    fk_muni = models.ForeignKey(municipio, on_delete=models.DO_NOTHING)
+    fk_muni = models.ForeignKey(municipio, on_delete=models.DO_NOTHING, default='')
     refcat = models.CharField(max_length=20, blank=True)
     num_fijo = models.CharField(max_length=14, blank=True)
     sigla_via = models.CharField(max_length=5, blank=True)
@@ -57,12 +58,20 @@ class Desconocido(models.Model):
     def __str__(self):
         return self.refcat
 
+    @property
+    def getIbi(self):
+        ibi = str(round(Decimal((self.b_liquidable/100)) * self.fk_muni.tipo_impositivo / 100, 2)) + ' €'
+        return ibi
+
+
+
+
     class Meta:
         unique_together = (('fk_muni', 'refcat'),)
 
 class actuaciones(models.Model):
-    desconocido = models.ForeignKey(Desconocido, on_delete=models.CASCADE)
-    usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    desconocido = models.ForeignKey(Desconocido, on_delete=models.CASCADE, default='')
+    usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING, default='')
     fecha = models.DateTimeField(null=True)
     descripcion = models.CharField(max_length=400)
     agendar = models.DateField(null=True)

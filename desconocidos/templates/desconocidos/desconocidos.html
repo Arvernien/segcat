@@ -11,13 +11,14 @@
 </div>
 {% if lista_desc %}
 <div class="container-fluid">
-<table class="table">
+<table class="table table-sm table-hover">
     <thead>
     <tr>
         <th scope="col">ORGANISMO</th>
         <th scope="col">MUNICIPIO</th>
         <th scope="col">REFERENCIA CATASTRAL</th>
         <th scope="col">TIPO</th>
+        <th scope="col">CUOTA IBI</th>
         <th scope=""col>RESUELTO</th>
     </tr>
   </thead>
@@ -27,6 +28,7 @@
         <td>{{ desc.fk_muni.nombre }}</td>
         <td>{{ desc.refcat }}</td>
         <td>{{ desc.tipo }}</td>
+        <td>{{ desc.getIbi }}</td>
         {% if desc.resuelto == True %}
             <td><img src="{% static 'img/ok.svg' %}" width="25" height="25"></td>
         {% else %}
