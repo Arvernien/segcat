@@ -11,9 +11,11 @@ def Desconocidos(request):
     if q:
         texto = request.GET.get('q')
         desc = Desconocido.objects.filter(Q(refcat__icontains=q) |
-                                                Q(fk_muni__nombre__icontains=q)
+                                          Q(fk_muni__nombre__icontains=q) |
+                                          Q(fk_muni__org__nombre__icontains=q)
                                                 ).order_by(((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
     else:
+        q = ''
         desc = Desconocido.objects.all().order_by(
             ((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
     limite_pagina = 50
@@ -40,6 +42,7 @@ def Desconocidos(request):
                'paginas': paginas,
                'inicio': inicio,
                'final': final,
-               'total': total
+               'total': total,
+               'q': q
                }
     return render(request, 'desconocidos/desconocidos.html', context)

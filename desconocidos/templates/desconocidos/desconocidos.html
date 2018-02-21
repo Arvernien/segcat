@@ -6,7 +6,7 @@
 <div class="container-fluid text-right mb-2">
     <form method="get" class="form-inline flex-row-reverse">
         <button type="submit" class="btn btn-primary mb-2 ml-2">Buscar</button>
-        <input type="text" id="idCriterio" name="q" class="form-control mb-2 col-3" placeholder="Búsqueda" autofocus>
+        <input type="text" id="idCriterio" name="q" class="form-control mb-2 col-3" placeholder="Búsqueda" value="{{q}}" autofocus>
     </form>
 </div>
 {% if lista_desc %}
@@ -14,6 +14,7 @@
 <table class="table table-sm table-hover">
     <thead>
     <tr>
+        <th scope="col">#</th>
         <th scope="col">ORGANISMO</th>
         <th scope="col">MUNICIPIO</th>
         <th scope="col">REFERENCIA CATASTRAL</th>
@@ -24,9 +25,10 @@
   </thead>
 {% for desc in lista_desc %}
     <tr>
+        <td>{{forloop.counter0|add:lista_desc.start_index }}</td>
         <td>{{ desc.fk_muni.org.nombre }}</td>
         <td>{{ desc.fk_muni.nombre }}</td>
-        <td>{{ desc.refcat }}</td>
+        <td><a href="#">{{ desc.refcat }}</a></td>
         <td>{{ desc.tipo }}</td>
         <td>{{ desc.getIbi }}</td>
         {% if desc.resuelto == True %}
