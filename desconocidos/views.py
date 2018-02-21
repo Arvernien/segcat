@@ -13,7 +13,7 @@ def Desconocidos(request):
         desc = Desconocido.objects.filter(Q(refcat__icontains=q) |
                                           Q(fk_muni__nombre__icontains=q) |
                                           Q(fk_muni__org__nombre__icontains=q)
-                                                ).order_by(((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
+                                          ).order_by(((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
     else:
         q = ''
         desc = Desconocido.objects.all().order_by(

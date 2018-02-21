@@ -39,10 +39,15 @@ body {
 .nv-custom .dropdown-menu {
     background-color: #FFFFFF;
     border: 2px solid rgb(143,212,0);
+    -webkit-box-shadow: 3px 6px 18px -1px rgba(0,0,0,0.75);
+-moz-box-shadow: 3px 6px 18px -1px rgba(0,0,0,0.75);
+box-shadow: 3px 6px 18px -1px rgba(0,0,0,0.75);
+box-shadow: 3px 6px 18px -1px rgba(0,0,0,0.75);
 }
 .nv-custom .dropdown-item {
     border-color: rgb(143,212,0);
     color: #000000;
+
 }
 .nv-custom .dropdown-item:hover,
 .nv-custom .dropdown-item:focus {
