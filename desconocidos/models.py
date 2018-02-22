@@ -2,6 +2,8 @@ from django.db import models
 from polls.models import organismo, municipio
 from django.contrib.auth.models import User
 from decimal import Decimal
+import xml.etree.ElementTree as ET
+import urllib.request
 
 
 # Create your models here.
@@ -64,6 +66,26 @@ class Desconocido(models.Model):
         return ibi
 
     @property
+    def getDireccion(self):
+        via = ' '.join([self.sigla_via, self.nombre_via, ])
+        if self.num_pol != '0000':
+            num = ' Nº ' + self.num_pol + self.letra_pol
+        else:
+            num = ''
+        if self.num_pol_2 != '':
+            num2 = 'Bis ' + self.num_pol_2 + self.letra_pol_2
+        else:
+            num2 = ''
+        escalera = '/'.join([self.escalera, self.planta, self.puerta])
+        direccion = via
+        if num != '':
+            direccion = direccion + num
+            if num2 != '':
+                direccion = direccion + num2
+
+        return direccion
+
+    @property
     def getVcat(self):
         vcat = str(round(Decimal(self.v_cat/100),2)) + ' €'
         return vcat
@@ -82,6 +104,19 @@ class Desconocido(models.Model):
     def getBliq(self):
         bliq = str(round(Decimal(self.b_liquidable / 100), 2)) + ' €'
         return bliq
+
+    @property
+    def getGmaps(self):
+        url = 'http://ovc.catastro.meh.es/ovcservweb/OVCSWLocalizacionRC/OVCCoordenadas.asmx/Consulta_CPMRC?Provincia=&Municipio=&SRS=EPSG:4258&RC="' + self.refcat[:14] + '"'
+        tree = ET.parse(urllib.request.urlopen(url))
+        root = tree.getroot()
+        a = root.findall('http://www.catastro.meh.es/consulta_coordenadas')
+        print(a)
+        # gmaps = "https://www.google.com/maps?t=k&z=18&q=" & ycen & "," & xcen & "(" & self.refcat[:14] & ")&output=classic&dg=brw"
+        gmaps = "mierda"
+        return gmaps
+
+
 
 
 

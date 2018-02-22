@@ -2,58 +2,95 @@
 {% load static %}
 {% load custom_tags %}
 {% block contenido %}
-<div class="card">
-  <div class="card-header clearfix no-gutter">
-  <h5 class="float-left">{{refcat}}</h5>
-    <h5 class="float-right">{{desconocido.tipo}}</h5>
+<div class="container clearfix">
+    <div class="card">
+        <div class="card-header clearfix">
+            <h5 class="float-left mb-0">{{refcat}}</h5>
+            <h5 class="float-right mb-0">{{desconocido.tipo}}</h5>
+        </div>
+        <form class="card-body">
+            {% csrf_token %}
+            <!-- ---------------------------- DATOS GENERALES ----------------------------------->
+
+            <h5 class="card-title text-secondary">Datos generales</h5>
+            <div class="card-text">
+                <div class="row mb-2">
+                    <div class="col-sm-3">
+                        <label for="organismo" class="text-primary mb-0">Organismo</label>
+                        <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm" id="organismo" value="{{desconocido.fk_muni.org.nombre}}">
+                    </div>
+                    <div class="col-3">
+                        <label for="municipio" class="text-primary mb-0">Municipio</label>
+                        <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm col-md-auto" id="municipio" value="{{desconocido.fk_muni.nombre}}">
+                    </div>
+                    <div class="col-2">
+                        <label for="cod_postal" class="text-primary mb-0">Código postal</label>
+                        <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm" id="cod_postal" value="{{desconocido.cod_postal}}">
+                    </div>
+                    <div class="col-2">
+                        <label for="uso_principal" class="text-primary mb-0">Uso principal</label>
+                        <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm" id="uso_principal" value="{{desconocido.clave_uso.descripcion}}">
+                    </div>
+                    <div class="col-2">
+                        <label for="num_fijo" class="text-primary mb-0">Número fijo</label>
+                        <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm" id="num_fijo" value="{{desconocido.num_fijo}}">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <label for="direccion" class="text-primary mb-0">Dirección objeto tributario</label>
+                        <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm" id="direccion" value="{{desconocido.getDireccion}}">
+                    </div>
+                    <div class="col-6">
+                        <label for="dir_no_estructurada" class="text-primary mb-0">Dirección no estructurada</label>
+                        <input type="text mt-0" readonly class="form-control-plaintext text-secondary form-control-sm" id="dir_no_estructurada" value="{{ desconocido.dir_no_estruc}}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-10">
+                        <label for="titular" class="text-primary mb-0">Titular</label>
+                        <input type="text mt-0" readonly class="form-control-plaintext text-secondary form-control-sm" id="titular" value="{{ desconocido.sujeto_pasivo}}">
+                    </div>
+                    <div class="col-2">
+                        <label for="Id_fiscal" class="text-primary mb-0">Id. Fiscal</label>
+                        <input type="text mt-0" readonly class="form-control-plaintext text-secondary form-control-sm" id="Id_fiscal" value="{{ desconocido.id_fiscal}}">
+                    </div>
+                </div>
+
+                <hr>
+                <!-- ---------------------------- DATOS ECONÓMICOS ----------------------------------->
+
+                    <h5 class="card-title mt-2 text-secondary">Datos económicos</h5>
+                    <div class="row justify-content-center">
+                        <div class="col-2 text-center">
+                            <label for="vsuelo" class="text-primary">Valor del suelo</label>
+                            <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="vsuelo" value="{{desconocido.getVsuelo}}">
+                        </div>
+                        <div class="col-3 text-center">
+                            <label for="vcons" class="text-primary">Valor de la construcción</label>
+                            <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="vcons" value="{{desconocido.getVcons}}">
+                        </div>
+                        <div class="col-2 text-center">
+                            <label for="vcat" class="text-primary">Valor catastral</label>
+                            <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="vcat" value="{{desconocido.getVcat}}">
+                        </div>
+                        <div class="col-2 text-center">
+                            <label for="bliq" class="text-primary">Base liquidable</label>
+                            <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="bliq" value="{{desconocido.getBliq}}">
+                        </div>
+                        <div class="col-2 text-center">
+                            <label for="ibi" class="text-primary">Cuota Ibi</label>
+                            <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="ibi" value="{{desconocido.getIbi}}">
+                        </div>
+                    </div>
+                </div>
+                <!-- </div> -->
+        </form>
+
     </div>
-
-  <div class="card-body no-gutters">
-    <div class="alert bg-light">
-    <h5 class="card-title text-secondary">Datos generales:</h5>
-    <p class="card-text bg-dark">
-
-    <form action="{{ action }}" method="POST">
-      {% csrf_token %}
-      <div class="row no-gutters justify-content-md-center">
-        <label for="municipio" class="col-sm-1 col-form-label text-primary">Municipio:</label>
-        <div class="col-sm-1">
-          <input type="text" readonly class="form-control-plaintext text-secondary" id="municipio" value="{{desconocido.fk_muni.nombre}}">
-        </div>
-        <label for="num_fijo" class="col-sm-1 col-form-label text-primary">Número fijo:</label>
-        <div class="col-sm-1">
-          <input type="text" readonly class="form-control-plaintext text-secondary" id="num_fijo" value="{{desconocido.num_fijo}}">
-        </div>
-      </div>
-      </div>
-    <div class="alert bg-light">
-    <h5 class="card-title mt-2 text-secondary">Datos económicos:</h5>
-      <div class="row no-gutters justify-content-md-center">
-        <label for="vsuelo" class="col-sm-1 col-form-label text-primary">Valor del suelo:</label>
-        <div class="col-sm-1">
-          <input type="text" readonly class="form-control-plaintext text-secondary" id="vsuelo" value="{{desconocido.getVsuelo}}">
-        </div>
-        <label for="vcons" class="col-sm-1 col-form-label text-primary">Valor de la construcción:</label>
-        <div class="col-sm-1">
-          <input type="text" readonly class="form-control-plaintext text-secondary" id="vcons" value="{{desconocido.getVcons}}">
-        </div>
-        <label for="vcat" class="col-sm-1 col-form-label text-primary">Valor catastral:</label>
-        <div class="col-sm-1">
-          <input type="text" readonly class="form-control-plaintext text-secondary" id="vcat" value="{{desconocido.getVcat}}">
-        </div>
-        <label for="bliq" class="col-sm-1 col-form-label text-primary">Base liquidable:</label>
-        <div class="col-sm-1">
-          <input type="text" readonly class="form-control-plaintext text-secondary" id="bliq" value="{{desconocido.getBliq}}">
-        </div>
-        <label for="ibi" class="col-sm-1 col-form-label text-primary">Cuota Ibi:</label>
-        <div class="col-sm-1">
-          <input type="text" readonly class="form-control-plaintext text-secondary" id="ibi" value="{{desconocido.getIbi}}">
-        </div>
-      </div>
-      </div>
-    </p>
-    <a href="#" class="btn btn-primary">Guardar</a>
-  </div>
+    <a href="{{desconocido.getGmaps}}" class="btn btn-primary mt-2 float-right">Guardar</a>
 </div>
+
+
 
 {% endblock %}
