@@ -107,13 +107,19 @@ class Desconocido(models.Model):
 
     @property
     def getGmaps(self):
-        url = 'http://ovc.catastro.meh.es/ovcservweb/OVCSWLocalizacionRC/OVCCoordenadas.asmx/Consulta_CPMRC?Provincia=&Municipio=&SRS=EPSG:4258&RC="' + self.refcat[:14] + '"'
+        print(self.refcat[:14])
+        url = 'http://ovc.catastro.meh.es/ovcservweb/OVCSWLocalizacionRC/OVCCoordenadas.asmx/Consulta_CPMRC?Provincia=&Municipio=&SRS=EPSG:4258&RC=' + self.refcat[:14]
         tree = ET.parse(urllib.request.urlopen(url))
         root = tree.getroot()
-        a = root.findall('http://www.catastro.meh.es/consulta_coordenadas')
-        print(a)
-        # gmaps = "https://www.google.com/maps?t=k&z=18&q=" & ycen & "," & xcen & "(" & self.refcat[:14] & ")&output=classic&dg=brw"
-        gmaps = "mierda"
+
+
+        for a in root.iter():
+            if a.tag == '{http://www.catastro.meh.es/}xcen':
+                xcen = a.text
+            if a.tag == '{http://www.catastro.meh.es/}ycen':
+                ycen = a.text
+
+        gmaps = "https://www.google.com/maps?t=k&z=18&q=" + ycen + "," + xcen + "(" + self.refcat[:14] + ")&output=classic&dg=brw"
         return gmaps
 
 
