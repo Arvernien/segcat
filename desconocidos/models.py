@@ -76,14 +76,22 @@ class Desconocido(models.Model):
             num2 = 'Bis ' + self.num_pol_2 + self.letra_pol_2
         else:
             num2 = ''
-        escalera = '/'.join([self.escalera, self.planta, self.puerta])
+
+        direninmueble = ''
+        if self.escalera != '':
+            direninmueble = 'ES: ' + self.escalera
+        if self.planta != '':
+            direninmueble = direninmueble + ' PL: ' + self.planta
+        if self.puerta != '':
+            direninmueble = direninmueble + ' PU: ' + self.puerta
+
         direccion = via
         if num != '':
             direccion = direccion + num
             if num2 != '':
                 direccion = direccion + num2
 
-        return direccion
+        return ' '.join([direccion, direninmueble, ])
 
     @property
     def getVcat(self):
@@ -107,20 +115,32 @@ class Desconocido(models.Model):
 
     @property
     def getGmaps(self):
-        print(self.refcat[:14])
-        url = 'http://ovc.catastro.meh.es/ovcservweb/OVCSWLocalizacionRC/OVCCoordenadas.asmx/Consulta_CPMRC?Provincia=&Municipio=&SRS=EPSG:4258&RC=' + self.refcat[:14]
-        tree = ET.parse(urllib.request.urlopen(url))
-        root = tree.getroot()
+        try:
+            print(self.refcat[:14])
+            url = 'http://ovc.catastro.meh.es/ovcservweb/OVCSWLocalizacionRC/OVCCoordenadas.asmx/Consulta_CPMRC?Provincia=&Municipio=&SRS=EPSG:4258&RC=' + self.refcat[:14]
+            tree = ET.parse(urllib.request.urlopen(url))
+            root = tree.getroot()
 
 
-        for a in root.iter():
-            if a.tag == '{http://www.catastro.meh.es/}xcen':
-                xcen = a.text
-            if a.tag == '{http://www.catastro.meh.es/}ycen':
-                ycen = a.text
+            for a in root.iter():
+                if a.tag == '{http://www.catastro.meh.es/}xcen':
+                    xcen = str(round(float(a.text), 3))
+                if a.tag == '{http://www.catastro.meh.es/}ycen':
+                    ycen = str(round(float(a.text), 3))
 
-        gmaps = "https://www.google.com/maps?t=k&z=18&q=" + ycen + "," + xcen + "(" + self.refcat[:14] + ")&output=classic&dg=brw"
-        return gmaps
+            #gmaps = "https://www.google.com/maps?t=k&z=18&q=" + ycen + "," + xcen + "(" + self.refcat[:14] + ")&output=classic&dg=brw"
+            #gmaps = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBBQljsL5eXkLS1pYEd6LO6u08bMKxTb6k&q=" + ycen + "," + xcen + "&zoom=18&maptype=satellite"
+            #gmaps = '{lat: ' + ycen + ', lng: ' + xcen + '}'
+            gmaps = '{lat: ' + ycen + ', lng: ' + xcen + '}'
+            print(gmaps)
+            return gmaps
+        except:
+            return None
+
+    @property
+    def getCarto(self):
+        url ='https://www1.sedecatastro.gob.es/Cartografia/mapa.aspx?refcat=' + self.refcat
+        return url
 
 
 

@@ -2,6 +2,12 @@
 {% load static %}
 {% load custom_tags %}
 {% block contenido %}
+  <!--<style>-->
+       <!--#map {-->
+        <!--height: 400px;-->
+        <!--width: 100%;-->
+       <!--}-->
+    <!--</style>-->
 <div class="container clearfix">
     <div class="card">
         <div class="card-header clearfix">
@@ -86,10 +92,93 @@
                 </div>
                 <!-- </div> -->
         </form>
-
     </div>
-    <a href="{{desconocido.getGmaps}}" class="btn btn-primary mt-2 float-right" target="_blank">Guardar</a>
+    <!-- ---------------------- INVESTIGACIÓN ------------------------------->
+    <div class="card mt-3">
+        <div class="card-header clearfix" id="cabecera_investigacion">
+            <h5 class="float-left mb-0">INVESTIGACIÓN</h5>
+            <a class="float-right mb-0" href="#" data-toggle="collapse" data-target="#collapse-investigacion" aria-expanded="true" aria-controls="collapseOne">
+                <i class="fas fa-user-secret text-secondary"></i>
+            </a>
+        </div>
+        <div id="collapse-investigacion" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body jare">
+                <p>LALALALALALLALA</p>
+                <p>LALALALALALLALA</p>
+                <p>LALALALALALLALA</p>
+                <p>LALALALALALLALA</p>
+                <p>LALALALALALLALA</p>
+                <p>LALALALALALLALA</p>
+                <p>LALALALALALLALA</p>
+                <p>LALALALALALLALA</p>
+                <p>LALALALALALLALA</p>
+                <p>LALALALALALLALA</p>
+            </div>
+        </div>
+    </div>
+    <!-- ---------------------- CARTOGRAFIA ------------------------------->
+    <div class="card mt-3">
+    <div class="card-header clearfix" id="headingOne">
+        <h5 class="float-left mb-0">
+            CARTOGRAFÍA
+        </h5>
+        <a class="float-right mb-0" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <i class="fas fa-map-marker-alt text-secondary"></i>
+        </a>
+    </div>
+
+        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#sedecatastro" data-toggle="tab" target="navegador"><img src="{% static 'img/sec.gif' %}" width="20" height="20"> Sede Electrónica de Catastro</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#googlemaps" data-toggle="tab" target="navegador"><img src="{% static 'img/gmaps.png' %}" width="20" height="20"> Google Maps</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="mytabcontent">
+                    <div class="tab-pane fade show active" id="sedecatastro" role="tabpanel" aria-labelledby="SedeCatastro">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <iframe name="navegador" class="embed-responsive-item" src="{{desconocido.getCarto}}" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="googlemaps" role="tabpanel" aria-labelledby="GoogleMaps">
+                        <!--<div class="embed-responsive embed-responsive-16by9">-->
+                        <!--<iframe name="navegador" class="embed-responsive-item" src="{{desconocido.getGmaps}}" allowfullscreen></iframe>-->
+                        <!--</div>-->
+
+                            <div class="embed-responsive embed-responsive-16by9" id="map"></div>
+    <script>
+      function initMap() {
+        var a = {{desconocido.getGmaps}};
+        var uluru = a;
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 18,
+          center: uluru,
+          mapTypeId: 'satellite'
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBQljsL5eXkLS1pYEd6LO6u08bMKxTb6k&callback=initMap">
+    </script>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
 </div>
+
 
 
 
