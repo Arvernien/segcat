@@ -98,7 +98,7 @@
         <div id="collapse-investigacion" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="container-fluid pt-1 pb-1 card-header">
                 <button type="button" class="btn btn-sm btn-light btn-verde" data-toggle="modal" data-target="#addNota"><i class="far fa-plus-square fa-lg"></i></button>
-                <!-- EJEMPLO MODAL -->
+                <!------------------------------ MODAL ------------------------------------------->
                 <div class="modal fade" id="addNota" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div class="modal-content">
@@ -110,7 +110,7 @@
                             </div>
                             <div class="modal-body">
                                 <form method="post" action="addnota">
-                                     {% csrf_token %}
+                                    {% csrf_token %}
                                     <input type="hidden" name="pk" value="{{desconocido.pk}}">
                                     <div class="row mb-2">
                                         <div class="col-2"><label for="{{formactuacion.fecha_agenda.id_for_label}}" class="text-primary mb-0">Fecha agenda</label></div>
@@ -124,9 +124,6 @@
                                     <div class="row mb-2">
                                         <div class="col-12">{{formactuacion.descripcion}}</div>
                                     </div>
-
-
-
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Guardar</button>
@@ -135,7 +132,6 @@
 
                         </div>
                     </div>
-                    <!------------------------------ EJEMPLO MODAL ------------------------------------------->
                 </div>
             </div>
             <div class="scroll-box">
@@ -180,10 +176,10 @@
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#sedecatastro" data-toggle="tab" target="navegador"><img src="{% static 'img/sec.gif' %}" width="20" height="20"> Sede Electrónica de Catastro</a>
+                        <a class="nav-link active text-secondary" href="#sedecatastro" data-toggle="tab" target="navegador"><img src="{% static 'img/sec.gif' %}" width="20" height="20"> Sede Electrónica de Catastro</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#googlemaps" data-toggle="tab" target="navegador"><img src="{% static 'img/gmaps.png' %}" width="20" height="20"> Google Maps</a>
+                        <a class="nav-link text-secondary" href="#googlemaps" data-toggle="tab" target="navegador"><img src="{% static 'img/gmaps.png' %}" width="20" height="20"> Google Maps</a>
                     </li>
                 </ul>
             </div>
@@ -195,26 +191,22 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="googlemaps" role="tabpanel" aria-labelledby="GoogleMaps">
-                        <!--<div class="embed-responsive embed-responsive-16by9">-->
-                        <!--<iframe name="navegador" class="embed-responsive-item" src="{{desconocido.getGmaps}}" allowfullscreen></iframe>-->
-                        <!--</div>-->
-
                         <div class="embed-responsive embed-responsive-16by9" id="map"></div>
                         <script>
-      function initMap() {
-        var a = {{desconocido.getGmaps}};
-        var uluru = a;
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 18,
-          center: uluru,
-          mapTypeId: 'satellite'
-        });
-        var marker = new google.maps.Marker({
-          position: uluru,
-          map: map
-        });
-      }
-    </script>
+                            function initMap() {
+                                var a = {{desconocido.getGmaps}};
+                                var uluru = a;
+                                var map = new google.maps.Map(document.getElementById('map'), {
+                                    zoom: 18,
+                                    center: uluru,
+                                    mapTypeId: 'satellite'
+                                });
+                                var marker = new google.maps.Marker({
+                                    position: uluru,
+                                    map: map
+                                });
+                            }
+                        </script>
                         <script async defer
                                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBQljsL5eXkLS1pYEd6LO6u08bMKxTb6k&callback=initMap">
                         </script>
@@ -223,12 +215,13 @@
             </div>
         </div>
     </div>
-
-
-
 </div>
-
-
-
-
+<script>
+    $('.datepicker').datepicker({
+        format: "dd/mm/yyyy",
+        weekStart: 1,
+        language: "es",
+        orientation: "auto right"
+    });
+</script>
 {% endblock %}
