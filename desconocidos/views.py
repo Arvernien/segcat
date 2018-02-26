@@ -1,11 +1,14 @@
 from django.shortcuts import render
-from .models import Desconocido
+from .models import Desconocido, actuaciones
 from django.db.models import F, Q
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.views import generic
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import DesconocidoForm
+from .forms import DesconocidoForm, ActuacionForm
 from django.shortcuts import get_object_or_404
+from datetime import datetime
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 @login_required
@@ -50,13 +53,41 @@ def Desconocidos(request):
                }
     return render(request, 'desconocidos/desconocidos.html', context)
 
+def addnota(request):
+    form = request.POST
+    desconocido = Desconocido.objects.get(pk=form.get('pk'))
+    user = User.objects.get(username=request.user)
+    getagenda = form.get('fecha_agenda') or None
+    if getagenda is not None:
+        agenda = datetime.strptime(getagenda, '%d/%m/%Y').strftime('%Y-%m-%d')
+    else:
+        agenda = None
+    desconocido.creaActuacion(user, form.get('descripcion'), datetime.now(), agenda)
+    return HttpResponseRedirect(form.get('pk'))
+
+    # a = get_object_or_404(Desconocido, pk=pk)
+    # act = actuaciones.objects.filter(desconocido=a).order_by('fecha')
+    # form = DesconocidoForm(request.POST or None, instance=a)
+    # actform = ActuacionForm()
+    # refcat = a.refcat
+    # context = {'desconocido': a,
+    #            'form': form,
+    #            'refcat': refcat,
+    #            'acts': act,
+    #            'formactuacion': actform}
+    # return render(request, 'desconocidos/detalle.html', context)
+
 
 def detalle(request, pk):
 
     a = get_object_or_404(Desconocido, pk=pk)
+    act = actuaciones.objects.filter(desconocido=a).order_by('pk')
     form = DesconocidoForm(request.POST or None, instance=a)
+    actform = ActuacionForm()
     refcat = a.refcat
     context = {'desconocido': a,
                'form': form,
-               'refcat': refcat}
+               'refcat': refcat,
+               'acts': act,
+               'formactuacion': actform}
     return render(request, 'desconocidos/detalle.html', context)

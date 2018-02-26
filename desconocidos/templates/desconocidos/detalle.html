@@ -2,12 +2,6 @@
 {% load static %}
 {% load custom_tags %}
 {% block contenido %}
-  <!--<style>-->
-       <!--#map {-->
-        <!--height: 400px;-->
-        <!--width: 100%;-->
-       <!--}-->
-    <!--</style>-->
 <div class="container clearfix">
     <div class="card">
         <div class="card-header clearfix">
@@ -66,66 +60,121 @@
                 <hr>
                 <!-- ---------------------------- DATOS ECONÓMICOS ----------------------------------->
 
-                    <h5 class="card-title mt-2 text-secondary">Datos económicos</h5>
-                    <div class="row justify-content-center">
-                        <div class="col-2 text-center">
-                            <label for="vsuelo" class="text-primary">Valor del suelo</label>
-                            <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="vsuelo" value="{{desconocido.getVsuelo}}">
-                        </div>
-                        <div class="col-3 text-center">
-                            <label for="vcons" class="text-primary">Valor de la construcción</label>
-                            <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="vcons" value="{{desconocido.getVcons}}">
-                        </div>
-                        <div class="col-2 text-center">
-                            <label for="vcat" class="text-primary">Valor catastral</label>
-                            <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="vcat" value="{{desconocido.getVcat}}">
-                        </div>
-                        <div class="col-2 text-center">
-                            <label for="bliq" class="text-primary">Base liquidable</label>
-                            <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="bliq" value="{{desconocido.getBliq}}">
-                        </div>
-                        <div class="col-2 text-center">
-                            <label for="ibi" class="text-primary">Cuota Ibi</label>
-                            <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="ibi" value="{{desconocido.getIbi}}">
-                        </div>
+                <h5 class="card-title mt-2 text-secondary">Datos económicos</h5>
+                <div class="row justify-content-center">
+                    <div class="col-2 text-center">
+                        <label for="vsuelo" class="text-primary">Valor del suelo</label>
+                        <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="vsuelo" value="{{desconocido.getVsuelo}}">
+                    </div>
+                    <div class="col-3 text-center">
+                        <label for="vcons" class="text-primary">Valor de la construcción</label>
+                        <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="vcons" value="{{desconocido.getVcons}}">
+                    </div>
+                    <div class="col-2 text-center">
+                        <label for="vcat" class="text-primary">Valor catastral</label>
+                        <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="vcat" value="{{desconocido.getVcat}}">
+                    </div>
+                    <div class="col-2 text-center">
+                        <label for="bliq" class="text-primary">Base liquidable</label>
+                        <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="bliq" value="{{desconocido.getBliq}}">
+                    </div>
+                    <div class="col-2 text-center">
+                        <label for="ibi" class="text-primary">Cuota Ibi</label>
+                        <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="ibi" value="{{desconocido.getIbi}}">
                     </div>
                 </div>
-                <!-- </div> -->
+            </div>
+            <!-- </div> -->
         </form>
     </div>
     <!-- ---------------------- INVESTIGACIÓN ------------------------------->
     <div class="card mt-3">
         <div class="card-header clearfix" id="cabecera_investigacion">
-            <h5 class="float-left mb-0">INVESTIGACIÓN</h5>
+            <h5 class="float-left mb-0 text-secondary"><i class="fas fa-user-secret text-secondary"></i> INVESTIGACIÓN</h5>
             <a class="float-right mb-0" href="#" data-toggle="collapse" data-target="#collapse-investigacion" aria-expanded="true" aria-controls="collapseOne">
-                <i class="fas fa-user-secret text-secondary"></i>
+                <i class="fas fa-chevron-circle-down text-secondary"></i>
             </a>
         </div>
         <div id="collapse-investigacion" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-            <div class="card-body jare">
-                <p>LALALALALALLALA</p>
-                <p>LALALALALALLALA</p>
-                <p>LALALALALALLALA</p>
-                <p>LALALALALALLALA</p>
-                <p>LALALALALALLALA</p>
-                <p>LALALALALALLALA</p>
-                <p>LALALALALALLALA</p>
-                <p>LALALALALALLALA</p>
-                <p>LALALALALALLALA</p>
-                <p>LALALALALALLALA</p>
+            <div class="container-fluid pt-1 pb-1 card-header">
+                <button type="button" class="btn btn-sm btn-light btn-verde" data-toggle="modal" data-target="#addNota"><i class="far fa-plus-square fa-lg"></i></button>
+                <!-- EJEMPLO MODAL -->
+                <div class="modal fade" id="addNota" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Añadir actuación</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post" action="addnota">
+                                     {% csrf_token %}
+                                    <input type="hidden" name="pk" value="{{desconocido.pk}}">
+                                    <div class="row mb-2">
+                                        <div class="col-2"><label for="{{formactuacion.fecha_agenda.id_for_label}}" class="text-primary mb-0">Fecha agenda</label></div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-3">{{formactuacion.fecha_agenda}}</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-2"><label for="{{formactuacion.descripcion.id_for_label}}" class="text-primary mb-0">Actuación</label></div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-12">{{formactuacion.descripcion}}</div>
+                                    </div>
+
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!------------------------------ EJEMPLO MODAL ------------------------------------------->
+                </div>
             </div>
+            <div class="scroll-box">
+                {% for a in acts %}
+                <div class="alert mb-2 fd-verde">
+                    <div class="row lineadebajo">
+                        <div class="col-sm texto-peq text-secondary">
+                            <i class="fas fa-pencil-alt text-secondary"></i> {{a.fecha}}
+                        </div>
+                        <div class="col-sm text-center texto-peq text-secondary">
+                            <i class="fas fa-user text-secondary"></i> {{a.usuario.first_name}} {{a.usuario.last_name}}
+                        </div>
+                        <div class="col-sm text-right texto-peq text-secondary">
+                            {{a.agendar|default_if_none:""}} <i class="far fa-calendar-alt text-secondary"></i>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm">
+                            {{a.descripcion}}
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+            </div>
+
+
         </div>
     </div>
     <!-- ---------------------- CARTOGRAFIA ------------------------------->
     <div class="card mt-3">
-    <div class="card-header clearfix" id="headingOne">
-        <h5 class="float-left mb-0">
-            CARTOGRAFÍA
-        </h5>
-        <a class="float-right mb-0" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            <i class="fas fa-map-marker-alt text-secondary"></i>
-        </a>
-    </div>
+        <div class="card-header clearfix" id="headingOne">
+            <h5 class="float-left mb-0 text-secondary">
+                <i class="fas fa-map text-secondary"></i> CARTOGRAFÍA
+            </h5>
+            <a class="float-right mb-0" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <i class="fas fa-chevron-circle-down text-secondary"></i>
+            </a>
+        </div>
 
         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-header">
@@ -150,8 +199,8 @@
                         <!--<iframe name="navegador" class="embed-responsive-item" src="{{desconocido.getGmaps}}" allowfullscreen></iframe>-->
                         <!--</div>-->
 
-                            <div class="embed-responsive embed-responsive-16by9" id="map"></div>
-    <script>
+                        <div class="embed-responsive embed-responsive-16by9" id="map"></div>
+                        <script>
       function initMap() {
         var a = {{desconocido.getGmaps}};
         var uluru = a;
@@ -166,11 +215,11 @@
         });
       }
     </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBQljsL5eXkLS1pYEd6LO6u08bMKxTb6k&callback=initMap">
-    </script>
-
-
+                        <script async defer
+                                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBQljsL5eXkLS1pYEd6LO6u08bMKxTb6k&callback=initMap">
+                        </script>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

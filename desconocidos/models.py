@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from decimal import Decimal
 import xml.etree.ElementTree as ET
 import urllib.request
+from datetime import datetime
 
 
 # Create your models here.
@@ -53,8 +54,8 @@ class Desconocido(models.Model):
     tipo = models.ForeignKey(tipoDesc, on_delete=models.DO_NOTHING, default='1')
 
 
-    def creaActuacion(self, user, descr):
-        q = actuaciones(desconocido=self, usuario=user, descripcion=descr)
+    def creaActuacion(self, user, descr, fecha, agendar):
+        q = actuaciones(desconocido=self, usuario=user, descripcion=descr, agendar=agendar)
         q.save()
 
     def __str__(self):
@@ -116,8 +117,11 @@ class Desconocido(models.Model):
     @property
     def getGmaps(self):
         try:
-            print(self.refcat[:14])
-            url = 'http://ovc.catastro.meh.es/ovcservweb/OVCSWLocalizacionRC/OVCCoordenadas.asmx/Consulta_CPMRC?Provincia=&Municipio=&SRS=EPSG:4258&RC=' + self.refcat[:14]
+            url = 'http://ovc.catastro.meh.es/ovcservweb/OVCSWLocalizacionRC/OVCCoordenadas.asmx/' \
+                  'Consulta_CPMRC?Provincia=&Municipio=&SRS=EPSG:4258&RC='
+            urllib.request.urlopen(url)
+            url = 'http://ovc.catastro.meh.es/ovcservweb/OVCSWLocalizacionRC/OVCCoordenadas.asmx/' \
+                  'Consulta_CPMRC?Provincia=&Municipio=&SRS=EPSG:4258&RC=' + self.refcat[:14]
             tree = ET.parse(urllib.request.urlopen(url))
             root = tree.getroot()
 
@@ -128,11 +132,7 @@ class Desconocido(models.Model):
                 if a.tag == '{http://www.catastro.meh.es/}ycen':
                     ycen = str(round(float(a.text), 3))
 
-            #gmaps = "https://www.google.com/maps?t=k&z=18&q=" + ycen + "," + xcen + "(" + self.refcat[:14] + ")&output=classic&dg=brw"
-            #gmaps = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBBQljsL5eXkLS1pYEd6LO6u08bMKxTb6k&q=" + ycen + "," + xcen + "&zoom=18&maptype=satellite"
-            #gmaps = '{lat: ' + ycen + ', lng: ' + xcen + '}'
             gmaps = '{lat: ' + ycen + ', lng: ' + xcen + '}'
-            print(gmaps)
             return gmaps
         except:
             return None
@@ -154,9 +154,12 @@ class Desconocido(models.Model):
 class actuaciones(models.Model):
     desconocido = models.ForeignKey(Desconocido, on_delete=models.CASCADE, default='')
     usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING, default='')
-    fecha = models.DateTimeField(null=True)
+    fecha = models.DateTimeField(default=datetime.now())
     descripcion = models.CharField(max_length=400)
     agendar = models.DateField(null=True)
+
+    def __str__(self):
+        return self.desconocido.refcat
 
     class Meta:
         verbose_name_plural = 'Actuaciones'

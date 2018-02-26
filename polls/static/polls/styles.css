@@ -3,6 +3,14 @@ body {
     padding-top: 75px;
 }
 
+
+.scroll-box {
+        overflow-y: scroll;
+        max-height: 600px;
+        padding: 1rem
+}
+
+
 .nv-custom {
 
     /*background-color: rgb(143,212,0);*/
@@ -54,4 +62,20 @@ box-shadow: 3px 6px 18px -1px rgba(0,0,0,0.75);
 .nv-custom .dropdown-item:focus {
     color: #333333;
     background-color: rgba(143,212,0,.5);
+}
+.barra-herramientas {
+    background-color: gray;
+}
+.btn-verde {
+    color: rgb(143,212,0);
+}
+.texto-peq {
+    font-weight: bold;
+    font-size: 12px !important;
+}
+.fd-verde {
+    background-color: #dcedc8 !important;
+}
+.lineadebajo {
+    border-bottom: 1px solid gray;
 }

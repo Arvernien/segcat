@@ -7,6 +7,20 @@ class actuacionesInLine(admin.StackedInline):
     model = actuaciones
     extra = 1
 
+class ActuacionesAdmin(admin.ModelAdmin):
+    list_display = ('desco', 'user', 'fecha')
+    list_display_links = ('desco',)
+    search_fields = ('desconocido__refcat',)
+
+    def desco(self, obj):
+        return obj.desconocido.refcat
+    desco.short_description = "Desconocido"
+
+    def user(self, obj):
+        return obj.usuario.first_name + ' ' + obj.usuario.last_name
+    user.short_description = "Usuario"
+
+
 class DesconocidoAdmin(admin.ModelAdmin):
     list_display = ('delegacion', 'muni', 'refcat', 'cuota_ibi', 'resuelto')
     list_filter = ('fk_muni__org__nombre',)
@@ -38,6 +52,7 @@ class UsosAdmin(admin.ModelAdmin):
 
 # Register your models here.
 admin.site.register(Desconocido, DesconocidoAdmin)
-admin.site.register(actuaciones)
+
+admin.site.register(actuaciones, ActuacionesAdmin)
 admin.site.register(tipoDesc)
 admin.site.register(usos, UsosAdmin)
