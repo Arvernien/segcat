@@ -53,6 +53,7 @@ def Desconocidos(request):
                }
     return render(request, 'desconocidos/desconocidos.html', context)
 
+@login_required
 def addnota(request):
     form = request.POST
     desconocido = Desconocido.objects.get(pk=form.get('pk'))
@@ -65,19 +66,16 @@ def addnota(request):
     desconocido.creaActuacion(user, form.get('descripcion'), datetime.now(), agenda)
     return HttpResponseRedirect(form.get('pk'))
 
-    # a = get_object_or_404(Desconocido, pk=pk)
-    # act = actuaciones.objects.filter(desconocido=a).order_by('fecha')
-    # form = DesconocidoForm(request.POST or None, instance=a)
-    # actform = ActuacionForm()
-    # refcat = a.refcat
-    # context = {'desconocido': a,
-    #            'form': form,
-    #            'refcat': refcat,
-    #            'acts': act,
-    #            'formactuacion': actform}
-    # return render(request, 'desconocidos/detalle.html', context)
+@login_required
+def checknota(request):
+    form = request.POST
+    actuacion = actuaciones.objects.get(pk=form.get('pk'))
+    actuacion.revisado = True
+    actuacion.save()
 
+    return HttpResponseRedirect(form.get('descopk'))
 
+@login_required
 def detalle(request, pk):
 
     a = get_object_or_404(Desconocido, pk=pk)
@@ -91,3 +89,4 @@ def detalle(request, pk):
                'acts': act,
                'formactuacion': actform}
     return render(request, 'desconocidos/detalle.html', context)
+

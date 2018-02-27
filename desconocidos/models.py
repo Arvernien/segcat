@@ -5,6 +5,7 @@ from decimal import Decimal
 import xml.etree.ElementTree as ET
 import urllib.request
 from datetime import datetime
+from django.urls import reverse
 
 
 # Create your models here.
@@ -52,6 +53,11 @@ class Desconocido(models.Model):
     sujeto_pasivo = models.CharField(max_length=60, blank=True)
     resuelto = models.BooleanField(default=False)
     tipo = models.ForeignKey(tipoDesc, on_delete=models.DO_NOTHING, default='1')
+    titular_candidato = models.CharField(max_length=100, blank=True, null=True)
+    nif_candidato = models.CharField(max_length=9, blank=True, null=True)
+    expediente = models.CharField(max_length=14, blank=True, null=True)
+    mt = models.BooleanField(blank=True, default=False)
+    liq = models.BooleanField(blank=True, default=False)
 
 
     def creaActuacion(self, user, descr, fecha, agendar):
@@ -157,9 +163,18 @@ class actuaciones(models.Model):
     fecha = models.DateTimeField(default=datetime.now())
     descripcion = models.CharField(max_length=400)
     agendar = models.DateField(null=True)
+    revisado = models.BooleanField(default=False)
 
     def __str__(self):
         return self.desconocido.refcat
 
     class Meta:
         verbose_name_plural = 'Actuaciones'
+
+    @property
+    def get_absolute_url(self):
+        return reverse('desconocidos:detalle', args=[str(self.desconocido.pk)])
+
+    @property
+    def get_link_name(self):
+        return self.desconocido.refcat

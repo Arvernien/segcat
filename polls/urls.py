@@ -17,5 +17,6 @@ urlpatterns = [
     path('<int:question_id>/vote/', views.vote, name='vote'),
     path('finca/', views.FincaView.as_view(), name='finca'),
     path('crea/', views.CrearFinca.as_view(), name='crea'),
+    path('agenda/', views.agenda, name='agenda'),
 ]
 

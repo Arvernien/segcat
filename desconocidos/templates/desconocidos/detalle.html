@@ -4,8 +4,9 @@
 {% block contenido %}
 <div class="container clearfix">
     <div class="card">
-        <div class="card-header clearfix">
+        <div class="card-header clearfix text-center">
             <h5 class="float-left mb-0">{{refcat}}</h5>
+            <!--<input class="float-none mt-0 mb-0" type="checkbox" data-toggle="toggle" data-on="Resuelto" data-off="Investigación" data-onstyle="success" data-offstyle="warning" data-size="mini"> -->
             <h5 class="float-right mb-0">{{desconocido.tipo}}</h5>
         </div>
         <form class="card-body">
@@ -84,7 +85,6 @@
                     </div>
                 </div>
             </div>
-            <!-- </div> -->
         </form>
     </div>
     <!-- ---------------------- INVESTIGACIÓN ------------------------------->
@@ -96,69 +96,104 @@
             </a>
         </div>
         <div id="collapse-investigacion" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-            <div class="container-fluid pt-1 pb-1 card-header">
-                <button type="button" class="btn btn-sm btn-light btn-verde" data-toggle="modal" data-target="#addNota"><i class="far fa-plus-square fa-lg"></i></button>
-                <!------------------------------ MODAL ------------------------------------------->
-                <div class="modal fade" id="addNota" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Añadir actuación</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active text-secondary" href="#tabnotas" data-toggle="tab" target="navegador"><i class="fas fa-pencil-alt"></i> Notas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-secondary" href="#tabdatos" data-toggle="tab" target="navegador"><i class="fas fa-key"></i> Datos</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content" id="micontenido">
+                <!--------------------------- PANEL DE NOTAS ------------------------------------------>
+                <div class="tab-pane fade show active" id="tabnotas" role="tabpanel" aria-labelledby="SedeCatastro">
+                    <div class="container-fluid pt-1 pb-1 card-header">
+                        <button type="button" class="btn btn-sm btn-light btn-verde" data-toggle="modal" data-target="#addNota"><i class="far fa-plus-square fa-lg"></i></button>
+                        <!------------------------------ MODAL ------------------------------------------->
+                        <div class="modal fade" id="addNota" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Añadir actuación</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post" action="addnota">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="pk" value="{{desconocido.pk}}">
+                                            <div class="row mb-2">
+                                                <div class="col-2"><label for="{{formactuacion.fecha_agenda.id_for_label}}" class="text-primary mb-0">Fecha agenda</label></div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-3">{{formactuacion.fecha_agenda}}</div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-2"><label for="{{formactuacion.descripcion.id_for_label}}" class="text-primary mb-0">Actuación</label></div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-12">{{formactuacion.descripcion}}</div>
+                                            </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Guardar</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="modal-body">
-                                <form method="post" action="addnota">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="pk" value="{{desconocido.pk}}">
-                                    <div class="row mb-2">
-                                        <div class="col-2"><label for="{{formactuacion.fecha_agenda.id_for_label}}" class="text-primary mb-0">Fecha agenda</label></div>
-                                    </div>
-                                    <div class="row mb-2">
-                                        <div class="col-3">{{formactuacion.fecha_agenda}}</div>
-                                    </div>
-                                    <div class="row mb-2">
-                                        <div class="col-2"><label for="{{formactuacion.descripcion.id_for_label}}" class="text-primary mb-0">Actuación</label></div>
-                                    </div>
-                                    <div class="row mb-2">
-                                        <div class="col-12">{{formactuacion.descripcion}}</div>
-                                    </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Guardar</button>
-                                </form>
-                            </div>
-
                         </div>
+                        <!-- ----------------------------- FIN MODAL ---------------------------------------->
+                    </div>
+                    <div class="scroll-box">
+                        {% for a in acts %}
+                        <div class="alert mb-2 fd-verde">
+                            <div class="row lineadebajo">
+                                <div class="col-sm texto-peq text-secondary">
+                                    <i class="fas fa-pencil-alt text-secondary"></i> {{a.fecha}}
+                                </div>
+                                <div class="col-sm text-center texto-peq text-secondary">
+                                    <i class="fas fa-user text-secondary"></i> {{a.usuario.first_name}} {{a.usuario.last_name}}
+                                </div>
+                                <div class="col-sm text-right texto-peq text-secondary">
+                                    {{a.agendar|default_if_none:""}}
+                                    {% if a.agendar %}
+                                    {% if a.revisado == False %}
+                                    {% if a.usuario == request.user %}
+                                    <form method="post" id="form{{a.pk}}" action="checknota" style="display:inline;">
+                                        {% csrf_token %}
+                                        <i class="far fa-calendar-alt text-secondary" onclick="form{{a.pk}}.submit()"></i>
+                                        <input type="hidden" name="pk" value="{{a.pk}}">
+                                        <input type="hidden" name="descopk" value="{{desconocido.pk}}">
+                                        <input type="hidden" name="revisado" value="True">
+                                    </form>
+                                    {% else %}
+                                    <i class="far fa-calendar-alt text-secondary"></i>
+                                    {% endif %}
+                                    {% else %}
+                                    <i class="fas fa-check"></i>
+                                    {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-sm">
+                                    {{a.descripcion}}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-------------------------- PANEL DE DATOS ----------------------------->
+                <div class="tab-pane fade" id="tabdatos" role="tabpanel" aria-labelledby="tabdatos">
+                    <div class="container-fluid pt-1 pb-1 card-header">
+                        <h1>LALALALLALALLA</h1>
                     </div>
                 </div>
             </div>
-            <div class="scroll-box">
-                {% for a in acts %}
-                <div class="alert mb-2 fd-verde">
-                    <div class="row lineadebajo">
-                        <div class="col-sm texto-peq text-secondary">
-                            <i class="fas fa-pencil-alt text-secondary"></i> {{a.fecha}}
-                        </div>
-                        <div class="col-sm text-center texto-peq text-secondary">
-                            <i class="fas fa-user text-secondary"></i> {{a.usuario.first_name}} {{a.usuario.last_name}}
-                        </div>
-                        <div class="col-sm text-right texto-peq text-secondary">
-                            {{a.agendar|default_if_none:""}} <i class="far fa-calendar-alt text-secondary"></i>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 col-sm">
-                            {{a.descripcion}}
-                        </div>
-                    </div>
-                </div>
-
-                {% endfor %}
-            </div>
-
-
         </div>
     </div>
     <!-- ---------------------- CARTOGRAFIA ------------------------------->
@@ -171,7 +206,6 @@
                 <i class="fas fa-chevron-circle-down text-secondary"></i>
             </a>
         </div>
-
         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs">

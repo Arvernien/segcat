@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% block contenido %}
+<div class="container-fluid -mb-6">
+    <nav>
+        <ul class="pagination pagination-sm justify-content-center">
+                    <li class="page-item"><a class="page-link" href="?f={{mprevio}}"><< Mes anterior</a></li>
+                    <li><a class="page-link" href="?f={{today}}">Mes actual</a></li>
+                    <li class="page-item"><a class="page-link" href="?f={{msiguiente}}">Mes siguiente >></a></li>
+            </ul>
+    </nav>
+</div>
+<div class="container-fluid justify-content-center">
+    <div>
+        {{calendario}}
+    </div>
+</div>
+{% endblock %}
