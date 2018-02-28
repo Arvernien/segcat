@@ -5,9 +5,9 @@
 <div class="container clearfix">
     <div class="card">
         <div class="card-header clearfix text-center">
-            <h5 class="float-left mb-0">{{refcat}}</h5>
+            <h5 class="float-left mb-0 text-secondary">{{refcat}}</h5>
             <!--<input class="float-none mt-0 mb-0" type="checkbox" data-toggle="toggle" data-on="Resuelto" data-off="Investigación" data-onstyle="success" data-offstyle="warning" data-size="mini"> -->
-            <h5 class="float-right mb-0">{{desconocido.tipo}}</h5>
+            <h5 class="float-right mb-0 text-secondary">{{desconocido.tipo}}</h5>
         </div>
         <form class="card-body">
             {% csrf_token %}
@@ -98,8 +98,8 @@
         <div id="collapse-investigacion" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active text-secondary" href="#tabnotas" data-toggle="tab" target="navegador"><i class="fas fa-pencil-alt"></i> Notas</a>
+                    <li class="nav-item" id="butNotas">
+                        <a class="nav-link active text-secondary" href="#tabnotas" data-toggle="tab" target="navegador"><i class="fas fa-sticky-note"></i> Notas</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-secondary" href="#tabdatos" data-toggle="tab" target="navegador"><i class="fas fa-key"></i> Datos</a>
@@ -108,7 +108,7 @@
             </div>
             <div class="tab-content" id="micontenido">
                 <!--------------------------- PANEL DE NOTAS ------------------------------------------>
-                <div class="tab-pane fade show active" id="tabnotas" role="tabpanel" aria-labelledby="SedeCatastro">
+                <div class="tab-pane fade show active" id="tabnotas" role="tabpanel" aria-labelledby="tabnotas">
                     <div class="container-fluid pt-1 pb-1 card-header">
                         <button type="button" class="btn btn-sm btn-light btn-verde" data-toggle="modal" data-target="#addNota"><i class="far fa-plus-square fa-lg"></i></button>
                         <!------------------------------ MODAL ------------------------------------------->
@@ -122,7 +122,8 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form method="post" action="addnota">
+                                        <form id="formnota2" method="post" action="addnota">
+                                        <!--<form id="formnota" method="post" action="addnotatest">-->
                                             {% csrf_token %}
                                             <input type="hidden" name="pk" value="{{desconocido.pk}}">
                                             <div class="row mb-2">
@@ -147,50 +148,75 @@
                         </div>
                         <!-- ----------------------------- FIN MODAL ---------------------------------------->
                     </div>
-                    <div class="scroll-box">
-                        {% for a in acts %}
-                        <div class="alert mb-2 fd-verde">
-                            <div class="row lineadebajo">
-                                <div class="col-sm texto-peq text-secondary">
-                                    <i class="fas fa-pencil-alt text-secondary"></i> {{a.fecha}}
-                                </div>
-                                <div class="col-sm text-center texto-peq text-secondary">
-                                    <i class="fas fa-user text-secondary"></i> {{a.usuario.first_name}} {{a.usuario.last_name}}
-                                </div>
-                                <div class="col-sm text-right texto-peq text-secondary">
-                                    {{a.agendar|default_if_none:""}}
-                                    {% if a.agendar %}
-                                    {% if a.revisado == False %}
-                                    {% if a.usuario == request.user %}
-                                    <form method="post" id="form{{a.pk}}" action="checknota" style="display:inline;">
-                                        {% csrf_token %}
-                                        <i class="far fa-calendar-alt text-secondary" onclick="form{{a.pk}}.submit()"></i>
-                                        <input type="hidden" name="pk" value="{{a.pk}}">
-                                        <input type="hidden" name="descopk" value="{{desconocido.pk}}">
-                                        <input type="hidden" name="revisado" value="True">
-                                    </form>
-                                    {% else %}
-                                    <i class="far fa-calendar-alt text-secondary"></i>
-                                    {% endif %}
-                                    {% else %}
-                                    <i class="fas fa-check"></i>
-                                    {% endif %}
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 col-sm">
-                                    {{a.descripcion}}
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
+                    <div class="scroll-box" id="muestranotas">
+                        {% include 'desconocidos/notas.html' %}
                     </div>
                 </div>
                 <!-------------------------- PANEL DE DATOS ----------------------------->
                 <div class="tab-pane fade" id="tabdatos" role="tabpanel" aria-labelledby="tabdatos">
                     <div class="container-fluid pt-1 pb-1 card-header">
-                        <h1>LALALALLALALLA</h1>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="descopk" value="{{desconocido.pk}}">
+                            <div class="row mb-0">
+                                <div class="col-8">
+                                    <label class="text-primary" for="{{form.titular_candidato.id_for_label}}">Titular candidato</label>
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-primary" for="{{form.nif_candidato.id_for_label}}">NIF</label>
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-primary" for="{{form.telefono.id_for_label}}">Teléfono</label>
+                                </div>
+                            </div>
+                            <div class="row mt-0">
+                                <div class="col-8">
+                                    {{form.titular_candidato}}
+                                </div>
+                                <div class="col-2">
+                                    {{form.nif_candidato}}
+                                </div>
+                                <div class="col-2">
+                                    {{form.telefono}}
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-5">
+                                    <div class="form-check">
+                                        {{form.mt}}
+                                        <label class="form-check-label text-primary" for="{{form.mt.id_for_label}}">Modificación de titular realizada</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <fieldset id="mtform">
+                                <div class="form-group">
+                                    <div class="row mt-2">
+                                        <div class="col-2">
+                                            <label class="text-primary" for="{{form.expediente.id_for_label}}">Expediente</label>
+                                        </div>
+                                        <div class="col-8"></div>
+                                        <div class="col-2 text-right">
+                                            {{form.liq}}
+                                            <label class="form-check-label text-primary" for="{{form.liq.id_for_label}}">Liquidación realizada</label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-3">
+                                            {{form.expediente}}
+                                        </div>
+                                        <div class="col-7"></div>
+                                        <div class="col-2">
+                                            {{form.importe_liq}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <div class="row justify-content-center mb-2">
+                                <div class="col-1">
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -250,6 +276,8 @@
         </div>
     </div>
 </div>
+
+
 <script>
     $('.datepicker').datepicker({
         format: "dd/mm/yyyy",
@@ -257,5 +285,44 @@
         language: "es",
         orientation: "auto right"
     });
+
+    $(function () {
+        $('.form-check-input').change();
+        });
+
+    $('#formnota').on('submit', function(event){
+        event.preventDefault();
+        console.log("Formulario enviado") // Control sanidad
+        crear_nota();
+        });
+
+    function crear_nota() {
+        console.log("Crear post funciona")
+        $.ajax({
+            url: "addnotatest",
+            type: "POST",
+            data: {
+                pk: {{ desconocido.pk }},
+                descripcion: $('#{{formactuacion.descripcion.id_for_label}}').val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                fecha_agenda: $('#{{formactuacion.fecha_agenda.id_for_label}}').val(),
+            },
+
+            success: function(json) {
+                $('#{{formactuacion.descripcion.id_for_label}}').val('');
+                console.log(json);
+                $('#addNota').modal('hide');
+                $('#muestranotas').html(json.data);
+                $("#muestranotas").animate({scrollTop:$("#muestranotas")[0].scrollHeight}, 1000);
+            },
+
+            error: function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText);
+            }
+        });
+    };
 </script>
+
+
+
 {% endblock %}

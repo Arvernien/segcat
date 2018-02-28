@@ -4,6 +4,36 @@ from django.core.exceptions import ValidationError
 from .models import Desconocido, actuaciones
 
 class DesconocidoForm(forms.ModelForm):
+    titular_candidato = forms.CharField(required=False, label="Titular candidato", widget=forms.TextInput({
+        'class': 'form-control form-control-sm',
+        'placeholder': 'Nombre y apellidos',
+
+    }))
+    nif_candidato = forms.CharField(required=False, label="NIF", widget=forms.TextInput({
+        'class': 'form-control form-control-sm',
+        'placeholder': 'NIF o CIF'
+    }))
+    telefono = forms.CharField(required=False, label="Teléfono", widget=forms.TextInput({
+        'class': 'form-control form-control-sm',
+        'placeholder': 'Número'
+    }))
+    mt = forms.BooleanField(required=False, label="Modificación de titular realizada", widget=forms.CheckboxInput({
+        'class': 'form-check-input pt-3',
+        'onchange': "document.getElementById('mtform').disabled = !this.checked;",
+        'value': "true"
+    }))
+    expediente = forms.CharField(required=False, label="Titular candidato", widget=forms.TextInput({
+        'class': 'form-control form-control-sm',
+        'placeholder': 'Expediente gtt'
+    }))
+    liq = forms.BooleanField(required=False, label="Liquidación realizada", widget=forms.CheckboxInput({
+        'class': 'form-check-input pt-3',
+        'onchange': "document.getElementById('id_importe_liq').disabled = !this.checked;",
+    }))
+    importe_liq = forms.DecimalField(required=False, label='Importe liquidado', widget=forms.NumberInput({
+        'class': 'form-control form-control-sm',
+        'placeholder': '0,00'
+    }))
 
     class Meta:
         model = Desconocido
@@ -26,3 +56,44 @@ class ActuacionForm(forms.ModelForm):
     class Meta:
         model = actuaciones
         fields = ['fecha_agenda', 'descripcion']
+
+class DesconocidoDatosForm(forms.ModelForm):
+    titular_candidato = forms.CharField(required=False, label="Titular candidato", widget=forms.TextInput({
+        'class': 'form-control form-control-sm',
+        'placeholder': 'Nombre y apellidos',
+    }))
+    nif_candidato = forms.CharField(required=False, label="NIF", widget=forms.TextInput({
+        'class': 'form-control form-control-sm',
+        'placeholder': 'NIF o CIF'
+    }))
+    telefono = forms.CharField(required=False, label="Teléfono", widget=forms.TextInput({
+        'class': 'form-control form-control-sm',
+        'placeholder': 'Número'
+    }))
+    mt = forms.BooleanField(required=False, label="Modificación de titular realizada", widget=forms.CheckboxInput({
+        'class': 'form-check-input pt-3',
+        'onchange': "document.getElementById('mtform').disabled = !this.checked;"
+    }))
+    expediente = forms.CharField(required=False, label="Titular candidato", widget=forms.TextInput({
+        'class': 'form-control form-control-sm',
+        'placeholder': 'Expediente gtt'
+    }))
+    liq = forms.BooleanField(required=False, label="Liquidación realizada", widget=forms.CheckboxInput({
+        'class': 'form-check-input pt-3',
+    }))
+    importe_liq = forms.DecimalField(required=False, label='Importe liquidado', widget=forms.NumberInput({
+        'class': 'form-control form-control-sm',
+        'placeholder': '0,00'
+    }))
+    class Meta:
+        model = Desconocido
+        fields = [
+            'titular_candidato',
+            'nif_candidato',
+            'telefono',
+            'mt',
+            'expediente',
+            'liq',
+            'importe_liq'
+        ]
+

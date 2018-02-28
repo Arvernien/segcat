@@ -58,6 +58,8 @@ class Desconocido(models.Model):
     expediente = models.CharField(max_length=14, blank=True, null=True)
     mt = models.BooleanField(blank=True, default=False)
     liq = models.BooleanField(blank=True, default=False)
+    importe_liq = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    telefono = models.CharField(max_length=20, blank=True, null=True)
 
 
     def creaActuacion(self, user, descr, fecha, agendar):

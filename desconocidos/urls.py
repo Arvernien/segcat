@@ -7,5 +7,7 @@ urlpatterns = [
     path('', views.Desconocidos, name='desconocidos'),
     path('<int:pk>', views.detalle, name='detalle'),
     path('addnota', views.addnota, name='addnota'),
-    path('checknota', views.checknota, name='checknota')
+    path('addnotatest', views.addnotatest, name='addnotatest'),
+    path('checknota', views.checknota, name='checknota'),
+    path('datosform', views.grabadatos, name='datosform')
 ]
