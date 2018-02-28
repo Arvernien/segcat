@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from decimal import Decimal
 import xml.etree.ElementTree as ET
 import urllib.request
-from datetime import datetime
+import datetime
 from django.urls import reverse
 
 
@@ -71,7 +71,7 @@ class Desconocido(models.Model):
 
     @property
     def getIbi(self):
-        ibi = str(round(Decimal((self.b_liquidable/100)) * self.fk_muni.tipo_impositivo / 100, 2)) + ' €'
+        ibi = round(Decimal((self.b_liquidable/100)) * self.fk_muni.tipo_impositivo / 100, 2)
         return ibi
 
     @property
@@ -162,7 +162,7 @@ class Desconocido(models.Model):
 class actuaciones(models.Model):
     desconocido = models.ForeignKey(Desconocido, on_delete=models.CASCADE, default='')
     usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING, default='')
-    fecha = models.DateTimeField(default=datetime.now())
+    fecha = models.DateTimeField(default=datetime.datetime.today)
     descripcion = models.CharField(max_length=400)
     agendar = models.DateField(null=True)
     revisado = models.BooleanField(default=False)

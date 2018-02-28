@@ -9,5 +9,6 @@ urlpatterns = [
     path('addnota', views.addnota, name='addnota'),
     path('addnotatest', views.addnotatest, name='addnotatest'),
     path('checknota', views.checknota, name='checknota'),
+    path('orgdatos', views.orgdatos, name='orgdatos'),
     path('datosform', views.grabadatos, name='datosform')
 ]

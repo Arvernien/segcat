@@ -2,91 +2,84 @@
 {% load static %}
 {% load custom_tags %}
 {% block contenido %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" type="text/javascript"></script>"
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" type="text/javascript"></script>
 <div class="row justify-content-center">
-
+    {% for organismo in organismos %}
     <div class="card ml-3 mb-2" style="width: 18rem;">
-        <canvas class="card-img-top" id="myChart" width="400" height="400"></canvas>
+            <img id="img{{organismo.pk}}" class="card-img-top" src="{% static 'img/loading.svg' %}">
+        <canvas class="card-img-top" id="Graf{{organismo.pk}}" width="400" height="400">
+
+        </canvas>
+        <form method="post">{% csrf_token %}</form>
         <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <h6 class="card-title">{{organismo.nombre}}</h6>
+            <ul class="card-text">
+                <li>Mod. Titular: <span id="mt{{organismo.pk}}">--</span></li>
+                <li>Liquidaciones: <span id="liq{{organismo.pk}}">--</span></li>
+                <li>Importe liquidado: <span id="i_liq{{organismo.pk}}">--</span></li>
+                <li>IBI Desconocido: <span id="i_desc{{organismo.pk}}">--</span></li>
+            </ul>
+            <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
         </div>
     </div>
+    <script>
+        $('#Graf{{organismo.pk}}').hide();
+        $.ajax({
+            type: "POST",
+            url: "orgdatos",
+            data: {
+                pk: {{ organismo.pk }},
+        csrfmiddlewaretoken: '{{ csrf_token }}'},
 
-    <div class="card ml-3 mb-2" style="width: 18rem;">
-        <canvas class="card-img-top" id="myChart" width="400" height="400"></canvas>
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
+        success: function(json) {
+                $('#mt{{organismo.pk}}').html(json["mt"]);
+                $('#liq{{organismo.pk}}').html(json["liq"]);
+                $('#i_liq{{organismo.pk}}').html(json["importe_liq"]+' €');
+                $('#i_desc{{organismo.pk}}').html(json["pendiente"]+' €');
+            var ctx{{organismo.pk}} = document.getElementById("Graf{{organismo.pk}}").getContext('2d');
+            var myChart = new Chart(ctx{{organismo.pk}}, {
+                type: 'doughnut',
+                    data: {
+                    datasets: [{
+                        data: [json["investigacion"],json["ficticios"],json["candidatos"],json["resueltos"]],
+                        backgroundColor: [
+                            'rgba(255, 0, 0, 0.6)',
+                            'rgba(252, 176, 0, 0.6)',
+                            'rgba(255, 225, 0, 0.6)',
+                            'rgba(143, 212, 0, 0.6)'
+                        ],
+                        borderColor:[
+                            'rgba(255, 0, 0, 1)',
+                            'rgba(252, 176, 0, 1)',
+                            'rgba(255, 225, 0, 1)',
+                            'rgba(143, 212, 0, 1)'
+                        ]
+                    }],
 
-    <div class="card ml-3 mb-2" style="width: 18rem;">
-        <canvas class="card-img-top" id="myChart" width="400" height="400"></canvas>
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
+                        // Etiquetas
+                        labels: [
+                        'En investigación',
+                        'Nif Ficticio',
+                        'Candidatos',
+                        'Resueltos'
+                    ]
 
-    <div class="card ml-3 mb-2" style="width: 18rem;">
-        <canvas class="card-img-top" id="myChart" width="400" height="400"></canvas>
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-
-    <div class="card ml-3 mb-2" style="width: 18rem;">
-        <canvas class="card-img-top" id="myChart" width="400" height="400"></canvas>
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-
-    <div class="card ml-3 mb-2" style="width: 18rem;">
-        <canvas class="card-img-top" id="myChart" width="400" height="400"></canvas>
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-
-    <div class="card ml-3 mb-2" style="width: 18rem;">
-        <canvas class="card-img-top" id="myChart" width="400" height="400"></canvas>
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-
-    <div class="card ml-3 mb-2" style="width: 18rem;">
-        <canvas class="card-img-top" id="myChart" width="400" height="400"></canvas>
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
+                },
+            });
+            console.log(json);
+            console.log(json["resueltos"]);
+            $('#img{{organismo.pk}}').hide();
+            $('#Graf{{organismo.pk}}').show();
+        },
+        error: function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+        }
+        });
 
 
-</div>
 
-<!--<div class="container">-->
-    <!--<canvas id="myChart" width="400" height="400"></canvas>-->
-<!--</div>-->
-<script>
-var ctx = document.getElementById("myChart").getContext('2d');
-var myChart = new Chart(ctx, {
+
+/*var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
         labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
@@ -121,15 +114,25 @@ var myChart = new Chart(ctx, {
             }]
         }
     }
-});
+});*/
 </script>
+    {% endfor %}
+
+
+
+</div>
+
+<!--<div class="container">-->
+    <!--<canvas id="myChart" width="400" height="400"></canvas>-->
+<!--</div>-->
+
 
 
 <link rel="stylesheet" type="text/css" href="{% static 'polls/styles.css' %}" />
 <div class="container-fluid text-right mb-2">
     <form method="get" class="form-inline flex-row-reverse">
         <button type="submit" class="btn btn-primary mb-2 ml-2">Buscar</button>
-        <input type="text" id="idCriterio" name="q" class="form-control mb-2 col-3" placeholder="Búsqueda" value="{{q}}" autofocus>
+        <input type="text" id="idCriterio" name="q" class="form-control mb-2 col-3" placeholder="Búsqueda" value="{{q}}">
     </form>
 </div>
 {% if lista_desc %}
@@ -153,7 +156,7 @@ var myChart = new Chart(ctx, {
         <td>{{ desc.fk_muni.nombre }}</td>
         <td><a href="{{desc.pk}}">{{ desc.refcat }}</a></td>
         <td>{{ desc.tipo }}</td>
-        <td>{{ desc.getIbi }}</td>
+        <td>{{ desc.getIbi }} €</td>
         {% if desc.resuelto == True %}
             <td><img src="{% static 'img/ok.svg' %}" width="25" height="25"></td>
         {% else %}

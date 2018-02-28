@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from .models import Desconocido, actuaciones
-from django.db.models import F, Q
+from polls.models import organismo
+from django.db.models import F, Q, Sum
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.views import generic
@@ -15,6 +16,7 @@ import json
 # Create your views here.
 @login_required
 def Desconocidos(request):
+    organismos = organismo.objects.all()
     q = request.GET.get('q')
     if q:
         texto = request.GET.get('q')
@@ -51,6 +53,7 @@ def Desconocidos(request):
                'inicio': inicio,
                'final': final,
                'total': total,
+               'organismos': organismos,
                'q': q
                }
     return render(request, 'desconocidos/desconocidos.html', context)
@@ -68,7 +71,56 @@ def addnota(request):
     desconocido.creaActuacion(user, form.get('descripcion'), datetime.now(), agenda)
     return HttpResponseRedirect(form.get('pk'))
 
+def orgdatos(request):
+    form = request.POST
+    org = organismo.objects.get(pk=form.get('pk'))
+    noresueltos = Desconocido.objects.filter(
+        fk_muni__org=org,
+        resuelto=False)
+    investigacion = Desconocido.objects.filter(
+        fk_muni__org=org,
+        resuelto=False,
+        tipo__descripcion__icontains='INVESTIG'
+    ).exclude(titular_candidato__isnull=False).count()
+    ficticios = Desconocido.objects.filter(
+        fk_muni__org=org,
+        resuelto=False,
+        tipo__descripcion__icontains='FICTICIO'
+    ).exclude(titular_candidato__isnull=False).count()
+    resueltos = Desconocido.objects.filter(
+        fk_muni__org=org,
+        resuelto=True
+    ).count()
+    candidatos = Desconocido.objects.filter(
+        fk_muni__org=org,
+        resuelto=False,
+    ).exclude(titular_candidato__isnull=True).count()
+    mt = Desconocido.objects.filter(
+        fk_muni__org=org,
+        mt=True).count()
+    liq = Desconocido.objects.filter(
+        fk_muni__org=org,
+        liq=True)
+    sumaibi = 0
+    sum_liq = liq.aggregate(Sum('importe_liq'))['importe_liq__sum']
+    if sum_liq is None:
+        sum_liq = 0
+    for desco in noresueltos:
+        sumaibi += desco.getIbi
 
+
+
+    respuesta = {}
+    respuesta['investigacion'] = investigacion
+    respuesta['ficticios'] = ficticios
+    respuesta['resueltos'] = resueltos
+    respuesta['candidatos'] = candidatos
+    respuesta['mt'] = mt
+    respuesta['liq'] = liq.count()
+    respuesta['importe_liq'] = sum_liq
+    respuesta['pendiente'] = sumaibi
+
+    return JsonResponse(respuesta)
 
 def addnotatest(request):
     form = request.POST
