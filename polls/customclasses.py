@@ -16,10 +16,11 @@ class Agenda(LocaleHTMLCalendar):
         Return a day as a table cell.
         """
         events_from_day = events.filter(agendar__day=day)
-        events_html = '<ul>'
+        #events_html = '<ul class="texto-peq">'
+        events_html = ''
         for event in events_from_day:
-            events_html += '<li><a href="' + event.get_absolute_url + '">Desconocido</li>'
-        events_html += "</ul>"
+            events_html += '<li class=""><a class="texto-peq" href="' + event.get_absolute_url + '">' + event.desconocido.refcat + '</li>'
+        #events_html += "</ul>"
 
         if day == 0:
             return '<td width="150" height="120" class="noday">&nbsp;</td>'  # day outside month

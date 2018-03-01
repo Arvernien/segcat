@@ -9,6 +9,7 @@ class organismo(models.Model):
     cod = models.IntegerField(validators=[MaxValueValidator(99),])
     nombre = models.CharField(max_length=100)
     grupo = models.ForeignKey(Group, on_delete=models.DO_NOTHING, default='')
+    antieconomico = models.DecimalField(max_digits=4, decimal_places=2)
 
     def __str__(self):
         return self.nombre

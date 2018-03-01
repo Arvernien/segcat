@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Desconocido, actuaciones, tipoDesc, usos
+from .models import Desconocido, actuaciones, tipoDesc, usos, tipo_finca
 from django.db.models import F
 from decimal import Decimal
 
@@ -41,3 +41,4 @@ admin.site.register(Desconocido, DesconocidoAdmin)
 admin.site.register(actuaciones)
 admin.site.register(tipoDesc)
 admin.site.register(usos, UsosAdmin)
+admin.site.register(tipo_finca)

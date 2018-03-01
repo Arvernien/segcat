@@ -10,6 +10,15 @@ from django.urls import reverse
 
 # Create your models here.
 
+class tipo_finca(models.Model):
+    descripcion = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.descripcion
+
+    class Meta:
+        verbose_name_plural = "Tipos de finca"
+
 class usos(models.Model):
     clave = models.CharField(max_length=25, primary_key=True)
     descripcion = models.CharField(max_length=25)
@@ -60,6 +69,8 @@ class Desconocido(models.Model):
     liq = models.BooleanField(blank=True, default=False)
     importe_liq = models.DecimalField(max_digits=8, decimal_places=2, default=0)
     telefono = models.CharField(max_length=20, blank=True, null=True)
+    cuota = models.DecimalField(max_digits=15, decimal_places=2)
+    tipo_finca = models.ForeignKey(tipo_finca, on_delete=models.DO_NOTHING, null=True, blank=True)
 
 
     def creaActuacion(self, user, descr, fecha, agendar):
@@ -104,22 +115,22 @@ class Desconocido(models.Model):
 
     @property
     def getVcat(self):
-        vcat = str(round(Decimal(self.v_cat/100),2)) + ' €'
+        vcat = round(Decimal(self.v_cat/100),2)
         return vcat
 
     @property
     def getVsuelo(self):
-        vsuelo = str(round(Decimal(self.v_suelo / 100), 2)) + ' €'
+        vsuelo = round(Decimal(self.v_suelo / 100), 2)
         return vsuelo
 
     @property
     def getVcons(self):
-        vcons = str(round(Decimal(self.v_constru / 100), 2)) + ' €'
+        vcons = round(Decimal(self.v_constru / 100), 2)
         return vcons
 
     @property
     def getBliq(self):
-        bliq = str(round(Decimal(self.b_liquidable / 100), 2)) + ' €'
+        bliq = round(Decimal(self.b_liquidable / 100), 2)
         return bliq
 
     @property

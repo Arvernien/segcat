@@ -20,14 +20,22 @@ def Desconocidos(request):
     q = request.GET.get('q')
     if q:
         texto = request.GET.get('q')
+        # desc = Desconocido.objects.filter(Q(refcat__icontains=q) |
+        #                                   Q(fk_muni__nombre__icontains=q) |
+        #                                   Q(fk_muni__org__nombre__icontains=q)
+        #                                   ).order_by(((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
         desc = Desconocido.objects.filter(Q(refcat__icontains=q) |
                                           Q(fk_muni__nombre__icontains=q) |
                                           Q(fk_muni__org__nombre__icontains=q)
-                                          ).order_by(((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
+                                          ).order_by(
+            ((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
+        desc = desc.filter(cuota__gte=F('fk_muni__org__antieconomico'))
     else:
         q = ''
         desc = Desconocido.objects.all().order_by(
             ((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
+        desc = desc.filter(cuota__gte=F('fk_muni__org__antieconomico'))
+
     limite_pagina = 50
     paginador = Paginator(desc, limite_pagina)
     pag = request.GET.get('pag')
@@ -76,37 +84,46 @@ def orgdatos(request):
     org = organismo.objects.get(pk=form.get('pk'))
     noresueltos = Desconocido.objects.filter(
         fk_muni__org=org,
-        resuelto=False)
+        resuelto=False,
+        cuota__gte=F('fk_muni__org__antieconomico')
+    )
     investigacion = Desconocido.objects.filter(
         fk_muni__org=org,
         resuelto=False,
-        tipo__descripcion__icontains='INVESTIG'
+        tipo__descripcion__icontains='INVESTIG',
+        cuota__gte=F('fk_muni__org__antieconomico')
     ).exclude(titular_candidato__isnull=False).count()
     ficticios = Desconocido.objects.filter(
         fk_muni__org=org,
         resuelto=False,
-        tipo__descripcion__icontains='FICTICIO'
+        tipo__descripcion__icontains='FICTICIO',
+        cuota__gte=F('fk_muni__org__antieconomico')
     ).exclude(titular_candidato__isnull=False).count()
     resueltos = Desconocido.objects.filter(
         fk_muni__org=org,
-        resuelto=True
+        resuelto=True,
+        cuota__gte=F('fk_muni__org__antieconomico')
     ).count()
     candidatos = Desconocido.objects.filter(
         fk_muni__org=org,
         resuelto=False,
+        cuota__gte=F('fk_muni__org__antieconomico')
     ).exclude(titular_candidato__isnull=True).count()
     mt = Desconocido.objects.filter(
         fk_muni__org=org,
-        mt=True).count()
+        mt=True,
+        cuota__gte=F('fk_muni__org__antieconomico')
+    ).count()
     liq = Desconocido.objects.filter(
         fk_muni__org=org,
-        liq=True)
-    sumaibi = 0
+        liq=True,
+        cuota__gte=F('fk_muni__org__antieconomico'))
     sum_liq = liq.aggregate(Sum('importe_liq'))['importe_liq__sum']
+    sumaibi = noresueltos.aggregate(Sum('cuota'))['cuota__sum']
     if sum_liq is None:
         sum_liq = 0
-    for desco in noresueltos:
-        sumaibi += desco.getIbi
+    if sumaibi is None:
+        sumaibi = 0
 
 
 

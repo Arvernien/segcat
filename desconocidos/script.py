@@ -1,5 +1,6 @@
 from polls.models import municipio, organismo
-from .models import Desconocido, usos, tipoDesc
+from .models import Desconocido, usos, tipoDesc, tipo_finca
+from decimal import Decimal
 import csv
 
 def carga_usos():
@@ -106,4 +107,29 @@ def cargaDesc():
         print('----- LOS SIGUIENTES DESCONOCIDOS NO HAN CARGADO -----')
         for deleg, cod_muni, nombre, finca, error in muni_fallidos:
             print(deleg, cod_muni, nombre, finca, error)
+
+def actCuota():
+    lista = Desconocido.objects.all()
+    for desconocido in lista:
+        desconocido.cuota = round(Decimal((desconocido.b_liquidable / 100)) * desconocido.fk_muni.tipo_impositivo / 100, 2)
+        desconocido.save()
+
+def actNaturaleza():
+    lista = Desconocido.objects.all()
+    for desconocido in lista:
+        # codmuni = str((desconocido.fk_muni.org.cod * 1000) + (desconocido.fk_muni.cod))
+        # if len(codmuni) < 5:
+        #     codmuni = '0' + codmuni
+        #
+        refcat = desconocido.refcat[:14]
+        dgfparcela = refcat[:7]
+        dgfhoja = refcat[-7:]
+        try:
+            a = int(dgfhoja)
+            clase = 'RÚSTICA'
+        except:
+            clase = 'URBANA'
+        desconocido.tipo_finca = tipo_finca.objects.get(descripcion=clase)
+        desconocido.save()
+        print(desconocido.refcat + '-->' + clase)
 
