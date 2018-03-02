@@ -17,21 +17,30 @@ import json
 @login_required
 def Desconocidos(request):
     organismos = organismo.objects.all()
-    q = request.GET.get('q')
-    if q:
-        texto = request.GET.get('q')
-        # desc = Desconocido.objects.filter(Q(refcat__icontains=q) |
-        #                                   Q(fk_muni__nombre__icontains=q) |
-        #                                   Q(fk_muni__org__nombre__icontains=q)
-        #                                   ).order_by(((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
-        desc = Desconocido.objects.filter(Q(refcat__icontains=q) |
-                                          Q(fk_muni__nombre__icontains=q) |
-                                          Q(fk_muni__org__nombre__icontains=q)
-                                          ).order_by(
-            ((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
-        desc = desc.filter(cuota__gte=F('fk_muni__org__antieconomico'))
+    modo = request.GET.get('modo')
+    q = request.GET.get('q') or ''
+    if modo:
+        if modo == 's':
+
+            desc = Desconocido.objects.filter(Q(refcat__icontains=q) |
+                                              Q(fk_muni__nombre__icontains=q) |
+                                              Q(fk_muni__org__nombre__icontains=q)
+                                              ).order_by(
+                ((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
+            desc = desc.filter(cuota__gte=F('fk_muni__org__antieconomico'))
+        elif modo == 'a':
+            if request.GET.get('inputOrganismo') == '':
+                inputOrganismo = ''
+            else:
+                inputOrganismo = organismo.objects.filter(pk=request.GET.get('inputOrganismo')).first()
+            inputMunicipio = request.GET.get('inputMunicipio') or ''
+
+
+            desc = Desconocido.objects.filter(fk_muni__org=inputOrganismo,
+                                              fk_muni__nombre__icontains=inputMunicipio,
+                                              ).order_by(
+                ((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
     else:
-        q = ''
         desc = Desconocido.objects.all().order_by(
             ((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
         desc = desc.filter(cuota__gte=F('fk_muni__org__antieconomico'))
@@ -190,6 +199,10 @@ def detalle(request, pk):
             a.mt = False
         else:
             a.mt = True
+        if datos.get('resuelto') is None:
+            a.resuelto = False
+        else:
+            a.resuelto = True
         if datos.get('liq') is None:
             a.liq = False
             a.importe_liq = 0
@@ -203,6 +216,7 @@ def detalle(request, pk):
         a.nif_candidato = datos.get('nif_candidato')
         a.telefono = datos.get('telefono')
         a.expediente = datos.get('expediente')
+
         a.save()
 
     act = actuaciones.objects.filter(desconocido=a).order_by('pk')

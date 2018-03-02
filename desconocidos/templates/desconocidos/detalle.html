@@ -169,7 +169,7 @@
                                     <label class="text-primary" for="{{form.telefono.id_for_label}}">Teléfono</label>
                                 </div>
                             </div>
-                            <div class="row mt-0">
+                            <div class="row mt-0 mb-3">
                                 <div class="col-8">
                                     {{form.titular_candidato}}
                                 </div>
@@ -180,40 +180,43 @@
                                     {{form.telefono}}
                                 </div>
                             </div>
-                            <div class="row mt-2">
-                                <div class="col-5">
-                                    <div class="form-check">
+
+                            <div class="row mt-3">
+                                <div class="col-3">
+                                    <div class="checkbox align-items-center">
                                         {{form.mt}}
-                                        <label class="form-check-label text-primary" for="{{form.mt.id_for_label}}">Modificación de titular realizada</label>
+                                        <span class="text-primary ml-2">Modificación de titular</span>
                                     </div>
                                 </div>
-                            </div>
-                            <fieldset id="mtform">
-                                <div class="form-group">
-                                    <div class="row mt-2">
-                                        <div class="col-2">
-                                            <label class="text-primary" for="{{form.expediente.id_for_label}}">Expediente</label>
-                                        </div>
-                                        <div class="col-8"></div>
-                                        <div class="col-2 text-right">
-                                            {{form.liq}}
-                                            <label class="form-check-label text-primary" for="{{form.liq.id_for_label}}">Liquidación realizada</label>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-2">
-                                        <div class="col-3">
+                                <div class="col-3">
                                             {{form.expediente}}
                                         </div>
-                                        <div class="col-7"></div>
-                                        <div class="col-2">
-                                            {{form.importe_liq}}
-                                        </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-3">
+                                    <div class="checkbox align-items-center">
+                                        {{form.liq}}
+                                        <span class="text-primary ml-2">Liquidación realizada</span>
+                                        <!--<label class="form-check-label text-primary" for="{{form.mt.id_for_label}}">Modificación de titular realizada</label>-->
                                     </div>
                                 </div>
-                            </fieldset>
+                                <div class="col-3">
+                                    {{form.importe_liq}}
+                                </div>
+                            </div>
+                            <div class="row justify-content-center mt-1 mb-1">
+                                <div class="col-3 text-primary text-center">
+                                    Estado de la investigación
+                                </div>
+                            </div>
+                            <div class="row justify-content-center mb-4">
+                                <div class="col-3 text-center">
+                                    {{form.resuelto}}
+                                </div>
+                            </div>
                             <div class="row justify-content-center mb-2">
-                                <div class="col-1">
-                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                <div class="col-3 text-center">
+                                    <button type="submit" class="btn btn-primary"><i class="far fa-save"></i> Guardar</button>
                                 </div>
                             </div>
                         </form>
@@ -276,9 +279,18 @@
         </div>
     </div>
 </div>
-
-
 <script>
+
+
+
+  $(function() {
+    $('.toggle-btn').bootstrapToggle({
+        size: 'small',
+    });
+    disablegestion();
+    disableliq();
+  })
+
     $('.datepicker').datepicker({
         format: "dd/mm/yyyy",
         weekStart: 1,
@@ -321,6 +333,33 @@
             }
         });
     };
+    function disablegestion() {
+        console.clear();
+        console.log($('#{{form.mt.id_for_label}}').prop('checked'))
+        estado = $('#{{form.mt.id_for_label}}').prop('checked')
+        if(estado) {
+        $('#{{form.liq.id_for_label}}').bootstrapToggle('enable');
+        $('#{{form.expediente.id_for_label}}').prop('disabled', !estado);
+        console.log('Activo toggle Liquidaciones')
+        } else {
+        $('#{{form.expediente.id_for_label}}').val('');
+        $('#{{form.importe_liq.id_for_label}}').val('');
+        $('#{{form.liq.id_for_label}}').bootstrapToggle('off');
+        $('#{{form.liq.id_for_label}}').bootstrapToggle('disable');
+        $('#{{form.importe_liq.id_for_label}}').prop('disabled', !estado);
+        $('#{{form.expediente.id_for_label}}').prop('disabled', !estado);
+
+        }
+    }
+    function disableliq() {
+        estado = $('#{{form.liq.id_for_label}}').prop('checked')
+        if(estado) {
+            $('#{{form.importe_liq.id_for_label}}').prop('disabled', !estado);
+        } else {
+            $('#{{form.importe_liq.id_for_label}}').val('');
+            $('#{{form.importe_liq.id_for_label}}').prop('disabled', !estado);
+        }
+    }
 </script>
 
 

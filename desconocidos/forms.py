@@ -18,21 +18,32 @@ class DesconocidoForm(forms.ModelForm):
         'placeholder': 'Número'
     }))
     mt = forms.BooleanField(required=False, label="Modificación de titular realizada", widget=forms.CheckboxInput({
-        'class': 'form-check-input pt-3',
-        'onchange': "document.getElementById('mtform').disabled = !this.checked;",
-        'value': "true"
+        'class': 'toggle-btn',
+        'onchange': "disablegestion();",
+        'data-on': 'Sí',
+        'data-off': 'No',
     }))
     expediente = forms.CharField(required=False, label="Titular candidato", widget=forms.TextInput({
         'class': 'form-control form-control-sm',
         'placeholder': 'Expediente gtt'
     }))
     liq = forms.BooleanField(required=False, label="Liquidación realizada", widget=forms.CheckboxInput({
-        'class': 'form-check-input pt-3',
-        'onchange': "document.getElementById('id_importe_liq').disabled = !this.checked;",
+        'class': 'toggle-btn',
+        'onchange': "disableliq();",
+        'data-on': 'Sí',
+        'data-off': 'No',
     }))
     importe_liq = forms.DecimalField(required=False, label='Importe liquidado', widget=forms.NumberInput({
         'class': 'form-control form-control-sm',
         'placeholder': '0,00'
+    }))
+    resuelto = forms.BooleanField(required=False, label="Liquidación realizada", widget=forms.CheckboxInput({
+        'class': 'toggle-btn',
+        'data-on': 'Finalizada',
+        'data-off': 'En progreso',
+        'data-onStyle': 'success',
+        'data-offStyle': 'warning',
+        'data-width': '100'
     }))
 
     class Meta:
@@ -79,7 +90,7 @@ class DesconocidoDatosForm(forms.ModelForm):
         'placeholder': 'Expediente gtt'
     }))
     liq = forms.BooleanField(required=False, label="Liquidación realizada", widget=forms.CheckboxInput({
-        'class': 'form-check-input pt-3',
+        'class': 'form-check-input pt-3'
     }))
     importe_liq = forms.DecimalField(required=False, label='Importe liquidado', widget=forms.NumberInput({
         'class': 'form-control form-control-sm',
