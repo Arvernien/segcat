@@ -98,17 +98,30 @@
         <div id="collapse-investigacion" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs">
-                    <li class="nav-item" id="butNotas">
-                        <a class="nav-link active text-secondary" href="#tabnotas" data-toggle="tab" target="navegador"><i class="fas fa-sticky-note"></i> Notas</a>
-                    </li>
                     <li class="nav-item">
-                        <a class="nav-link text-secondary" href="#tabdatos" data-toggle="tab" target="navegador"><i class="fas fa-key"></i> Datos</a>
+                        <a class="nav-link active text-secondary" href="#tabdatos" data-toggle="tab" target="navegador"><i class="fas fa-key"></i> Datos</a>
+                    </li>
+                    <li class="nav-item" id="butActuaciones">
+                        <a class="nav-link text-secondary" href="#tabactuaciones" data-toggle="tab" target="navegador"><i class="fas fa-inbox"></i> Actuaciones</a>
+                    </li>
+                    <li class="nav-item" id="butNotas">
+                        <a class="nav-link text-secondary" href="#tabnotas" data-toggle="tab" target="navegador"><i class="fas fa-sticky-note"></i> Notas</a>
                     </li>
                 </ul>
             </div>
             <div class="tab-content" id="micontenido">
+                <!--------------------------- ACTUACIONES ------------------------------------------>
+                <div class="tab-pane fade" id="tabactuaciones" role="tabpanel" aria-labelledby="tabactuaciones">
+                    <div class="container-fluid pt-1 pb-1 card-header">
+                        <button type="button" class="btn btn-sm btn-light btn-verde" data-toggle="modal" data-target="#addNota"><i class="far fa-plus-square fa-lg"></i></button>
+                    </div>
+                        <div class="scroll-box" id="muestraactuaciones">
+                        {% include 'desconocidos/actuaciones.html' %}
+                    </div>
+                    </div>
+
                 <!--------------------------- PANEL DE NOTAS ------------------------------------------>
-                <div class="tab-pane fade show active" id="tabnotas" role="tabpanel" aria-labelledby="tabnotas">
+                <div class="tab-pane fade" id="tabnotas" role="tabpanel" aria-labelledby="tabnotas">
                     <div class="container-fluid pt-1 pb-1 card-header">
                         <button type="button" class="btn btn-sm btn-light btn-verde" data-toggle="modal" data-target="#addNota"><i class="far fa-plus-square fa-lg"></i></button>
                         <!------------------------------ MODAL ------------------------------------------->
@@ -153,7 +166,7 @@
                     </div>
                 </div>
                 <!-------------------------- PANEL DE DATOS ----------------------------->
-                <div class="tab-pane fade" id="tabdatos" role="tabpanel" aria-labelledby="tabdatos">
+                <div class="tab-pane fade show active" id="tabdatos" role="tabpanel" aria-labelledby="tabdatos">
                     <div class="container-fluid pt-1 pb-1 card-header">
                         <form method="post">
                             {% csrf_token %}
@@ -216,7 +229,7 @@
                             </div>
                             <div class="row justify-content-center mb-2">
                                 <div class="col-3 text-center">
-                                    <button type="submit" class="btn btn-primary"><i class="far fa-save"></i> Guardar</button>
+                                    <button type="submit" class="btn btn-primary btn-sm"><i class="far fa-save"></i> Guardar</button>
                                 </div>
                             </div>
                         </form>

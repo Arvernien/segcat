@@ -194,6 +194,7 @@ class actuaciones(models.Model):
 
 class tipotramite(models.Model):
     descripcion = models.CharField(max_length=20, default='')
+    icono = models.CharField(max_length=100, default='')
 
     def __str__(self):
         return self.descripcion
@@ -208,6 +209,9 @@ class tramites(models.Model):
     fecha = models.DateTimeField(default=datetime.datetime.today)
     tipo = models.ForeignKey(tipotramite, on_delete=models.DO_NOTHING, default='')
     ampliacion = models.TextField(default='')
+    agendar = models.DateField(null=True)
+    revisado = models.BooleanField(default=False)
+
 
     class Meta:
         verbose_name_plural = 'Trámites'
