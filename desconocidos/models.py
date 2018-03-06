@@ -67,7 +67,7 @@ class Desconocido(models.Model):
     expediente = models.CharField(max_length=14, blank=True, null=True)
     mt = models.BooleanField(blank=True, default=False)
     liq = models.BooleanField(blank=True, default=False)
-    importe_liq = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    importe_liq = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True, default=0)
     telefono = models.CharField(max_length=20, blank=True, null=True)
     cuota = models.DecimalField(max_digits=15, decimal_places=2)
     tipo_finca = models.ForeignKey(tipo_finca, on_delete=models.DO_NOTHING, null=True, blank=True)
@@ -191,3 +191,23 @@ class actuaciones(models.Model):
     @property
     def get_link_name(self):
         return self.desconocido.refcat
+
+class tipotramite(models.Model):
+    descripcion = models.CharField(max_length=20, default='')
+
+    def __str__(self):
+        return self.descripcion
+
+    class Meta:
+        verbose_name_plural = 'Tipos de trámite'
+
+
+class tramites(models.Model):
+    desconocido = models.ForeignKey(Desconocido, on_delete=models.CASCADE, default='')
+    usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING, default='')
+    fecha = models.DateTimeField(default=datetime.datetime.today)
+    tipo = models.ForeignKey(tipotramite, on_delete=models.DO_NOTHING, default='')
+    ampliacion = models.TextField(default='')
+
+    class Meta:
+        verbose_name_plural = 'Trámites'

@@ -40,7 +40,6 @@ def carga_ti():
             codigo = int(row[1][-3:])
             nombre = row[2]
             ti = float(row[3].replace(',', '.'))
-
             delegacion = organismo.objects.get(cod=org)
             try:
                 q = municipio(cod=codigo, nombre=nombre, tipo_impositivo=ti, org=delegacion)
@@ -111,7 +110,13 @@ def cargaDesc():
 def actCuota():
     lista = Desconocido.objects.all()
     for desconocido in lista:
-        desconocido.cuota = round(Decimal((desconocido.b_liquidable / 100)) * desconocido.fk_muni.tipo_impositivo / 100, 2)
+        if desconocido.tipo_finca.descripcion == 'URBANA':
+            desconocido.cuota = round(Decimal((desconocido.b_liquidable / 100)) * desconocido.fk_muni.tipo_impositivo / 100, 2)
+            print(desconocido.refcat, 'URBANA')
+        else:
+            desconocido.cuota = round(
+                Decimal((desconocido.b_liquidable / 100)) * desconocido.fk_muni.tipo_impositivo_ru / 100, 2)
+            print(desconocido.refcat, 'RÚSTICA')
         desconocido.save()
 
 def actNaturaleza():
@@ -132,4 +137,41 @@ def actNaturaleza():
         desconocido.tipo_finca = tipo_finca.objects.get(descripcion=clase)
         desconocido.save()
         print(desconocido.refcat + '-->' + clase)
+
+def ti_ru():
+    with open('desconocidos/TI.txt', newline='') as fichero:
+        lector = csv.reader(fichero, delimiter=';')
+        for row in lector:
+            org = int(row[1])//1000
+            codigo = int(row[1][-3:])
+            nombre = row[2]
+            ti = float(row[3].replace(',', '.'))
+            delegacion = organismo.objects.get(cod=org)
+            try:
+                q = municipio.objects.filter(cod=codigo, org=delegacion).first()
+                q.tipo_impositivo_ru = ti
+                q.save()
+            except:
+                q = municipio(cod=codigo, nombre=nombre, tipo_impositivo_ru=ti, org=delegacion)
+                q.save()
+            print(q)
+
+def ti_ur():
+    with open('desconocidos/TI.txt', newline='') as fichero:
+        lector = csv.reader(fichero, delimiter=';')
+        for row in lector:
+            org = int(row[1])//1000
+            codigo = int(row[1][-3:])
+            nombre = row[2]
+            ti = float(row[3].replace(',', '.'))
+            delegacion = organismo.objects.get(cod=org)
+            try:
+                q = municipio.objects.filter(cod=codigo, org=delegacion).first()
+                q.tipo_impositivo = ti
+                q.save()
+            except:
+                q = municipio(cod=codigo, nombre=nombre, tipo_impositivo=ti, org=delegacion)
+                q.save()
+            print(q)
+
 

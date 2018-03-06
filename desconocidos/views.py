@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.template.loader import render_to_string
-from .models import Desconocido, actuaciones
+from .models import Desconocido, actuaciones, tramites
 from polls.models import organismo
 from django.db.models import F, Q, Sum
 from django.contrib.auth.decorators import login_required
@@ -17,9 +17,12 @@ import json
 @login_required
 def Desconocidos(request):
     organismos = organismo.objects.all()
+    # ------------------- Identifica el tipo de búsqueda s=simple, a=avanzada ------------------------
     modo = request.GET.get('modo')
     q = request.GET.get('q') or ''
     if modo:
+        # ---------------------- Búsqueda simple, utiliza el criterio en "q" para buscar en la referencia catastral
+        # ---------------------- nombre de municipio y nombre de organismo.
         if modo == 's':
 
             desc = Desconocido.objects.filter(Q(refcat__icontains=q) |
@@ -28,21 +31,34 @@ def Desconocidos(request):
                                               ).order_by(
                 ((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
             desc = desc.filter(cuota__gte=F('fk_muni__org__antieconomico'))
+        # ---------------------- Búsqueda avanzada, usa los parámetros proporcionados en el formulario para buscar
         elif modo == 'a':
-            if request.GET.get('inputOrganismo') == '':
-                inputOrganismo = ''
-            else:
-                inputOrganismo = organismo.objects.filter(pk=request.GET.get('inputOrganismo')).first()
-            inputMunicipio = request.GET.get('inputMunicipio') or ''
-
-
-            desc = Desconocido.objects.filter(fk_muni__org=inputOrganismo,
-                                              fk_muni__nombre__icontains=inputMunicipio,
-                                              ).order_by(
-                ((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
+            desc = Desconocido.objects.all().order_by('-cuota')
+            if request.GET.get('inputOrganismo') != '':
+                desc = desc.filter(fk_muni__org__pk=request.GET.get('inputOrganismo'))
+            if request.GET.get('inputMunicipio') != '':
+                desc = desc.filter(fk_muni__nombre__icontains=request.GET.get('inputMunicipio'))
+            if request.GET.get('inputSP') != '':
+                desc = desc.filter(sujeto_pasivo__icontains=request.GET.get('inputSP'))
+            if request.GET.get('inputCandidato') != '':
+                desc = desc.filter(titular_candidato__icontains=request.GET.get('inputCandidato'))
+            if request.GET.get('inputTipoFinca') != '':
+                desc = desc.filter(tipo_finca__descripcion__icontains=request.GET.get('inputTipoFinca'))
+            if request.GET.get('inputTipo') != '':
+                desc = desc.filter(tipo__descripcion__icontains=request.GET.get('inputTipo'))
+            if request.GET.get('inputIbiMin') != '':
+                desc = desc.filter(cuota__gte=request.GET.get('inputIbiMin'))
+            if request.GET.get('inputIbiMax') != '':
+                desc = desc.filter(cuota__lte=request.GET.get('inputIbiMax'))
+            if request.GET.get('inputMt') != '':
+                desc = desc.filter(mt=request.GET.get('inputMt'))
+            if request.GET.get('inputLiq') != '':
+                desc = desc.filter(liq=request.GET.get('inputLiq'))
+            desc.filter(cuota__gte=F('fk_muni__org__antieconomico'))
     else:
-        desc = Desconocido.objects.all().order_by(
-            ((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
+        # desc = Desconocido.objects.all().order_by(
+        #     ((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
+        desc = Desconocido.objects.all().order_by('-cuota')
         desc = desc.filter(cuota__gte=F('fk_muni__org__antieconomico'))
 
     limite_pagina = 50
@@ -71,7 +87,7 @@ def Desconocidos(request):
                'final': final,
                'total': total,
                'organismos': organismos,
-               'q': q
+               'q': q,
                }
     return render(request, 'desconocidos/desconocidos.html', context)
 
@@ -205,11 +221,11 @@ def detalle(request, pk):
             a.resuelto = True
         if datos.get('liq') is None:
             a.liq = False
-            a.importe_liq = 0
+            a.importe_liq = None
         else:
             a.liq = True
-            if a.importe_liq is None:
-                a.importe_liq = 0
+            if datos.get('importe_liq') == '':
+                a.importe_liq = None
             else:
                 a.importe_liq = datos.get('importe_liq')
         a.titular_candidato = datos.get('titular_candidato')
@@ -218,7 +234,7 @@ def detalle(request, pk):
         a.expediente = datos.get('expediente')
 
         a.save()
-
+    listatramites = tramites.objects.filter(desconocido=a).order_by('-fecha')
     act = actuaciones.objects.filter(desconocido=a).order_by('pk')
     form = DesconocidoForm(instance=a)
     #datosform = DesconocidoDatosForm(request.POST or None, instance=a)
@@ -229,7 +245,8 @@ def detalle(request, pk):
                'refcat': refcat,
                'acts': act,
                'formactuacion': actform,
-               #'datosform': datosform
+               'listatramites': listatramites,
+
      }
     return render(request, 'desconocidos/detalle.html', context)
 

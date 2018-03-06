@@ -16,8 +16,9 @@ class QuestionAdmin(admin.ModelAdmin):
     search_fields = ['question_text']
 
 class municipioAdmin(admin.ModelAdmin):
-    list_display = ('delegacion', 'codigo', 'nombre', 'tipo_impositivo', 'organismo')
+    list_display = ('delegacion', 'codigo', 'nombre', 'tipo_impositivo', 'tipo_impositivo_ru', 'organismo')
     list_display_links = ('codigo', 'nombre')
+    list_filter = ['org__nombre',]
     search_fields = ('cod', 'nombre')
 
     def organismo(self, obj):

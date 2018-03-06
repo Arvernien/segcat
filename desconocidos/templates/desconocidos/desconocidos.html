@@ -76,7 +76,18 @@
 </script>
     {% endfor %}
 </div>
+<script>
+    function muestrabusquedas() {
+        if($('#busqrapida').is(':disabled')) {
+        $('#busqrapida').prop('disabled', false);
 
+        } else {
+        $('#busqrapida').prop('disabled', true);
+
+        }
+        }
+
+</script>
 
 <link rel="stylesheet" type="text/css" href="{% static 'polls/styles.css' %}" />
 <div class="container-fluid mb-3">
@@ -88,15 +99,17 @@
                 </div>
                 <div class="col">
                     <form method="get" class="">
-                        <div class="form-row no-gutters">
-                            <input type="hidden" name="modo" value="s">
-                            <input type="text" id="idCriterio" name="q" class="form-control col-4 offset-md-7 form-control-sm" placeholder="Búsqueda rápida" value="{{q}}">
-                            <button type="submit" class="btn btn-sm btn-primary ml-2 float-right"><i class="fas fa-search"></i> Buscar</button>
-                        </div>
+                        <fieldset id="busqrapida">
+                            <div class="form-row no-gutters">
+                                <input type="hidden" name="modo" value="s">
+                                <input type="text" id="idCriterio" name="q" class="form-control col-4 offset-md-7 form-control-sm" placeholder="Búsqueda rápida" value="{{q}}">
+                                <button type="submit" class="btn btn-sm btn-primary ml-2 float-right"><i class="fas fa-search"></i> Buscar</button>
+                            </div>
+                        </fieldset>
                     </form>
                 </div>
                 <div class="col-1 text-right">
-                    <a class="mb-0" href="#" data-toggle="collapse" data-target="#panelbusquedas" aria-expanded="true" aria-controls="collapseOne">
+                    <a class="mb-0" href="#" data-toggle="collapse" data-target="#panelbusquedas" aria-expanded="true" aria-controls="collapseOne" onclick="muestrabusquedas()" id="flechabusquedas">
                         <i class="fas fa-chevron-circle-down text-secondary"></i>
                     </a>
                 </div>
@@ -119,54 +132,54 @@
                             </div>
                             <div class="form-group col-3">
                                 <label for="inputMunicipio" class="text-primary">Municipio</label>
-                                <input type="text" class="form-control form-control-sm" id="inputMunicipio" name="inputMunicipio" placeholder="Municipio">
+                                <input type="text" class="form-control form-control-sm" id="inputMunicipio" name="inputMunicipio" placeholder="Municipio" value="{{inputMunicipio}}">
                             </div>
                             <div class="form-group col-3">
                                 <label for="inputSP" class="text-primary">Sujeto Pasivo</label>
-                                <input type="text" class="form-control form-control-sm" id="inputSP" placeholder="Sujeto Pasivo">
+                                <input type="text" class="form-control form-control-sm" id="inputSP" name="inputSP" placeholder="Sujeto Pasivo">
                             </div>
                             <div class="form-group col-3">
                                 <label for="inputCandidato" class="text-primary">Titular candidato</label>
-                                <input type="text" class="form-control form-control-sm" id="inputCandidato" placeholder="Titular candidato">
+                                <input type="text" class="form-control form-control-sm" id="inputCandidato" name="inputCandidato" placeholder="Titular candidato">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-1">
                                 <label for="inputTipoFinca" class="text-primary">Ámbito</label>
-                                <select class="form-control form-control-sm" id="inputTipoFinca">
-                                    <option value="TODAS">Cualquiera</option>
+                                <select class="form-control form-control-sm" id="inputTipoFinca" name="inputTipoFinca">
+                                    <option value="">Cualquiera</option>
                                     <option value="URBANA">Urbana</option>
                                     <option value="RÚSTICA">Rústica</option>
                                 </select>
                             </div>
                             <div class="form-group col-2">
                                 <label for="inputTipo" class="text-primary">Tipo</label>
-                                <select class="form-control form-control-sm" id="inputTipo">
-                                    <option value="TODOS">Cualquiera</option>
-                                    <option value="INVESTIGACION">En investigación</option>
+                                <select class="form-control form-control-sm" id="inputTipo" name="inputTipo">
+                                    <option value="">Cualquiera</option>
+                                    <option value="INVESTIGACIÓN">En investigación</option>
                                     <option value="FICTICIO">Nif Ficticio</option>
                                 </select>
                             </div>
                             <div class="form-group col-2">
                                 <label for="inputIbiMin" class="text-primary">Cuota mínima IBI</label>
-                                <input type="number" step="0.01" class="form-control form-control-sm" id="inputIbiMin" placeholder="Cuota mínima IBI">
+                                <input type="number" step="0.01" class="form-control form-control-sm" id="inputIbiMin" name="inputIbiMin" placeholder="Cuota mínima IBI">
                             </div>
                             <div class="form-group col-2">
                                 <label for="inputIbiMax" class="text-primary">Cuota máxima IBI</label>
-                                <input type="number" step="0.01" class="form-control form-control-sm" id="inputIbiMax" placeholder="Cuota máxima IBI">
+                                <input type="number" step="0.01" class="form-control form-control-sm" id="inputIbiMax" name="inputIbiMax" placeholder="Cuota máxima IBI">
                             </div>
                             <div class="form-group col-1">
                                 <label for="inputMt" class="text-primary">Mod. Titular</label>
-                                <select class="form-control form-control-sm" id="inputMt">
-                                    <option value="0">N/A</option>
+                                <select class="form-control form-control-sm" id="inputMt" name="inputMt">
+                                    <option value="">N/A</option>
                                     <option value="True">Sí</option>
                                     <option value="False">No</option>
                                 </select>
                             </div>
                             <div class="form-group col-1">
                                 <label for="inputLiq" class="text-primary">Liquidación</label>
-                                <select class="form-control form-control-sm" id="inputLiq">
-                                    <option value="0">N/A</option>
+                                <select class="form-control form-control-sm" id="inputLiq" name="inputLiq">
+                                    <option value="">N/A</option>
                                     <option value="True">Sí</option>
                                     <option value="False">No</option>
                                 </select>
@@ -227,18 +240,23 @@
     <nav>
         <ul class="pagination pagination-sm justify-content-center">
                 {% if lista_desc.has_previous %}
-                    <li class="page-item"><a class="page-link" href="?pag=1&q={{request.GET.q}}">Primera</a></li>
-                    <li><a class="page-link" href="?pag={{ lista_desc.previous_page_number }}&q={{request.GET.q}}">Anterior</a></li>
+
+                    <li class="page-item"><a class="page-link" href="?pag=1{% for nombre, valor in request.GET.items %}{% if nombre != 'pag' %}&{{nombre}}={{valor}}{% endif %}{% endfor %}">Primera</a></li>
+                    <li><a class="page-link" href="?pag={{ lista_desc.previous_page_number }}{% for nombre, valor in request.GET.items %}{% if nombre != 'pag' %}&{{nombre}}={{valor}}{% endif %}{% endfor %}">Anterior</a></li>
+
                 {% endif %}
 
                 {% for i in paginas %}
 
-                    <li {% if lista_desc.number == i %} class="page-item active" {% else %} class="page-item"{% endif %}><a class="page-link" href="?pag={{i}}&q={{request.GET.q}}">{{i}}</a></li>
+                    <li {% if lista_desc.number == i %} class="page-item active" {% else %} class="page-item"{% endif %}><a class="page-link" href="?pag={{i}}{% for nombre, valor in request.GET.items %}{% if nombre != 'pag' %}&{{nombre}}={{valor}}{% endif %}{% endfor %}">{{i}}</a></li>
+
                 {% endfor %}
 
                 {% if lista_desc.has_next %}
-                    <li class="page-item"><a class="page-link" href="?pag={{ lista_desc.next_page_number }}&q={{request.GET.q}}">Siguiente</a></li>
-                    <li class="page-item"><a class="page-link" href="?pag={{ lista_desc.paginator.num_pages }}&q={{request.GET.q}}">Última</a></li>
+
+                    <li class="page-item"><a class="page-link" href="?pag={{ lista_desc.next_page_number }}{% for nombre, valor in request.GET.items %}{% if nombre != 'pag' %}&{{nombre}}={{valor}}{% endif %}{% endfor %}">Siguiente</a></li>
+                    <li class="page-item"><a class="page-link" href="?pag={{ lista_desc.paginator.num_pages }}{% for nombre, valor in request.GET.items %}{% if nombre != 'pag' %}&{{nombre}}={{valor}}{% endif %}{% endfor %}">Última</a></li>
+
                 {% endif %}
             </ul>
     </nav>
