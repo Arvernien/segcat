@@ -2,47 +2,40 @@
 <div class="alert mb-2 fd-verde">
     <div class="row align-items-center">
         <div class="col-sm text-secondary">
-            <a class="" data-toggle="tooltip" title="{{a.tipo.descripcion}}"><i class="{{a.tipo.icono}}"></i></a>
+            <a class="" href="#" data-toggle="collapse" data-target="#tramite{{a.pk}}" aria-expanded="true" aria-controls="collapseOne"><i class="fas fa-chevron-circle-down text-secondary"></i></a>
+            <a class="ml-2" data-toggle="tooltip" title="{{a.tipo.descripcion}}"><i class="{{a.tipo.icono}}"></i></a>
+            <span class="texto-peq">{{a.fecha}}</span>
         </div>
         <div class="col-sm text-secondary text-center texto-peq">
             <i class="fas fa-user text-secondary"></i> {{a.usuario.first_name}} {{a.usuario.last_name}}
         </div>
         <div class="col-sm text-secondary text-right texto-peq">
-            <i class="far fa-clock"></i> {{a.fecha}}
+            {{a.agendar|default_if_none:""}}
+            {% if a.agendar %}
+                {% if a.revisado == False %}
+                    {% if a.usuario == request.user %}
+                        <form method="post" id="agendatramite{{a.pk}}" action="checktramite" style="display:inline;">
+                            {% csrf_token %}
+                            <span class="agendatramite" data="{{a.pk}}" desco="{{a.desconocido.pk}}">
+                            <i class="far fa-calendar-alt text-secondary"></i>
+                                </span>
+                            <input type="hidden" name="pk" value="{{a.pk}}">
+                            <input type="hidden" name="descopk" value="{{desconocido.pk}}">
+                            <input type="hidden" name="revisado" value="True">
+                        </form>
+                    {% else %}
+                        <i class="far fa-calendar-alt text-secondary"></i>
+                    {% endif %}
+                {% else %}
+                    <i class="fas fa-check"></i>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
-    <!--<div class="row lineadebajo">-->
-        <!--<div class="col-sm texto-peq text-secondary">-->
-            <!--<i class="{{a.tipo.icono}}"></i> {{a.fecha}}-->
-        <!--</div>-->
-        <!--<div class="col-sm text-center texto-peq text-secondary">-->
-            <!--<i class="fas fa-user text-secondary"></i> {{a.usuario.first_name}} {{a.usuario.last_name}}-->
-        <!--</div>-->
-        <!--<div class="col-sm text-right texto-peq text-secondary">-->
-            <!--{{a.agendar|default_if_none:""}}-->
-            <!--{% if a.agendar %}-->
-            <!--{% if a.revisado == False %}-->
-            <!--{% if a.usuario == request.user %}-->
-            <!--<form method="post" id="tramite{{a.pk}}" action="checktramite" style="display:inline;">-->
-                <!--{% csrf_token %}-->
-                <!--<i class="far fa-calendar-alt text-secondary" onclick="tramite{{a.pk}}.submit()"></i>-->
-                <!--<input type="hidden" name="pk" value="{{a.pk}}">-->
-                <!--<input type="hidden" name="descopk" value="{{desconocido.pk}}">-->
-                <!--<input type="hidden" name="revisado" value="True">-->
-            <!--</form>-->
-            <!--{% else %}-->
-            <!--<i class="far fa-calendar-alt text-secondary"></i>-->
-            <!--{% endif %}-->
-            <!--{% else %}-->
-            <!--<i class="fas fa-check"></i>-->
-            <!--{% endif %}-->
-            <!--{% endif %}-->
-        <!--</div>-->
-    <!--</div>-->
-    <!--<div class="row">-->
-        <!--<div class="col-12 col-sm">-->
-            <!--{{a.ampliacion}}-->
-        <!--</div>-->
-    <!--</div>-->
+    <div class="row collapse lineaencima" id="tramite{{a.pk}}">
+        <div class="col-sm text-secondary">
+            {{a.ampliacion}}
+        </div>
+    </div>
 </div>
 {% endfor %}

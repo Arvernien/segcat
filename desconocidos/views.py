@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.views import generic
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import DesconocidoForm, ActuacionForm, DesconocidoDatosForm
+from .forms import DesconocidoForm, ActuacionForm, TramiteForm
 from django.shortcuts import get_object_or_404
 from datetime import datetime
 from django.http import HttpResponseRedirect, JsonResponse
@@ -104,6 +104,7 @@ def addnota(request):
     desconocido.creaActuacion(user, form.get('descripcion'), datetime.now(), agenda)
     return HttpResponseRedirect(form.get('pk'))
 
+@login_required
 def orgdatos(request):
     form = request.POST
     org = organismo.objects.get(pk=form.get('pk'))
@@ -164,6 +165,26 @@ def orgdatos(request):
 
     return JsonResponse(respuesta)
 
+@login_required
+def addtramite(request):
+    form = request.POST
+    desconocido = Desconocido.objects.get(pk=form.get('pk'))
+    user = User.objects.get(username=request.user)
+    getagenda = form.get('fecha_agenda') or None
+    print(form.get('tipo'))
+    if getagenda is not None:
+        agenda = datetime.strptime(getagenda, '%d/%m/%Y').strftime('%Y-%m-%d')
+    else:
+        agenda = None
+    desconocido.creaTramite(user, form.get('ampliacion'), datetime.now(), form.get('tipo'), agenda)
+
+    listatramites = tramites.objects.filter(desconocido=desconocido).order_by('pk')
+    respuesta = {}
+    respuesta['data'] = render_to_string('desconocidos/actuaciones.html', {'listatramites': listatramites})
+
+    return JsonResponse(respuesta)
+
+@login_required
 def addnotatest(request):
     form = request.POST
     desconocido = Desconocido.objects.get(pk=form.get('pk'))
@@ -176,9 +197,9 @@ def addnotatest(request):
         agenda = None
     desconocido.creaActuacion(user, form.get('descripcion'), datetime.now(), agenda)
 
-    act = actuaciones.objects.filter(desconocido=desconocido).order_by('pk')
+    act = actuaciones.objects.filter(desconocido=desconocido).order_by('-pk')
     respuesta = {}
-    respuesta['data'] = render_to_string('desconocidos/notas.html', {'acts': act})
+    respuesta['data'] = render_to_string('desconocidos/notas.html', {'acts': act, 'request': request})
 
     return JsonResponse(respuesta)
 
@@ -187,11 +208,35 @@ def addnotatest(request):
 @login_required
 def checknota(request):
     form = request.POST
-    actuacion = actuaciones.objects.get(pk=form.get('pk'))
-    actuacion.revisado = True
-    actuacion.save()
-    return HttpResponseRedirect(form.get('descopk'))
+    print(form.get('desconocido'))
+    desconocido = Desconocido.objects.get(pk=form.get('desconocido'))
+    act = actuaciones.objects.get(pk=form.get('pk'))
+    act.revisado = True
+    act.save()
+    act = actuaciones.objects.filter(desconocido=desconocido).order_by('-pk')
+    respuesta = {}
+    respuesta['data'] = render_to_string('desconocidos/notas.html', {'acts': act, 'request': request})
 
+    return JsonResponse(respuesta)
+
+@login_required
+def checktramite(request):
+    form = request.POST
+    print(form.get('pk'))
+    print(form.get('desconocido'))
+    desconocido = Desconocido.objects.get(pk=form.get('desconocido'))
+    print(desconocido)
+    tram = tramites.objects.get(pk=form.get('pk'))
+    tram.revisado = True
+    tram.save()
+    tram = tramites.objects.filter(desconocido=desconocido)
+    print(tram)
+    respuesta = {}
+    respuesta['data'] = render_to_string('desconocidos/actuaciones.html', {'listatramites': tram, 'request': request})
+
+    return JsonResponse(respuesta)
+
+@login_required
 def grabadatos(request):
     form = request.POST
     print(form.get('descopk'))
@@ -199,10 +244,7 @@ def grabadatos(request):
     desco.titular_candidato = form.get('id_titular_candidato')
     desco.nif_candidato = form.get('id_nif_candidato')
     desco.telefono = form.get('id_telefono')
-    #desco.mt = form.get('id_mt')
     desco.expediente = form.get('id_expediente')
-    #desco.liq = form.get('id_liq')
-    #desco.importe_liq = form.get('id_importe_liq')
     desco.save()
     return HttpResponseRedirect(form.get('descopk'))
 
@@ -234,17 +276,19 @@ def detalle(request, pk):
         a.expediente = datos.get('expediente')
 
         a.save()
-    listatramites = tramites.objects.filter(desconocido=a).order_by('-fecha')
+    listatramites = tramites.objects.filter(desconocido=a).order_by('pk')
     act = actuaciones.objects.filter(desconocido=a).order_by('pk')
     form = DesconocidoForm(instance=a)
     #datosform = DesconocidoDatosForm(request.POST or None, instance=a)
     actform = ActuacionForm()
+    tramiteform = TramiteForm()
     refcat = a.refcat
     context = {'desconocido': a,
                'form': form,
                'refcat': refcat,
                'acts': act,
                'formactuacion': actform,
+               'tramiteform': tramiteform,
                'listatramites': listatramites,
 
      }

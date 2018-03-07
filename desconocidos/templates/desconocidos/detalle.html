@@ -88,7 +88,7 @@
         </form>
     </div>
     <!-- ---------------------- INVESTIGACIÓN ------------------------------->
-    <div class="card mt-3">
+    <div class="card mt-3" id="panel_investigacion">
         <div class="card-header clearfix" id="cabecera_investigacion">
             <h5 class="float-left mb-0 text-secondary"><i class="fas fa-user-secret text-secondary"></i> INVESTIGACIÓN</h5>
             <a class="float-right mb-0" href="#" data-toggle="collapse" data-target="#collapse-investigacion" aria-expanded="true" aria-controls="collapseOne">
@@ -113,8 +113,49 @@
                 <!--------------------------- ACTUACIONES ------------------------------------------>
                 <div class="tab-pane fade" id="tabactuaciones" role="tabpanel" aria-labelledby="tabactuaciones">
                     <div class="container-fluid pt-1 pb-1 card-header">
-                        <button type="button" class="btn btn-sm btn-light btn-verde" data-toggle="modal" data-target="#addNota"><i class="far fa-plus-square fa-lg"></i></button>
+                        <button type="button" class="btn btn-sm btn-light btn-verde" data-toggle="modal" data-target="#addActuacion"><i class="far fa-plus-square fa-lg"></i></button>
                     </div>
+                    <!-- ----------------------------- MODAL ACTUACIONES ---------------------------------------->
+                        <div class="modal fade" id="addActuacion" tabindex="-1" role="dialog" aria-labelledby="actuacionModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="actuacionModal">Añadir actuación</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!--<form id="formnota2" method="post" action="addnota">-->
+                                        <form id="formActuacion" method="post" action="addtramite">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="pk" value="{{desconocido.pk}}">
+                                            <div class="row mb-2">
+                                                <div class="col-3"><label for="{{tramiteform.tipo.id_for_label}}" class="text-primary mb-0">Tipo de actuación</label></div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-4">{{tramiteform.tipo}}</div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-2"><label for="{{tramiteform.tramite_agenda.id_for_label}}" class="text-primary mb-0">Fecha agenda</label></div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-3">{{tramiteform.tramite_agenda}}</div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-2"><label for="{{tramiteform.ampliacion.id_for_label}}" class="text-primary mb-0">Actuación</label></div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-12">{{tramiteform.ampliacion}}</div>
+                                            </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Guardar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="scroll-box" id="muestraactuaciones">
                         {% include 'desconocidos/actuaciones.html' %}
                     </div>
@@ -124,12 +165,12 @@
                 <div class="tab-pane fade" id="tabnotas" role="tabpanel" aria-labelledby="tabnotas">
                     <div class="container-fluid pt-1 pb-1 card-header">
                         <button type="button" class="btn btn-sm btn-light btn-verde" data-toggle="modal" data-target="#addNota"><i class="far fa-plus-square fa-lg"></i></button>
-                        <!------------------------------ MODAL ------------------------------------------->
+                        <!------------------------------ MODAL NOTAS------------------------------------------->
                         <div class="modal fade" id="addNota" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Añadir actuación</h5>
+                                        <h5 class="modal-title" id="exampleModalLabel">Añadir nota</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -146,7 +187,7 @@
                                                 <div class="col-3">{{formactuacion.fecha_agenda}}</div>
                                             </div>
                                             <div class="row mb-2">
-                                                <div class="col-2"><label for="{{formactuacion.descripcion.id_for_label}}" class="text-primary mb-0">Actuación</label></div>
+                                                <div class="col-2"><label for="{{formactuacion.descripcion.id_for_label}}" class="text-primary mb-0">Nota</label></div>
                                             </div>
                                             <div class="row mb-2">
                                                 <div class="col-12">{{formactuacion.descripcion}}</div>
@@ -159,7 +200,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- ----------------------------- FIN MODAL ---------------------------------------->
                     </div>
                     <div class="scroll-box" id="muestranotas">
                         {% include 'desconocidos/notas.html' %}
@@ -293,16 +333,13 @@
     </div>
 </div>
 <script>
-
-
-
-  $(function() {
+$(function() {
     $('.toggle-btn').bootstrapToggle({
         size: 'small',
     });
     disablegestion();
     disableliq();
-  })
+  });
 
     $('.datepicker').datepicker({
         format: "dd/mm/yyyy",
@@ -321,8 +358,53 @@
         crear_nota();
         });
 
+    $('#formActuacion').on('submit', function(event){
+        event.preventDefault();
+        console.log("Formulario enviado") // Control sanidad
+        crear_tramite();
+        });
+
+    $('#panel_investigacion').on('click', '.agendanota', function(event){
+    nota = $(this).attr('data');
+    desco = $(this).attr('desco');
+    check_nota(nota, desco);
+    });
+
+    $('#panel_investigacion').on('click', '.agendatramite', function(event){
+    tram = $(this).attr('data');
+    desco = $(this).attr('desco');
+    check_tram(tram, desco);
+    });
+
+    function check_tram(trampk, descopk) {
+        console.log("Marcar tramite funciona" + trampk + descopk)
+        $.ajax({
+            url: "checktram",
+            type: "POST",
+            data: {
+                pk: trampk,
+                desconocido: descopk,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+
+            },
+
+            success: function(json) {
+                console.log('exito');
+                $('#muestraactuaciones').html(json.data);
+                $("#muestraactuaciones").animate({scrollTop:$("#muestraactuaciones")[0].scrollHeight}, 1000);
+                $('[data-toggle="tooltip"]').tooltip({'placement': 'right'});
+            },
+
+            error: function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText);
+            }
+        });
+    };
+
+
     function crear_nota() {
         console.log("Crear post funciona")
+        console.log($('#{{formactuacion.fecha_agenda.id_for_label}}').val())
         $.ajax({
             url: "addnotatest",
             type: "POST",
@@ -346,9 +428,62 @@
             }
         });
     };
+    function check_nota(notapk, descopk) {
+        console.log("Marcar nota funciona" + notapk + descopk)
+        $.ajax({
+            url: "checknota",
+            type: "POST",
+            data: {
+                pk: notapk,
+                desconocido: descopk,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+
+            },
+
+            success: function(json) {
+                console.log('exito');
+                $('#muestranotas').html(json.data);
+                $("#muestranotas").animate({scrollTop:$("#muestraactuaciones")[0].scrollHeight}, 1000);
+                $('[data-toggle="tooltip"]').tooltip({'placement': 'right'});
+                $('.agendanota').on('click', function(){check_nota($('.agendanota').attr('data'), $('.agendanota').attr('desco'));});
+            },
+
+            error: function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText);
+            }
+        });
+    };
+    function crear_tramite() {
+        console.log("Crear tramite funciona")
+        $.ajax({
+            url: "addtramite",
+            type: "POST",
+            data: {
+                pk: {{ desconocido.pk }},
+                ampliacion: $('#{{tramiteform.ampliacion.id_for_label}}').val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                fecha_agenda: $('#{{tramiteform.tramite_agenda.id_for_label}}').val(),
+                tipo: $('#{{tramiteform.tipo.id_for_label}}').val(),
+            },
+
+            success: function(json) {
+                $('#{{tramiteform.ampliacion.id_for_label}}').val('');
+                $('#{{tramiteform.tramite_agenda.id_for_label}}').val('');
+                console.log('exito');
+                $('#addActuacion').modal('hide');
+                $('#muestraactuaciones').html(json.data);
+                $("#muestraactuaciones").animate({scrollTop:$("#muestraactuaciones")[0].scrollHeight}, 1000);
+                $('[data-toggle="tooltip"]').tooltip({'placement': 'right'});
+            },
+
+            error: function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText);
+            }
+        });
+    };
     function disablegestion() {
         console.clear();
-        console.log($('#{{form.mt.id_for_label}}').prop('checked'))
+        console.log($('#{{form.mt.id_for_label}}').prop('checked'));
         estado = $('#{{form.mt.id_for_label}}').prop('checked')
         if(estado) {
         $('#{{form.liq.id_for_label}}').bootstrapToggle('enable');
@@ -363,7 +498,7 @@
         $('#{{form.expediente.id_for_label}}').prop('disabled', !estado);
 
         }
-    }
+    };
     function disableliq() {
         estado = $('#{{form.liq.id_for_label}}').prop('checked')
         if(estado) {
@@ -372,7 +507,7 @@
             $('#{{form.importe_liq.id_for_label}}').val('');
             $('#{{form.importe_liq.id_for_label}}').prop('disabled', !estado);
         }
-    }
+    };
 </script>
 
 

@@ -77,6 +77,11 @@ class Desconocido(models.Model):
         q = actuaciones(desconocido=self, usuario=user, descripcion=descr, agendar=agendar)
         q.save()
 
+    def creaTramite(self, user, ampliacion, fecha, tipo, agendar):
+        t = tipotramite.objects.get(pk=tipo)
+        q = tramites(desconocido=self, tipo=t, fecha=fecha, usuario=user, ampliacion=ampliacion, agendar=agendar)
+        q.save()
+
     def __str__(self):
         return self.refcat
 
