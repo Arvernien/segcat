@@ -16,6 +16,14 @@ import json
 # Create your views here.
 @login_required
 def Desconocidos(request):
+    investigacion = 0
+    ficticios = 0
+    resueltos = 0
+    candidatos = 0
+    mt = 0
+    cuentaliq = 0
+    sum_liq = 0
+    sumaibi = 0
     organismos = organismo.objects.all()
     # ------------------- Identifica el tipo de búsqueda s=simple, a=avanzada ------------------------
     modo = request.GET.get('modo')
@@ -54,7 +62,48 @@ def Desconocidos(request):
                 desc = desc.filter(mt=request.GET.get('inputMt'))
             if request.GET.get('inputLiq') != '':
                 desc = desc.filter(liq=request.GET.get('inputLiq'))
-            desc.filter(cuota__gte=F('fk_muni__org__antieconomico'))
+            desc = desc.filter(cuota__gte=F('fk_muni__org__antieconomico'))
+            print(desc.count())
+        noresueltos = desc.filter(
+            resuelto=False,
+            cuota__gte=F('fk_muni__org__antieconomico')
+        )
+
+        investigacion = desc.filter(
+            resuelto=False,
+            tipo__descripcion__icontains='INVESTIG',
+            cuota__gte=F('fk_muni__org__antieconomico')
+        ).exclude(titular_candidato__isnull=False).count()
+        ficticios = desc.filter(
+            resuelto=False,
+            tipo__descripcion__icontains='FICTICIO',
+            cuota__gte=F('fk_muni__org__antieconomico')
+        ).exclude(titular_candidato__isnull=False).count()
+        resueltos = desc.filter(
+            resuelto=True,
+            cuota__gte=F('fk_muni__org__antieconomico')
+        ).count()
+        print(desc.count())
+        candidatos = desc.filter(
+            resuelto=False,
+            cuota__gte=F('fk_muni__org__antieconomico')
+        ).exclude(titular_candidato__isnull=True).count()
+        mt = desc.filter(
+            mt=True,
+            cuota__gte=F('fk_muni__org__antieconomico')
+        ).count()
+        liq = desc.filter(
+            liq=True,
+            cuota__gte=F('fk_muni__org__antieconomico'))
+        cuentaliq = liq.count()
+        sum_liq = liq.aggregate(Sum('importe_liq'))['importe_liq__sum']
+        sumaibi = noresueltos.aggregate(Sum('cuota'))['cuota__sum']
+        if sum_liq is None:
+            sum_liq = 0
+        if sumaibi is None:
+            sumaibi = 0
+
+
     else:
         # desc = Desconocido.objects.all().order_by(
         #     ((F('b_liquidable') / 100) * F('fk_muni__tipo_impositivo') / 100).desc())
@@ -88,6 +137,15 @@ def Desconocidos(request):
                'total': total,
                'organismos': organismos,
                'q': q,
+               'modo': request.GET.get('modo'),
+               'investigacion': investigacion,
+               'ficticios': ficticios,
+               'resueltos': resueltos,
+               'candidatos': candidatos,
+               'mt': mt,
+               'liq': cuentaliq,
+               'importe_liq': sum_liq,
+               'pendiente': sumaibi,
                }
     return render(request, 'desconocidos/desconocidos.html', context)
 
@@ -180,7 +238,7 @@ def addtramite(request):
 
     listatramites = tramites.objects.filter(desconocido=desconocido).order_by('pk')
     respuesta = {}
-    respuesta['data'] = render_to_string('desconocidos/actuaciones.html', {'listatramites': listatramites})
+    respuesta['data'] = render_to_string('desconocidos/actuaciones.html', {'listatramites': listatramites, 'request': request})
 
     return JsonResponse(respuesta)
 
@@ -197,7 +255,7 @@ def addnotatest(request):
         agenda = None
     desconocido.creaActuacion(user, form.get('descripcion'), datetime.now(), agenda)
 
-    act = actuaciones.objects.filter(desconocido=desconocido).order_by('-pk')
+    act = actuaciones.objects.filter(desconocido=desconocido).order_by('pk')
     respuesta = {}
     respuesta['data'] = render_to_string('desconocidos/notas.html', {'acts': act, 'request': request})
 
@@ -213,7 +271,7 @@ def checknota(request):
     act = actuaciones.objects.get(pk=form.get('pk'))
     act.revisado = True
     act.save()
-    act = actuaciones.objects.filter(desconocido=desconocido).order_by('-pk')
+    act = actuaciones.objects.filter(desconocido=desconocido).order_by('pk')
     respuesta = {}
     respuesta['data'] = render_to_string('desconocidos/notas.html', {'acts': act, 'request': request})
 
@@ -222,15 +280,11 @@ def checknota(request):
 @login_required
 def checktramite(request):
     form = request.POST
-    print(form.get('pk'))
-    print(form.get('desconocido'))
     desconocido = Desconocido.objects.get(pk=form.get('desconocido'))
-    print(desconocido)
     tram = tramites.objects.get(pk=form.get('pk'))
     tram.revisado = True
     tram.save()
-    tram = tramites.objects.filter(desconocido=desconocido)
-    print(tram)
+    tram = tramites.objects.filter(desconocido=desconocido).order_by('pk')
     respuesta = {}
     respuesta['data'] = render_to_string('desconocidos/actuaciones.html', {'listatramites': tram, 'request': request})
 
@@ -294,3 +348,6 @@ def detalle(request, pk):
      }
     return render(request, 'desconocidos/detalle.html', context)
 
+@login_required
+def orgstats(request, pk):
+    pass

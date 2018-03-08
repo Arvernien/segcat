@@ -102,7 +102,7 @@
                         <a class="nav-link active text-secondary" href="#tabdatos" data-toggle="tab" target="navegador"><i class="fas fa-key"></i> Datos</a>
                     </li>
                     <li class="nav-item" id="butActuaciones">
-                        <a class="nav-link text-secondary" href="#tabactuaciones" data-toggle="tab" target="navegador"><i class="fas fa-inbox"></i> Actuaciones</a>
+                        <a class="nav-link text-secondary" href="#tabtramites" data-toggle="tab" target="navegador"><i class="fas fa-inbox"></i> Trámites</a>
                     </li>
                     <li class="nav-item" id="butNotas">
                         <a class="nav-link text-secondary" href="#tabnotas" data-toggle="tab" target="navegador"><i class="fas fa-sticky-note"></i> Notas</a>
@@ -110,17 +110,17 @@
                 </ul>
             </div>
             <div class="tab-content" id="micontenido">
-                <!--------------------------- ACTUACIONES ------------------------------------------>
-                <div class="tab-pane fade" id="tabactuaciones" role="tabpanel" aria-labelledby="tabactuaciones">
+                <!--------------------------- TRAMITES ------------------------------------------>
+                <div class="tab-pane fade" id="tabtramites" role="tabpanel" aria-labelledby="tabactuaciones">
                     <div class="container-fluid pt-1 pb-1 card-header">
                         <button type="button" class="btn btn-sm btn-light btn-verde" data-toggle="modal" data-target="#addActuacion"><i class="far fa-plus-square fa-lg"></i></button>
                     </div>
-                    <!-- ----------------------------- MODAL ACTUACIONES ---------------------------------------->
+                    <!-- ----------------------------- MODAL TRAMITES ---------------------------------------->
                         <div class="modal fade" id="addActuacion" tabindex="-1" role="dialog" aria-labelledby="actuacionModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="actuacionModal">Añadir actuación</h5>
+                                        <h5 class="modal-title" id="actuacionModal">Añadir trámite</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -156,7 +156,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="scroll-box" id="muestraactuaciones">
+                        <div class="scroll-box" id="muestratramites">
                         {% include 'desconocidos/actuaciones.html' %}
                     </div>
                     </div>
@@ -389,10 +389,11 @@ $(function() {
             },
 
             success: function(json) {
-                console.log('exito');
-                $('#muestraactuaciones').html(json.data);
-                $("#muestraactuaciones").animate({scrollTop:$("#muestraactuaciones")[0].scrollHeight}, 1000);
+                console.log('tramite check');
+                $('#muestratramites').html(json.data);
+                $("#muestratramites").animate({scrollTop:$("#muestratramites")[0].scrollHeight}, 1000);
                 $('[data-toggle="tooltip"]').tooltip({'placement': 'right'});
+                $('.agendatramite').on('click', function(){check_tram($('.agendatramite').attr('data'), $('.agendatramite').attr('desco'));});
             },
 
             error: function(xhr,errmsg,err) {
@@ -443,7 +444,7 @@ $(function() {
             success: function(json) {
                 console.log('exito');
                 $('#muestranotas').html(json.data);
-                $("#muestranotas").animate({scrollTop:$("#muestraactuaciones")[0].scrollHeight}, 1000);
+                $("#muestranotas").animate({scrollTop:$("#muestranotas")[0].scrollHeight}, 1000);
                 $('[data-toggle="tooltip"]').tooltip({'placement': 'right'});
                 $('.agendanota').on('click', function(){check_nota($('.agendanota').attr('data'), $('.agendanota').attr('desco'));});
             },
@@ -471,8 +472,8 @@ $(function() {
                 $('#{{tramiteform.tramite_agenda.id_for_label}}').val('');
                 console.log('exito');
                 $('#addActuacion').modal('hide');
-                $('#muestraactuaciones').html(json.data);
-                $("#muestraactuaciones").animate({scrollTop:$("#muestraactuaciones")[0].scrollHeight}, 1000);
+                $('#muestratramites').html(json.data);
+                $("#muestratramites").animate({scrollTop:$("#muestratramites")[0].scrollHeight}, 1000);
                 $('[data-toggle="tooltip"]').tooltip({'placement': 'right'});
             },
 

@@ -69,7 +69,7 @@ class Desconocido(models.Model):
     liq = models.BooleanField(blank=True, default=False)
     importe_liq = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True, default=0)
     telefono = models.CharField(max_length=20, blank=True, null=True)
-    cuota = models.DecimalField(max_digits=15, decimal_places=2)
+    cuota = models.DecimalField(max_digits=15, decimal_places=2, null=True)
     tipo_finca = models.ForeignKey(tipo_finca, on_delete=models.DO_NOTHING, null=True, blank=True)
 
 
@@ -158,7 +158,8 @@ class Desconocido(models.Model):
 
             gmaps = '{lat: ' + ycen + ', lng: ' + xcen + '}'
             return gmaps
-        except:
+        except Exception as e:
+            print(e)
             return None
 
     @property

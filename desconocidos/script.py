@@ -63,10 +63,10 @@ def cargaDesc():
                     uso = usos.objects.get(pk='1')
                 else:
                     uso = usos.objects.get(pk=row[22])
-                if 'EN INVESTIGACION' in row[24]:
-                    tipo = tipoDesc.objects.get(descripcion='EN INVESTIGACIÓN')
-                else:
+                if 'EN INVESTIGACION' not in row[24] and row[23] != '*':
                     tipo = tipoDesc.objects.get(descripcion='NIF FICTICIO')
+                else:
+                    tipo = tipoDesc.objects.get(descripcion='EN INVESTIGACIÓN')
 
                 q = Desconocido(
                     fk_muni=muni,
@@ -92,8 +92,22 @@ def cargaDesc():
                     sujeto_pasivo=row[24],
                     tipo= tipo
                 )
+
+                if q.num_fijo == '':
+                    clase = 'RÚSTICA'
+                else:
+                    clase = 'URBANA'
+                q.tipo_finca = tipo_finca.objects.get(descripcion=clase)
+                if q.tipo_finca.descripcion == 'URBANA':
+                    q.cuota = round(
+                        Decimal((q.b_liquidable / 100)) * q.fk_muni.tipo_impositivo / 100, 2)
+
+                else:
+                    q.cuota = round(
+                        Decimal((q.b_liquidable / 100)) * q.fk_muni.tipo_impositivo_ru / 100, 2)
+
                 q.save()
-                print('Cargado desconocido: ' +row[2])
+                print('Cargado desconocido: ' + row[2])
                 i += 1
 
             except Exception as err:
@@ -121,22 +135,26 @@ def actCuota():
 
 def actNaturaleza():
     lista = Desconocido.objects.all()
+    i = 0
     for desconocido in lista:
-        # codmuni = str((desconocido.fk_muni.org.cod * 1000) + (desconocido.fk_muni.cod))
-        # if len(codmuni) < 5:
-        #     codmuni = '0' + codmuni
-        #
-        refcat = desconocido.refcat[:14]
-        dgfparcela = refcat[:7]
-        dgfhoja = refcat[-7:]
-        try:
-            a = int(dgfhoja)
-            clase = 'RÚSTICA'
-        except:
-            clase = 'URBANA'
-        desconocido.tipo_finca = tipo_finca.objects.get(descripcion=clase)
+        i += 1
+        # refcat = desconocido.refcat[:14]
+        # dgfhoja = refcat[-7:]
+        # try:
+        #     a = int(dgfhoja)
+        #     clase = 'RÚSTICA'
+        # except:
+        #     clase = 'URBANA'
+        # desconocido.tipo_finca = tipo_finca.objects.get(descripcion=clase)
+        # desconocido.save()
+        # print(desconocido.refcat + '-->' + clase)
+        if desconocido.num_fijo == '':
+            desconocido.tipo_finca = tipo_finca.objects.get(descripcion='RÚSTICA')
+        else:
+            desconocido.tipo_finca = tipo_finca.objects.get(descripcion='URBANA')
+        print(str(i)+'/'+str(lista.count()))
         desconocido.save()
-        print(desconocido.refcat + '-->' + clase)
+
 
 def ti_ru():
     with open('desconocidos/TI.txt', newline='') as fichero:
@@ -173,5 +191,10 @@ def ti_ur():
                 q = municipio(cod=codigo, nombre=nombre, tipo_impositivo=ti, org=delegacion)
                 q.save()
             print(q)
+
+def loadDesc():
+    cargaDesc()
+    actNaturaleza()
+    actCuota()
 
 

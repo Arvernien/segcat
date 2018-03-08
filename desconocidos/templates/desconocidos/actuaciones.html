@@ -16,9 +16,7 @@
                     {% if a.usuario == request.user %}
                         <form method="post" id="agendatramite{{a.pk}}" action="checktramite" style="display:inline;">
                             {% csrf_token %}
-                            <span class="agendatramite" data="{{a.pk}}" desco="{{a.desconocido.pk}}">
-                            <i class="far fa-calendar-alt text-secondary"></i>
-                                </span>
+                            <span class="agendatramite" data="{{a.pk}}" desco="{{a.desconocido.pk}}"><i class="far fa-calendar-alt text-secondary"></i></span>
                             <input type="hidden" name="pk" value="{{a.pk}}">
                             <input type="hidden" name="descopk" value="{{desconocido.pk}}">
                             <input type="hidden" name="revisado" value="True">
@@ -34,7 +32,7 @@
     </div>
     <div class="row collapse lineaencima" id="tramite{{a.pk}}">
         <div class="col-sm text-secondary">
-            {{a.ampliacion}}
+            {{a.ampliacion}}{{request.user}}
         </div>
     </div>
 </div>

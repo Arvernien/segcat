@@ -11,14 +11,18 @@
         <canvas class="card-img-top" id="Graf{{organismo.pk}}" width="400" height="400"></canvas>
         <form method="post">{% csrf_token %}</form>
         <div class="card-body">
-            <h6 class="card-title">{{organismo.nombre}}</h6>
+            <h6 class="card-title text-center">{{organismo.nombre}}</h6>
             <ul class="card-text">
                 <li class="texto-peq">Mod. Titular: <span class="texto-peq" id="mt{{organismo.pk}}">--</span></li>
                 <li class="texto-peq">Liquidaciones: <span class="texto-peq" id="liq{{organismo.pk}}">--</span></li>
                 <li class="texto-peq">Importe liquidado: <span class="texto-peq" id="i_liq{{organismo.pk}}">--</span></li>
                 <li class="texto-peq">IBI Desconocido: <span class="texto-peq" id="i_desc{{organismo.pk}}">--</span></li>
             </ul>
-        </div>
+            </div>
+            <div class="row align-items-end mb-1">
+            <div class="col text-center align-self-end"><button class="btn btn-sm btn-outline-primary"><i class="fas fa-info"></i> Más datos</button></div>
+</div>
+
     </div>
     <script>
         $('#Graf{{organismo.pk}}').hide();
@@ -75,19 +79,56 @@
         });
 </script>
     {% endfor %}
-</div>
-<script>
-    function muestrabusquedas() {
-        if($('#busqrapida').is(':disabled')) {
-        $('#busqrapida').prop('disabled', false);
+    {% if modo %}
+    <div class="card ml-3 mb-2" style="width: 18rem; background-color: #e9fcc2;">
+        <!--<img id="imgresultados" class="card-img-top" src="{% static 'img/loading.svg' %}">-->
+        <canvas class="card-img-top" id="Grafresultados" width="400" height="400"></canvas>
+        <form method="post">{% csrf_token %}</form>
+        <div class="card-body">
+            <h6 class="card-title text-center">Resultados búsqueda</h6>
+            <ul class="card-text">
+                <li class="texto-peq">Mod. Titular: <span class="texto-peq" id="mtresultados">{{mt}}</span></li>
+                <li class="texto-peq">Liquidaciones: <span class="texto-peq" id="liqresultados">{{liq}}</span></li>
+                <li class="texto-peq">Importe liquidado: <span class="texto-peq" id="i_liqresultados">{{importe_liq}} €</span></li>
+                <li class="texto-peq">IBI Desconocido: <span class="texto-peq" id="i_descresultados">{{pendiente}} €</span></li>
+            </ul>
+        </div>
+    </div>
+    <script>
+            var ctxresultados = document.getElementById("Grafresultados").getContext('2d');
+            var myChart = new Chart(ctxresultados, {
+                type: 'doughnut',
+                    data: {
+                    datasets: [{
+                        data: [{{investigacion}},{{ficticios}},{{candidatos}},{{resueltos}}],
+                        backgroundColor: [
+                            'rgba(255, 0, 0, 0.6)',
+                            'rgba(252, 176, 0, 0.6)',
+                            'rgba(255, 225, 0, 0.6)',
+                            'rgba(143, 212, 0, 0.6)'
+                        ],
+                        borderColor:[
+                            'rgba(255, 0, 0, 1)',
+                            'rgba(252, 176, 0, 1)',
+                            'rgba(255, 225, 0, 1)',
+                            'rgba(143, 212, 0, 1)'
+                        ]
+                    }],
 
-        } else {
-        $('#busqrapida').prop('disabled', true);
+                        // Etiquetas
+                        labels: [
+                        'En investigación',
+                        'Nif Ficticio',
+                        'Candidatos',
+                        'Resueltos'
+                    ]
 
-        }
-        }
-
+                },
+            });
 </script>
+    {% endif %}
+</div>
+
 
 <link rel="stylesheet" type="text/css" href="{% static 'polls/styles.css' %}" />
 <div class="container-fluid mb-3">
@@ -109,7 +150,7 @@
                     </form>
                 </div>
                 <div class="col-1 text-right">
-                    <a class="mb-0" href="#" data-toggle="collapse" data-target="#panelbusquedas" aria-expanded="true" aria-controls="collapseOne" onclick="muestrabusquedas()" id="flechabusquedas">
+                    <a class="mb-0" href="#" data-toggle="collapse" data-target="#panelbusquedas" aria-expanded="true" aria-controls="collapseOne" id="flechabusquedas">
                         <i class="fas fa-chevron-circle-down text-secondary"></i>
                     </a>
                 </div>
@@ -266,4 +307,12 @@
 </div>
 {% else %}
 {% endif %}
+<script>
+    $('#panelbusquedas').on('show.bs.collapse', function() {
+        $('#busqrapida').prop('disabled', true);
+        });
+    $('#panelbusquedas').on('hide.bs.collapse', function() {
+        $('#busqrapida').prop('disabled', false);
+        });
+</script>
 {% endblock %}

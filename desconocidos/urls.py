@@ -12,5 +12,6 @@ urlpatterns = [
     path('checknota', views.checknota, name='checknota'),
     path('checktram', views.checktramite, name='checktramite'),
     path('orgdatos', views.orgdatos, name='orgdatos'),
-    path('datosform', views.grabadatos, name='datosform')
+    path('datosform', views.grabadatos, name='datosform'),
+    path('organismo/<int:pk>', views.orgstats, name='orgstats')
 ]
