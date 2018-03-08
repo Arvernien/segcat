@@ -350,4 +350,33 @@ def detalle(request, pk):
 
 @login_required
 def orgstats(request, pk):
-    pass
+    org = organismo.objects.get(pk=pk)
+    desc = Desconocido.objects.filter(fk_muni__org=org)
+    antieconomicos = desc.filter(
+        cuota__lt=F('fk_muni__org__antieconomico')
+    ).count()
+
+    rusticas = desc.filter(
+        tipo_finca__descripcion='RÚSTICA',
+        v_constru=0,
+        cuota__gte=F('fk_muni__org__antieconomico')
+    ).count()
+    solares = desc.filter(
+        tipo_finca__descripcion='URBANA',
+        v_constru=0,
+        cuota__gte=F('fk_muni__org__antieconomico')
+    ).count()
+    investigables = desc.filter(
+        v_constru__gt=0,
+        cuota__gte=F('fk_muni__org__antieconomico')
+    ).count()
+    context = {
+        'organismo': org,
+        'pk': pk,
+        'desconocidos': desc,
+        'antieconomicos': antieconomicos,
+        'rusticas': rusticas,
+        'solares':solares,
+        'investigables': investigables
+    }
+    return render(request, 'desconocidos/organismo.html', context)

@@ -31,7 +31,6 @@ ALLOWED_HOSTS = ['ahlopez', '127.0.0.1', '192.168.1.130', '9.56.3.159']
 # Application definition
 
 INSTALLED_APPS = [
-    'desconocidos.apps.DesconocidosConfig',
     'polls.apps.PollsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'desconocidos.apps.DesconocidosConfig',
 ]
 
 MIDDLEWARE = [

@@ -10,6 +10,16 @@ from django.urls import reverse
 
 # Create your models here.
 
+class tipotramite(models.Model):
+    descripcion = models.CharField(max_length=20, default='')
+    icono = models.CharField(max_length=100, default='')
+
+    def __str__(self):
+        return self.descripcion
+
+    class Meta:
+        verbose_name_plural = 'Tipos de trámite'
+
 class tipo_finca(models.Model):
     descripcion = models.CharField(max_length=15)
 
@@ -198,17 +208,6 @@ class actuaciones(models.Model):
     def get_link_name(self):
         return self.desconocido.refcat
 
-class tipotramite(models.Model):
-    descripcion = models.CharField(max_length=20, default='')
-    icono = models.CharField(max_length=100, default='')
-
-    def __str__(self):
-        return self.descripcion
-
-    class Meta:
-        verbose_name_plural = 'Tipos de trámite'
-
-
 class tramites(models.Model):
     desconocido = models.ForeignKey(Desconocido, on_delete=models.CASCADE, default='')
     usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING, default='')
@@ -217,7 +216,6 @@ class tramites(models.Model):
     ampliacion = models.TextField(default='')
     agendar = models.DateField(null=True)
     revisado = models.BooleanField(default=False)
-
 
     class Meta:
         verbose_name_plural = 'Trámites'
