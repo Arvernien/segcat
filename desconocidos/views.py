@@ -354,29 +354,49 @@ def orgstats(request, pk):
     desc = Desconocido.objects.filter(fk_muni__org=org)
     antieconomicos = desc.filter(
         cuota__lt=F('fk_muni__org__antieconomico')
-    ).count()
+    )
 
     rusticas = desc.filter(
         tipo_finca__descripcion='RÚSTICA',
         v_constru=0,
         cuota__gte=F('fk_muni__org__antieconomico')
-    ).count()
+    )
     solares = desc.filter(
         tipo_finca__descripcion='URBANA',
         v_constru=0,
         cuota__gte=F('fk_muni__org__antieconomico')
-    ).count()
+    )
     investigables = desc.filter(
         v_constru__gt=0,
         cuota__gte=F('fk_muni__org__antieconomico')
-    ).count()
+    )
+    descrustica = desc.filter(tipo_finca__descripcion='RÚSTICA')
+    descurbana = desc.filter(tipo_finca__descripcion='URBANA')
+
     context = {
         'organismo': org,
         'pk': pk,
         'desconocidos': desc,
-        'antieconomicos': antieconomicos,
-        'rusticas': rusticas,
-        'solares':solares,
-        'investigables': investigables
+        'desconocidoscuota': desc.aggregate(Sum('cuota'))['cuota__sum'],
+        'antieconomicos': antieconomicos.count(),
+        'antipercent': round((antieconomicos.count()/desc.count())*100, 2),
+        'anticuota': antieconomicos.aggregate(Sum('cuota'))['cuota__sum'],
+        'rusticas': rusticas.count(),
+        'rusticaspercent': round((rusticas.count()/desc.count())*100, 2),
+        'rusticascuota': rusticas.aggregate(Sum('cuota'))['cuota__sum'],
+        'solares':solares.count(),
+        'solarespercent': round((solares.count()/desc.count())*100, 2),
+        'solarescuota': solares.aggregate(Sum('cuota'))['cuota__sum'],
+        'investigables': investigables.count(),
+        'investigablespercent': round((investigables.count()/desc.count())*100, 2),
+        'investigablescuota': investigables.aggregate(Sum('cuota'))['cuota__sum'],
+        'descrustica': descrustica.count(),
+        'descrusticapercent': round((descrustica.count()/desc.count())*100),
+        'descrusticacuota': descrustica.aggregate(Sum('cuota'))['cuota__sum'],
+        'descurbana': descurbana.count(),
+        'descurbanapercent': round((descurbana.count() / desc.count()) * 100),
+        'descurbanacuota': descurbana.aggregate(Sum('cuota'))['cuota__sum']
+
+
     }
     return render(request, 'desconocidos/organismo.html', context)

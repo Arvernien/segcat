@@ -10,7 +10,7 @@
             <h5 class="float-left mb-0 text-secondary">{{organismo.nombre}}</h5>
         </div>
         <div class="card-body">
-            <h5>Desglose desconocidos</h5>
+            <h5 class="text-secondary">Desglose desconocidos: Viabilidad de investigación</h5>
             <div class="row border rounded">
                 <div class="col-4">
                     <canvas class="mb-2" id="Grafresultados" width="200" height="200"></canvas>
@@ -19,13 +19,73 @@
                     <table class="table">
                         <tr>
                             <td></td>
-                            <th scope="col">Desconocidos</th>
-                            <th scope="col">% del total</th>
+                            <th scope="col" class="text-center">Desconocidos</th>
+                            <th scope="col" class="text-center">Cuota IBI</th>
+                            <th scope="col" class="text-center">% del total</th>
                         </tr>
                         <tr>
                             <th scope="row">Antieconómicos</th>
-                            <td>{{antieconomicos}}</td>
+                            <td class="text-center">{{antieconomicos}}</td>
+                            <td class="text-center">{{anticuota}} €</td>
+                            <td class="text-center">{{antipercent}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Rústicas sin construcción</th>
+                            <td class="text-center">{{rusticas}}</td>
+                            <td class="text-center">{{rusticascuota}} €</td>
+                            <td class="text-center">{{rusticaspercent}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Solares urbanos</th>
+                            <td class="text-center">{{solares}}</td>
+                            <td class="text-center">{{solarescuota}} €</td>
+                            <td class="text-center">{{solarespercent}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Investigable</th>
+                            <td class="text-center">{{investigables}}</td>
+                            <td class="text-center">{{investigablescuota}} €</td>
+                            <td class="text-center">{{investigablespercent}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">TOTALES:</th>
+                            <th scope="col" class="text-center">{{desconocidos.count}}</th>
+                            <th scope="col" class="text-center">{{desconocidoscuota}} €</th>
+                            <td class="text-center"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <h5 class="mt-4 text-secondary">Desglose desconocidos: Rústica / Urbana</h5>
+            <div class="row border rounded">
+                <div class="col-4">
+                    <canvas class="mb-2" id="Grafurru" width="200" height="200"></canvas>
+                </div>
+                <div class="col">
+                    <table class="table">
+                        <tr>
                             <td></td>
+                            <th scope="col" class="text-center">Desconocidos</th>
+                            <th scope="col" class="text-center">Cuota IBI</th>
+                            <th scope="col" class="text-center">% del total</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">Rústicas</th>
+                            <td class="text-center">{{descrustica}}</td>
+                            <td class="text-center">{{descrusticacuota}} €</td>
+                            <td class="text-center">{{descrusticapercent}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Urbanas</th>
+                            <td class="text-center">{{descurbana}}</td>
+                            <td class="text-center">{{descurbanacuota}} €</td>
+                            <td class="text-center">{{descurbanapercent}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">TOTALES:</th>
+                            <th scope="col" class="text-center">{{desconocidos.count}}</th>
+                            <th scope="col" class="text-center">{{desconocidoscuota}} €</th>
+                            <td class="text-center"></td>
                         </tr>
                     </table>
                 </div>
@@ -33,7 +93,7 @@
         </div>
     </div>
 </div>
-    <script>
+<script>
         var ctxresultados = document.getElementById("Grafresultados").getContext('2d');
         var myChart = new Chart(ctxresultados, {
             type: 'pie',
@@ -68,12 +128,36 @@
     }
 
         });
+        var ctxresultados = document.getElementById("Grafurru").getContext('2d');
+        var myChart = new Chart(ctxresultados, {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [{{descrustica}},{{descurbana}}],
+        backgroundColor: [
+            'rgba(173, 173, 173, 0.6)',
+            'rgba(143, 212, 0, 0.6)'
+        ],
+            borderColor: [
+            'rgba(173, 173, 173, 1)',
+            'rgba(143, 212, 0, 1)'
+        ]
+        }],
+        // Etiquetas
+        labels: [
+            'Rústica',
+            'Urbana'
+        ]},
+        options: {
+        title: {
+            display: true,
+            text: ''
+        }
+    }
+
+        });
 </script>
-            {{desconocidos.count}}
-            {{antieconomicos}}
-            {{rusticas}}
-            {{solares}}
-            {{investigables}}
+
             </div>
         </div>
     </div>
