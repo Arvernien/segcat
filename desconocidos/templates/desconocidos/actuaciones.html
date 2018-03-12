@@ -1,3 +1,4 @@
+{% if listatramites %}
 {% for a in listatramites %}
 <div class="alert mb-2 fd-verde">
     <div class="row align-items-center">
@@ -37,3 +38,6 @@
     </div>
 </div>
 {% endfor %}
+{% else %}
+<div class="alert mb-2 fd-verde text-center texto-peq">No hay trámites</div>
+{% endif %}

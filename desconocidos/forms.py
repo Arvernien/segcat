@@ -56,7 +56,7 @@ class ActuacionForm(forms.ModelForm):
             'placeholder': 'Ej. 01/01/2018'
         }
     ))
-    descripcion = forms.CharField(widget=forms.Textarea({
+    descripcion = forms.CharField(required=True, widget=forms.Textarea({
         'rows': '5',
         'width': '100%',
         'class': 'form-control',
@@ -71,18 +71,24 @@ class TramiteForm(forms.ModelForm):
     a = []
     for tipo in tipotramite.objects.all():
         a.append((tipo.pk, tipo.descripcion))
+
     tipo = forms.ChoiceField(required=True, choices=a, widget=forms.Select(
         {
             'class': 'form-control',
         }
     ))
+    # tipo = forms.ModelChoiceField(required=True, queryset=tipotramite.objects.all(), widget=forms.Select(
+    #          {
+    #              'class': 'form-control',
+    #          }
+    #      ))
     tramite_agenda = forms.DateField(required=False, input_formats=['%d/%m/%Y'], label='Fecha agenda', widget=forms.TextInput(
         {
             'class': 'form-control datepicker',
             'placeholder': 'Ej. 01/01/2018'
         }
     ))
-    ampliacion = forms.CharField(widget=forms.Textarea({
+    ampliacion = forms.CharField(required=True, widget=forms.Textarea({
         'rows': '5',
         'width': '100%',
         'class': 'form-control',

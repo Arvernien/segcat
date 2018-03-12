@@ -1,4 +1,4 @@
-
+{% if acts %}
 {% for a in acts %}
 <div class="alert mb-2 fd-verde">
     <div class="row lineadebajo">
@@ -33,4 +33,6 @@
     </div>
 </div>
 {% endfor %}
-
+{% else %}
+<div class="alert mb-2 fd-verde text-center texto-peq">No hay notas</div>
+{% endif %}

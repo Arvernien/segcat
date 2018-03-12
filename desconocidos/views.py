@@ -226,16 +226,17 @@ def orgdatos(request):
 @login_required
 def addtramite(request):
     form = request.POST
+    # a = TramiteForm(request.POST)
+    # if a.is_valid():
+    #     print(a.cleaned_data['tramite_agenda'])
     desconocido = Desconocido.objects.get(pk=form.get('pk'))
     user = User.objects.get(username=request.user)
     getagenda = form.get('fecha_agenda') or None
-    print(form.get('tipo'))
     if getagenda is not None:
         agenda = datetime.strptime(getagenda, '%d/%m/%Y').strftime('%Y-%m-%d')
     else:
         agenda = None
     desconocido.creaTramite(user, form.get('ampliacion'), datetime.now(), form.get('tipo'), agenda)
-
     listatramites = tramites.objects.filter(desconocido=desconocido).order_by('pk')
     respuesta = {}
     respuesta['data'] = render_to_string('desconocidos/actuaciones.html', {'listatramites': listatramites, 'request': request})
