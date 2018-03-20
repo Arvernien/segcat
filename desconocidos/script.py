@@ -30,8 +30,6 @@ def carga_usos():
             print(clave, ex)
 
 
-
-
 def carga_ti():
     with open('desconocidos/TI.txt', newline='') as fichero:
         lector = csv.reader(fichero, delimiter=';')
@@ -40,13 +38,19 @@ def carga_ti():
             codigo = int(row[1][-3:])
             nombre = row[2]
             ti = float(row[3].replace(',', '.'))
+            ti_ru = float(row[4].replace(',', '.'))
             delegacion = organismo.objects.get(cod=org)
             try:
-                q = municipio(cod=codigo, nombre=nombre, tipo_impositivo=ti, org=delegacion)
+                q = municipio(cod=codigo, nombre=nombre, tipo_impositivo=ti, tipo_impositivo_ru=ti_ru, org=delegacion)
                 q.save()
-                print(delegacion, codigo, nombre, ti)
-            except:
-                print('Ya existe: ', codigo, nombre)
+                print(delegacion, codigo, nombre, ti, ti_ru)
+            except Exception as err:
+                if 'Ya existe la llave' in err.__str__():
+                    q = municipio.objects.get(cod=codigo, org=delegacion)
+                    q.tipo_impositivo = ti
+                    q.tipo_impositivo_ru = ti_ru
+                    q.save()
+                    print(delegacion, codigo, nombre, ti, ti_ru)
 
 def cargaDesc():
     with open('desconocidos/desconocidos.txt', newline='') as fichero:
@@ -57,8 +61,8 @@ def cargaDesc():
         for row in lector:
             filas += 1
             try:
-                delegacion = organismo.objects.get(cod=int(row[0])//1000)
-                muni = municipio.objects.get(org=delegacion, cod=row[0][-3:])
+                cod_delegacion = int(row[0])//1000
+                muni = municipio.objects.get(org__cod=cod_delegacion, cod=row[0][-3:])
                 if row[22] == '':
                     uso = usos.objects.get(pk='1')
                 else:
@@ -83,14 +87,14 @@ def cargaDesc():
                     puerta=row[15],
                     dir_no_estruc=row[16],
                     cod_postal=row[17],
-                    v_cat=int(row[18]),
-                    v_suelo=int(row[19]),
-                    v_constru=int(row[20]),
-                    b_liquidable=int(row[21]),
+                    v_cat=int(row[18].replace(',00', '')),
+                    v_suelo=int(row[19].replace(',00', '')),
+                    v_constru=int(row[20].replace(',00', '')),
+                    b_liquidable=int(row[21].replace(',00', '')),
                     clave_uso=uso,
                     id_fiscal=row[23],
                     sujeto_pasivo=row[24],
-                    tipo= tipo
+                    tipo=tipo
                 )
 
                 if q.num_fijo == '':
@@ -138,16 +142,6 @@ def actNaturaleza():
     i = 0
     for desconocido in lista:
         i += 1
-        # refcat = desconocido.refcat[:14]
-        # dgfhoja = refcat[-7:]
-        # try:
-        #     a = int(dgfhoja)
-        #     clase = 'RÚSTICA'
-        # except:
-        #     clase = 'URBANA'
-        # desconocido.tipo_finca = tipo_finca.objects.get(descripcion=clase)
-        # desconocido.save()
-        # print(desconocido.refcat + '-->' + clase)
         if desconocido.num_fijo == '':
             desconocido.tipo_finca = tipo_finca.objects.get(descripcion='RÚSTICA')
         else:
