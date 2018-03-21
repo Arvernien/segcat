@@ -2,29 +2,82 @@
 {% load static %}
 {% load custom_tags %}
 {% block contenido %}
-
+<script type='text/javascript' src="{% static 'polls/wheel/jquery.mousewheel.min.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" type="text/javascript"></script>
+
+        {% if modo %}
 <div class="row justify-content-center">
-    {% for organismo in organismos %}
-    <div class="card ml-3 mb-2" style="width: 18rem;">
-        <img id="img{{organismo.pk}}" class="card-img-top" src="{% static 'img/loading.svg' %}">
-        <canvas class="card-img-top" id="Graf{{organismo.pk}}" width="400" height="400"></canvas>
+    <div class="card ml-3 mb-2 live__scroll--box" style="width: 18rem; background-color: #e9fcc2;">
+        <canvas class="card-img-top" id="Grafresultados" width="400" height="400"></canvas>
         <form method="post">{% csrf_token %}</form>
         <div class="card-body">
-            <h6 class="card-title text-center">{{organismo.nombre}}</h6>
+            <h6 class="card-title text-center">Resultados búsqueda</h6>
             <ul class="card-text">
-                <li class="texto-peq">Mod. Titular: <span class="texto-peq" id="mt{{organismo.pk}}">--</span></li>
-                <li class="texto-peq">Liquidaciones: <span class="texto-peq" id="liq{{organismo.pk}}">--</span></li>
-                <li class="texto-peq">Importe liquidado: <span class="texto-peq" id="i_liq{{organismo.pk}}">--</span></li>
-                <li class="texto-peq">IBI Desconocido: <span class="texto-peq" id="i_desc{{organismo.pk}}">--</span></li>
+                <li class="texto-peq">Mod. Titular: <span class="texto-peq" id="mtresultados">{{mt}}</span></li>
+                <li class="texto-peq">Liquidaciones: <span class="texto-peq" id="liqresultados">{{liq}}</span></li>
+                <li class="texto-peq">Importe liquidado: <span class="texto-peq" id="i_liqresultados">{{importe_liq}} €</span></li>
+                <li class="texto-peq">IBI Desconocido: <span class="texto-peq" id="i_descresultados">{{pendiente}} €</span></li>
             </ul>
+        </div>
+        <div class="row align-items-end mb-1">
+            <div class="col text-center align-self-end"><a class="btn btn-sm btn-outline-primary" href="{{busqhref}}"><i class="fas fa-info"></i> Más datos</a></div>
+        </div>
+    </div>
+        <script>
+            var ctxresultados = document.getElementById("Grafresultados").getContext('2d');
+            var myChart = new Chart(ctxresultados, {
+                type: 'doughnut',
+                    data: {
+                    datasets: [{
+                        data: [{{investigacion}},{{ficticios}},{{candidatos}},{{resueltos}}],
+                        backgroundColor: [
+                            'rgba(255, 0, 0, 0.6)',
+                            'rgba(252, 176, 0, 0.6)',
+                            'rgba(255, 225, 0, 0.6)',
+                            'rgba(143, 212, 0, 0.6)'
+                        ],
+                        borderColor:[
+                            'rgba(255, 0, 0, 1)',
+                            'rgba(252, 176, 0, 1)',
+                            'rgba(255, 225, 0, 1)',
+                            'rgba(143, 212, 0, 1)'
+                        ]
+                    }],
+
+                        // Etiquetas
+                        labels: [
+                        'En investigación',
+                        'Nif Ficticio',
+                        'Candidatos',
+                        'Resueltos'
+                    ]
+
+                },
+            });
+</script>
+</div>
+        {% else %}
+<div class="live__scroll">
+    <div class="row justify-content-center">
+        {% for organismo in organismos %}
+        <div class="card ml-3 mb-2 live__scroll--box" style="width: 18rem;">
+            <img id="img{{organismo.pk}}" class="card-img-top" src="{% static 'img/loading.svg' %}">
+            <canvas class="card-img-top" id="Graf{{organismo.pk}}" width="400" height="400"></canvas>
+            <form method="post">{% csrf_token %}</form>
+            <div class="card-body">
+                <h6 class="card-title text-center">{{organismo.nombre}}</h6>
+                <ul class="card-text">
+                    <li class="texto-peq">Mod. Titular: <span class="texto-peq" id="mt{{organismo.pk}}">--</span></li>
+                    <li class="texto-peq">Liquidaciones: <span class="texto-peq" id="liq{{organismo.pk}}">--</span></li>
+                    <li class="texto-peq">Importe liquidado: <span class="texto-peq" id="i_liq{{organismo.pk}}">--</span></li>
+                    <li class="texto-peq">IBI Desconocido: <span class="texto-peq" id="i_desc{{organismo.pk}}">--</span></li>
+                </ul>
             </div>
             <div class="row align-items-end mb-1">
-            <div class="col text-center align-self-end"><a class="btn btn-sm btn-outline-primary" href="organismo/{{organismo.pk}}"><i class="fas fa-info"></i> Más datos</a></div>
-</div>
-
-    </div>
-    <script>
+                <div class="col text-center align-self-end"><a class="btn btn-sm btn-outline-primary" href="organismo/{{organismo.pk}}"><i class="fas fa-info"></i> Más datos</a></div>
+            </div>
+        </div>
+        <script>
         $('#Graf{{organismo.pk}}').hide();
         $.ajax({
             type: "POST",
@@ -78,56 +131,10 @@
         }
         });
 </script>
-    {% endfor %}
-    {% if modo %}
-    <div class="card ml-3 mb-2" style="width: 18rem; background-color: #e9fcc2;">
-        <!--<img id="imgresultados" class="card-img-top" src="{% static 'img/loading.svg' %}">-->
-        <canvas class="card-img-top" id="Grafresultados" width="400" height="400"></canvas>
-        <form method="post">{% csrf_token %}</form>
-        <div class="card-body">
-            <h6 class="card-title text-center">Resultados búsqueda</h6>
-            <ul class="card-text">
-                <li class="texto-peq">Mod. Titular: <span class="texto-peq" id="mtresultados">{{mt}}</span></li>
-                <li class="texto-peq">Liquidaciones: <span class="texto-peq" id="liqresultados">{{liq}}</span></li>
-                <li class="texto-peq">Importe liquidado: <span class="texto-peq" id="i_liqresultados">{{importe_liq}} €</span></li>
-                <li class="texto-peq">IBI Desconocido: <span class="texto-peq" id="i_descresultados">{{pendiente}} €</span></li>
-            </ul>
-        </div>
-    </div>
-    <script>
-            var ctxresultados = document.getElementById("Grafresultados").getContext('2d');
-            var myChart = new Chart(ctxresultados, {
-                type: 'doughnut',
-                    data: {
-                    datasets: [{
-                        data: [{{investigacion}},{{ficticios}},{{candidatos}},{{resueltos}}],
-                        backgroundColor: [
-                            'rgba(255, 0, 0, 0.6)',
-                            'rgba(252, 176, 0, 0.6)',
-                            'rgba(255, 225, 0, 0.6)',
-                            'rgba(143, 212, 0, 0.6)'
-                        ],
-                        borderColor:[
-                            'rgba(255, 0, 0, 1)',
-                            'rgba(252, 176, 0, 1)',
-                            'rgba(255, 225, 0, 1)',
-                            'rgba(143, 212, 0, 1)'
-                        ]
-                    }],
-
-                        // Etiquetas
-                        labels: [
-                        'En investigación',
-                        'Nif Ficticio',
-                        'Candidatos',
-                        'Resueltos'
-                    ]
-
-                },
-            });
-</script>
-    {% endif %}
+        {% endfor %}
+            </div>
 </div>
+        {% endif %}
 
 
 <link rel="stylesheet" type="text/css" href="{% static 'polls/styles.css' %}" />
@@ -267,9 +274,9 @@
         <td>{{ desc.tipo }}</td>
         <td>{{ desc.cuota }} €</td>
         {% if desc.resuelto == True %}
-            <td><img src="{% static 'img/ok.svg' %}" width="25" height="25"></td>
+            <td><img class="ml-4" src="{% static 'img/ok.svg' %}" width="25" height="25"></td>
         {% else %}
-            <td><img src="{% static 'img/fail.svg' %}" width="25" height="25"></td>
+            <td><img class="ml-4" src="{% static 'img/fail.svg' %}" width="25" height="25"></td>
         {% endif %}
     </tr>
 {% endfor %}
@@ -314,5 +321,15 @@
     $('#panelbusquedas').on('hide.bs.collapse', function() {
         $('#busqrapida').prop('disabled', false);
         });
+    $(document).ready(function(){
+      $('.live__scroll').mousewheel(function(event, delta) {
+
+         //The "30" represents speed. preventDefault ensures the page won't scroll down.
+         this.scrollLeft -= (delta * 60);
+        event.preventDefault();
+
+ });
+});
+
 </script>
 {% endblock %}

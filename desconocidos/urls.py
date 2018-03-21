@@ -5,6 +5,7 @@ from . import views
 app_name = 'desconocidos'
 urlpatterns = [
     path('', views.Desconocidos, name='desconocidos'),
+    path('busqstats/', views.busqstats, name='busqstats'),
     path('<int:pk>', views.detalle, name='detalle'),
     path('addnota', views.addnota, name='addnota'),
     path('addnotatest', views.addnotatest, name='addnotatest'),

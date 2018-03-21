@@ -67,7 +67,7 @@ def cargaDesc():
                     uso = usos.objects.get(pk='1')
                 else:
                     uso = usos.objects.get(pk=row[22])
-                if 'EN INVESTIGACION' not in row[24] and row[23] != '*':
+                if 'EN INVESTIGACION' not in row[24]:
                     tipo = tipoDesc.objects.get(descripcion='NIF FICTICIO')
                 else:
                     tipo = tipoDesc.objects.get(descripcion='EN INVESTIGACIÓN')
