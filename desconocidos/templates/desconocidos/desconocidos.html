@@ -2,9 +2,12 @@
 {% load static %}
 {% load custom_tags %}
 {% block contenido %}
+
+<!-- CARGA DE LOS SCRIPTS PARA SCROLLING HORIZONTAL Y GENERACIÓN DE GRÁFICOS CON CHARTJS  -->
 <script type='text/javascript' src="{% static 'polls/wheel/jquery.mousewheel.min.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" type="text/javascript"></script>
 
+<!-- MUESTRA EL GRÁFICO DE DE LOS RESULTADOS DE BÚSQUEDA SI SE HA REALIZADO (COMPRUEBA LA EXISTENCIA DE "MODO" ) -->
         {% if modo %}
 <div class="row justify-content-center">
     <div class="card ml-3 mb-2 live__scroll--box" style="width: 18rem; background-color: #e9fcc2;">
@@ -13,6 +16,7 @@
         <div class="card-body">
             <h6 class="card-title text-center">Resultados búsqueda</h6>
             <ul class="card-text">
+                <li class="texto-peq">Desconocidos: <span class="texto-peq" id="descocount">{{total}}</span></li>
                 <li class="texto-peq">Mod. Titular: <span class="texto-peq" id="mtresultados">{{mt}}</span></li>
                 <li class="texto-peq">Liquidaciones: <span class="texto-peq" id="liqresultados">{{liq}}</span></li>
                 <li class="texto-peq">Importe liquidado: <span class="texto-peq" id="i_liqresultados">{{importe_liq}} €</span></li>
@@ -24,6 +28,8 @@
         </div>
     </div>
         <script>
+            //ESTE SCRIPT ES EL ENCARGADO DE MOSTRAR EL GRÁFICO DE LOS RESULTADOS DE BÚSQUEDA
+
             var ctxresultados = document.getElementById("Grafresultados").getContext('2d');
             var myChart = new Chart(ctxresultados, {
                 type: 'doughnut',
@@ -56,6 +62,8 @@
             });
 </script>
 </div>
+
+<!-- SI NO SE HA REALIZADO BÚSQUEDA MUESTRA UN GRÁFICO PARA CADA ORGANISMO QUE FIGURE EN LA BASE DE DATOS -->
         {% else %}
 <div class="live__scroll">
     <div class="row justify-content-center">
@@ -67,6 +75,7 @@
             <div class="card-body">
                 <h6 class="card-title text-center">{{organismo.nombre}}</h6>
                 <ul class="card-text">
+                    <li class="texto-peq">Desconocidos: <span class="texto-peq" id="desc{{organismo.pk}}">--</span></li>
                     <li class="texto-peq">Mod. Titular: <span class="texto-peq" id="mt{{organismo.pk}}">--</span></li>
                     <li class="texto-peq">Liquidaciones: <span class="texto-peq" id="liq{{organismo.pk}}">--</span></li>
                     <li class="texto-peq">Importe liquidado: <span class="texto-peq" id="i_liq{{organismo.pk}}">--</span></li>
@@ -78,6 +87,8 @@
             </div>
         </div>
         <script>
+        //ESTE SCRIPT ES EL ENCARGADO DE MOSTRAR EL GRÁFICO DE CADA ORGANISMO
+
         $('#Graf{{organismo.pk}}').hide();
         $.ajax({
             type: "POST",
@@ -87,6 +98,7 @@
         csrfmiddlewaretoken: '{{ csrf_token }}'},
 
         success: function(json) {
+                $('#desc{{organismo.pk}}').html(json["total"]);
                 $('#mt{{organismo.pk}}').html(json["mt"]);
                 $('#liq{{organismo.pk}}').html(json["liq"]);
                 $('#i_liq{{organismo.pk}}').html(json["importe_liq"]+' €');
@@ -121,8 +133,6 @@
 
                 },
             });
-            console.log(json);
-            console.log(json["resueltos"]);
             $('#img{{organismo.pk}}').hide();
             $('#Graf{{organismo.pk}}').show();
         },
@@ -136,6 +146,7 @@
 </div>
         {% endif %}
 
+<!-- PANEL DE BÚSQUEDAS -->
 
 <link rel="stylesheet" type="text/css" href="{% static 'polls/styles.css' %}" />
 <div class="container-fluid mb-3">
@@ -232,17 +243,25 @@
                                     <option value="False">No</option>
                                 </select>
                             </div>
+                            <div class="form-group col-1">
+                                <label for="inputAntiecon" class="text-primary">Antieconómicos</label>
+                                <select class="form-control form-control-sm" id="inputAntiecon" name="inputAntiecon">
+                                    <option value="True">Mostrar</option>
+                                    <option value="False" selected="selected">Ocultar</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="form-row justify-content-center mb-3">
                             <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-search"></i> Buscar</button>
                         </div>
+                    </form>
                 </div>
-                </form>
             </div>
         </div>
     </div>
 </div>
 
+<!-- SI SE PASA UNA LISTA DE DESCONOCIDOS PAGINADA DESDE LA VISTA GENERA LA TABLA CON LOS RESULTADOS -->
 
 {% if lista_desc %}
 <div class="container-fluid">
@@ -259,10 +278,13 @@
             <th scope=""col>RESUELTO</th>
         </tr>
         </thead>
+
+        <!-- BUCLE PARA MOSTRAR CADA UNO DE LOS DESCONOCIDOS EN UNA LINEA DE LA TABLA -->
+
 {% for desc in lista_desc %}
     <tr>
         <td>{{forloop.counter0|add:lista_desc.start_index }}</td>
-        <td><a class="" data-toggle="tooltip" title="{{desc.tipo_finca.descripcion}}">{% if desc.tipo_finca.descripcion == 'RÚSTICA' %}
+        <td><a class="" data-toggle="tooltip" title="{{desc.tipo_finca.descripcion}}" data-placement="right">{% if desc.tipo_finca.descripcion == 'RÚSTICA' %}
             <i class="fas fa-tree text-secondary ml-4"></i>
             {% else %}
             <i class="fas fa-building text-secondary ml-4"></i>
@@ -283,6 +305,7 @@
 </table>
 </div>
 
+<!-- PAGINADOR AL FINAL DE LA PÁGINA -->
 
 <div class="container-fluid -mb-6">
     <nav>
@@ -315,16 +338,23 @@
 {% else %}
 {% endif %}
 <script>
+
+    // DESACTIVA BÚSQUEDA RÁPIDA SI SE DESPLIEGA EL PANEL DE BÚSQUEDAS
+
     $('#panelbusquedas').on('show.bs.collapse', function() {
         $('#busqrapida').prop('disabled', true);
         });
+
+    // ACTIVA BÚSQUEDA RÁPIDA SI SE CONTRAE EL PANEL DE BÚSQUEDAS
+
     $('#panelbusquedas').on('hide.bs.collapse', function() {
         $('#busqrapida').prop('disabled', false);
         });
+
+    // INICIALIZA EL SCROLL HORIZONTAL EN EL DIV DE LOS GRÁFICOS DE ORGANISMO
+
     $(document).ready(function(){
       $('.live__scroll').mousewheel(function(event, delta) {
-
-         //The "30" represents speed. preventDefault ensures the page won't scroll down.
          this.scrollLeft -= (delta * 60);
         event.preventDefault();
 

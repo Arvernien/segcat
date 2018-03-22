@@ -219,3 +219,7 @@ class tramites(models.Model):
 
     class Meta:
         verbose_name_plural = 'Trámites'
+
+    @property
+    def get_absolute_url(self):
+        return reverse('desconocidos:detalle', args=[str(self.desconocido.pk)])

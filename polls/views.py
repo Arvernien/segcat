@@ -102,13 +102,8 @@ def agenda(request):
     next_month = datetime.date(year=next_month.year, month=next_month.month,
                                day=1)  # find first day of next month
     context = {'calendario': mark_safe(cal),
-               # 'yprevio': yprevio,
                 'mprevio': str(previous_month),
-               # 'ysiguiente': ysiguiente,
                 'msiguiente': str(next_month),
-               # 'y': y,
-               # 'm': m,
-                'today': str(today),
-               # 'todaymonth': todaymonth
-    }
+                'today': str(today)
+               }
     return render(request, 'polls/agenda.html', context)
