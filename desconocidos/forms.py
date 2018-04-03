@@ -104,3 +104,6 @@ class TramiteForm(forms.ModelForm):
         fields = ['tipo', 'tramite_agenda', 'ampliacion']
 
 
+class SubirFichero(forms.Form):
+    titulo = forms.CharField(max_length=50)
+    fichero = forms.FileField()

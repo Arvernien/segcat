@@ -1,5 +1,6 @@
 from polls.models import municipio, organismo
 from .models import Desconocido, usos, tipoDesc, tipo_finca
+from django.db.models import F
 from decimal import Decimal
 import csv
 
@@ -52,7 +53,58 @@ def carga_ti():
                     q.save()
                     print(delegacion, codigo, nombre, ti, ti_ru)
 
+def clasifica():
+    desc = Desconocido.objects.all()
+    tipo_antiecon = tipoDesc.objects.get(descripcion='ANTIECONÓMICO')
+    tipo_investigable = tipoDesc.objects.get(descripcion='INVESTIGABLE')
+    tipo_rustica = tipoDesc.objects.get(descripcion='RÚSTICA SOLAR')
+    tipo_solar = tipoDesc.objects.get(descripcion='URBANA SOLAR')
+    antieconomicos = desc.filter(
+        cuota__lt=F('fk_muni__org__antieconomico')
+    )
+
+    rusticas = desc.filter(
+        tipo_finca__descripcion='RÚSTICA',
+        v_constru=0,
+        cuota__gte=F('fk_muni__org__antieconomico')
+    )
+    solares = desc.filter(
+        tipo_finca__descripcion='URBANA',
+        v_constru=0,
+        cuota__gte=F('fk_muni__org__antieconomico')
+    )
+    investigables = desc.filter(
+        v_constru__gt=0,
+        cuota__gte=F('fk_muni__org__antieconomico')
+    )
+    i = 0
+    for desco in antieconomicos:
+        desco.tipo = tipo_antiecon
+        desco.save()
+        print(desco, tipo_antiecon)
+        i += 1
+    for desco in rusticas:
+        desco.tipo = tipo_rustica
+        desco.save()
+        print(desco, tipo_rustica)
+        i += 1
+    for desco in solares:
+        desco.tipo = tipo_solar
+        desco.save()
+        print(desco, tipo_solar)
+        i += 1
+    for desco in investigables:
+        desco.tipo = tipo_investigable
+        desco.save()
+        print(desco, tipo_investigable)
+        i += 1
+    print(str(i)+'/'+str(desc.count()))
+
 def cargaDesc():
+    tipo_antiecon = tipoDesc.objects.get(descripcion='ANTIECONÓMICO')
+    tipo_investigable = tipoDesc.objects.get(descripcion='INVESTIGABLE')
+    tipo_rustica = tipoDesc.objects.get(descripcion='RÚSTICA SOLAR')
+    tipo_solar = tipoDesc.objects.get(descripcion='URBANA SOLAR')
     with open('desconocidos/desconocidos.txt', newline='') as fichero:
         lector = csv.reader(fichero, delimiter=';')
         i = 0
@@ -67,10 +119,6 @@ def cargaDesc():
                     uso = usos.objects.get(pk='1')
                 else:
                     uso = usos.objects.get(pk=row[22])
-                if 'EN INVESTIGACION' not in row[24]:
-                    tipo = tipoDesc.objects.get(descripcion='NIF FICTICIO')
-                else:
-                    tipo = tipoDesc.objects.get(descripcion='EN INVESTIGACIÓN')
 
                 q = Desconocido(
                     fk_muni=muni,
@@ -94,7 +142,6 @@ def cargaDesc():
                     clave_uso=uso,
                     id_fiscal=row[23],
                     sujeto_pasivo=row[24],
-                    tipo=tipo
                 )
 
                 if q.num_fijo == '':
@@ -109,6 +156,16 @@ def cargaDesc():
                 else:
                     q.cuota = round(
                         Decimal((q.b_liquidable / 100)) * q.fk_muni.tipo_impositivo_ru / 100, 2)
+
+                if q.cuota < q.fk_muni.org.antieconomico:
+                    q.tipo = tipo_antiecon
+                elif q.tipo_finca.descripcion == 'RÚSTICA' and q.v_constru == 0:
+                    q.tipo = tipo_rustica
+                elif q.tipo_finca.descripcion == 'URBANA' and q.v_constru == 0:
+                    q.tipo = tipo_solar
+                else:
+                    q.tipo = tipo_investigable
+
 
                 q.save()
                 print('Cargado desconocido: ' + row[2])

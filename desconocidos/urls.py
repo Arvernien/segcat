@@ -14,5 +14,7 @@ urlpatterns = [
     path('checktram', views.checktramite, name='checktramite'),
     path('orgdatos', views.orgdatos, name='orgdatos'),
     path('datosform', views.grabadatos, name='datosform'),
-    path('organismo/<int:pk>', views.orgstats, name='orgstats')
+    path('organismo/<int:pk>', views.orgstats, name='orgstats'),
+    path('pdf', views.pdftest, name='pdf'),
+    path('subir', views.subefichero, name='subir'),
 ]

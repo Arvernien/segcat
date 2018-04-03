@@ -3,97 +3,119 @@
 {% load custom_tags %}
 {% block contenido %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" type="text/javascript"></script>
-<div class="container clearfix">
+<div class="container-fluid clearfix w-75">
 
     <div class="card">
         <div class="card-header justify-content-center">
-            <h5 class="float-left mb-0 text-secondary">{{organismo.nombre}}</h5>
+            <h5 class="float-left mb-0 text-secondary">{{titulo}}</h5>
         </div>
         <div class="card-body">
             <h5 class="text-secondary">Desglose desconocidos: Viabilidad de investigación</h5>
             <div class="row border rounded">
-                <div class="col-4">
+                <div class="col-3">
                     <canvas class="mb-2" id="Grafresultados" width="200" height="200"></canvas>
                 </div>
                 <div class="col">
                     <table class="table">
                         <tr>
                             <td></td>
-                            <th scope="col" class="text-center">Desconocidos</th>
-                            <th scope="col" class="text-center">Cuota IBI</th>
-                            <th scope="col" class="text-center">% Desconocidos</th>
-                            <th scope="col" class="text-center">% IBI</th>
+                            <th scope="col" class="text-center"><a class="" data-toggle="tooltip" title="Nº de Desconocidos de la categoría" data-placement="top">Desconocidos</a></th>
+                            <th scope="col" class="text-center"><a class="" data-toggle="tooltip" title="Porcentaje que representa la categoría del total de Desconocidos listados" data-placement="top">% Desconocidos</a></th>
+                            <th scope="col" class="text-center"><a class="" data-toggle="tooltip" title="Porcentaje que representa la categoría del total de Objetos Tributarios en los padrones afectados" data-placement="top">% OT</a></th>
+                            <th scope="col" class="text-center"><a class="" data-toggle="tooltip" title="Suma de la cuota de IBI de los Desconocidos de la categoría" data-placement="top">Cuota IBI</a></th>
+                            <th scope="col" class="text-center"><a class="" data-toggle="tooltip" title="Porcentaje que representa la categoría de la cuota de IBI de los Desconocidos listados" data-placement="top">% IBI Desco</a></th>
+                            <th scope="col" class="text-center"><a class="" data-toggle="tooltip" title="Porcentaje que representa la categoría del total de la cuota de IBI de los padrones afectados" data-placement="top">% IBI</a></th>
                         </tr>
                         <tr>
-                            <th scope="row">Antieconómicos</th>
+                            <th scope="row"><a class="" data-toggle="tooltip" title="Desconocidos que no superan el filtro antieconómico del organismo al que pertenecen" data-placement="left">Antieconómicos</a></th>
                             <td class="text-center">{{antieconomicos}}</td>
-                            <td class="text-center">{{anticuota}} €</td>
                             <td class="text-center">{{antipercent}} %</td>
+                            <td class="text-center">{{antipercentOT}} %</td>
+                            <td class="text-center">{{anticuota}} €</td>
                             <td class="text-center">{{antipercentibi}} %</td>
+                            <td class="text-center">{{antipercentibitotal}} %</td>
                         </tr>
                         <tr>
-                            <th scope="row">Rústicas sin construcción</th>
+                            <th scope="row"><a class="" data-toggle="tooltip" title="Desconocidos de rústica sin construcción que superan el filtro antieconómico" data-placement="left">Rústicas sin construcción</a></th>
                             <td class="text-center">{{rusticas}}</td>
-                            <td class="text-center">{{rusticascuota}} €</td>
                             <td class="text-center">{{rusticaspercent}} %</td>
+                            <td class="text-center">{{rusticaspercentOT}} %</td>
+                            <td class="text-center">{{rusticascuota}} €</td>
                             <td class="text-center">{{rusticaspercentibi}} %</td>
+                            <td class="text-center">{{rusticaspercentibitotal}} %</td>
                         </tr>
                         <tr>
-                            <th scope="row">Solares urbanos</th>
+                            <th scope="row"><a class="" data-toggle="tooltip" title="Desconocidos de urbana sin construcción que superan el filtro antieconómico" data-placement="left">Solares urbanos</a></th>
                             <td class="text-center">{{solares}}</td>
-                            <td class="text-center">{{solarescuota}} €</td>
                             <td class="text-center">{{solarespercent}} %</td>
+                            <td class="text-center">{{solarespercentOT}} %</td>
+                            <td class="text-center">{{solarescuota}} €</td>
                             <td class="text-center">{{solarespercentibi}} %</td>
+                            <td class="text-center">{{solarespercentibitotal}} %</td>
                         </tr>
                         <tr>
-                            <th scope="row">Investigable</th>
+                            <th scope="row"><a class="" data-toggle="tooltip" title="Desconocidos con construcción que superan el filtro antieconómico" data-placement="left">Investigable</a></th>
                             <td class="text-center">{{investigables}}</td>
-                            <td class="text-center">{{investigablescuota}} €</td>
                             <td class="text-center">{{investigablespercent}} %</td>
+                            <td class="text-center">{{investigablespercentOT}} %</td>
+                            <td class="text-center">{{investigablescuota}} €</td>
                             <td class="text-center">{{investigablespercentibi}} %</td>
+                            <td class="text-center">{{investigablespercentibitotal}} %</td>
                         </tr>
                         <tr>
                             <th scope="row">TOTALES:</th>
                             <th scope="col" class="text-center">{{desconocidos.count}}</th>
+                            <td class="text-center"></td>
+                            <th scope="col" class="text-center">{{percenttotalOT}} %</th>
                             <th scope="col" class="text-center">{{desconocidoscuota}} €</th>
                             <td class="text-center"></td>
+                            <th scope="col" class="text-center">{{ibipercenttotal}} %</th>
                         </tr>
                     </table>
                 </div>
             </div>
             <h5 class="mt-4 text-secondary">Desglose desconocidos: Rústica / Urbana</h5>
             <div class="row border rounded">
-                <div class="col-4">
+                <div class="col-3">
                     <canvas class="mb-2" id="Grafurru" width="200" height="200"></canvas>
                 </div>
                 <div class="col">
                     <table class="table">
                         <tr>
                             <td></td>
-                            <th scope="col" class="text-center">Desconocidos</th>
-                            <th scope="col" class="text-center">Cuota IBI</th>
-                            <th scope="col" class="text-center">% Desconocidos</th>
-                            <th scope="col" class="text-center">% IBI</th>
+                            <th scope="col" class="text-center"><a class="" data-toggle="tooltip" title="Nº de Desconocidos de la categoría" data-placement="top">Desconocidos</a></th>
+                            <th scope="col" class="text-center"><a class="" data-toggle="tooltip" title="Porcentaje que representa la categoría del total de Desconocidos listados" data-placement="top">% Desconocidos</a></th>
+                            <th scope="col" class="text-center"><a class="" data-toggle="tooltip" title="Porcentaje que representa la categoría del total de Objetos Tributarios en los padrones afectados" data-placement="top">% OT</a></th>
+                            <th scope="col" class="text-center"><a class="" data-toggle="tooltip" title="Suma de la cuota de IBI de los Desconocidos de la categoría" data-placement="top">Cuota IBI</a></th>
+                            <th scope="col" class="text-center"><a class="" data-toggle="tooltip" title="Porcentaje que representa la categoría de la cuota de IBI de los Desconocidos listados" data-placement="top">% IBI Desco</a></th>
+                            <th scope="col" class="text-center"><a class="" data-toggle="tooltip" title="Porcentaje que representa la categoría del total de la cuota de IBI de los padrones afectados" data-placement="top">% IBI</a></th>
                         </tr>
                         <tr>
-                            <th scope="row">Rústicas</th>
+                            <th scope="row"><a class="" data-toggle="tooltip" title="Desconocidos situados en fincas rústicas" data-placement="left">Rústicas</a></th>
                             <td class="text-center">{{descrustica}}</td>
-                            <td class="text-center">{{descrusticacuota}} €</td>
                             <td class="text-center">{{descrusticapercent}} %</td>
+                            <td class="text-center">{{descrusticapercentOT}} %</td>
+                            <td class="text-center">{{descrusticacuota}} €</td>
                             <td class="text-center">{{descrusticapercentibi}} %</td>
+                            <td class="text-center">{{descrusticapercentibitotal}} %</td>
                         </tr>
                         <tr>
-                            <th scope="row">Urbanas</th>
+                            <th scope="row"><a class="" data-toggle="tooltip" title="Desconocidos situados en fincas urbanas" data-placement="left">Urbanas</a></th>
                             <td class="text-center">{{descurbana}}</td>
-                            <td class="text-center">{{descurbanacuota}} €</td>
                             <td class="text-center">{{descurbanapercent}} %</td>
+                            <td class="text-center">{{descurbanapercentOT}} %</td>
+                            <td class="text-center">{{descurbanacuota}} €</td>
                             <td class="text-center">{{descurbanapercentibi}} %</td>
+                            <td class="text-center">{{descurbanapercentibitotal}} %</td>
                         </tr>
                         <tr>
                             <th scope="row">TOTALES:</th>
                             <th scope="col" class="text-center">{{desconocidos.count}}</th>
+                            <td class="text-center"></td>
+                            <th scope="col" class="text-center">{{percenttotalOT}} %</th>
                             <th scope="col" class="text-center">{{desconocidoscuota}} €</th>
                             <td class="text-center"></td>
+                            <th scope="col" class="text-center">{{ibipercenttotal}} %</th>
                         </tr>
                     </table>
                 </div>

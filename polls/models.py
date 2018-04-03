@@ -11,6 +11,7 @@ class organismo(models.Model):
     grupo = models.ForeignKey(Group, on_delete=models.DO_NOTHING, default='')
     antieconomico = models.DecimalField(max_digits=4, decimal_places=2)
     padron_ibi = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    padron_n_OT = models.IntegerField()
 
     def __str__(self):
         return self.nombre
