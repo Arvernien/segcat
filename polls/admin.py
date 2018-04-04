@@ -1,19 +1,10 @@
 from django.contrib import admin
-from .models import Choice, Question, Finca, organismo, municipio
+from .models import organismo, municipio, SubidaFichero
 
-class ChoiceInLine(admin.TabularInline):
-    model = Choice
-    extra = 3
 
-class QuestionAdmin(admin.ModelAdmin):
-    fieldsets = [
-        (None, {'fields': ['question_text']}),
-        ('Date information', {'fields': ['pub_date'], 'classes':['collapse']}),
-    ]
-    inlines = [ChoiceInLine]
-    list_display = ('question_text', 'pub_date', 'was_published_recently')
-    list_filter = ['pub_date']
-    search_fields = ['question_text']
+
+
+# Register your models here.
 
 class municipioAdmin(admin.ModelAdmin):
     list_display = ('delegacion', 'codigo', 'nombre', 'tipo_impositivo', 'tipo_impositivo_ru', 'organismo')
@@ -42,12 +33,6 @@ class organismoAdmin(admin.ModelAdmin):
         return obj.cod
     codigo.short_description = "CÓDIGO"
 
-
-
-admin.site.register(Question, QuestionAdmin)
-admin.site.register(Finca)
 admin.site.register(organismo, organismoAdmin)
 admin.site.register(municipio, municipioAdmin)
-
-
-# Register your models here.
+admin.site.register(SubidaFichero)

@@ -4,9 +4,43 @@
 {% block contenido %}
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-{{form.as_table}}
-    <button class="btn" type="submit">Subir</button>
+    <div class="container-fluid card-header">
+
+        <div class="form-row">
+            <div class="form-group col-5">
+                <label for="{{form.titulo.id_for_label}}" class="text-primary">{{form.titulo.label}}</label>
+                {{form.titulo}}
+            </div>
+            <div class="form-group col-3">
+                <label for="{{form.fichero.id_for_label}}" class="text-primary">{{form.fichero.label}}</label>
+                <div class="input-group input-group-sm">
+                    <div class="custom-file">
+                        <!--<input type="file" class="custom-file-input" id="inputGroupFile04">-->
+                        {{form.fichero}}
+                        <label class="custom-file-label" for="{{form.fichero.id_for_label}}">Seleccione fichero</label>
+                    </div>
+                    <div class="input-group-append">
+                        <button class="btn btn-sm btn-primary " type="submit">Cargar</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
 </form>
-
-
+{% if carga %}
+<div class="container-fluid alert-success">
+    {{form.titulo}}
+</div>
+{% autoescape off %}
+{% if carga.cargados > 0 %}
+{{carga.tabla_cargados}}
+{% endif %}
+&nbsp;
+&nbsp;
+{% if carga.cargados != carga.totales %}
+{{carga.tabla_errores}}
+{% endif %}
+{% endautoescape %}
+{% endif %}
 {% endblock %}

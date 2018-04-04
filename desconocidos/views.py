@@ -1,3 +1,4 @@
+from desconocidos.script import cargaDesconocidos
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from .models import Desconocido, actuaciones, tramites, tipoDesc
@@ -6,7 +7,8 @@ from django.db.models import F, Q, Sum
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import DesconocidoForm, ActuacionForm, TramiteForm, SubirFichero
+from .forms import DesconocidoForm, ActuacionForm, TramiteForm
+from polls.forms import SubirFichero
 from django.shortcuts import get_object_or_404
 from datetime import datetime
 from django.http import HttpResponseRedirect, JsonResponse
@@ -895,16 +897,29 @@ def busqstats(request):
     return render(request, 'desconocidos/organismo.html', context)
 
 def subefichero(request):
+    carga = {}
     if request.method == 'POST':
         form = SubirFichero(request.POST, request.FILES)
         if form.is_valid():
-            f = request.FILES['fichero']
-            with open(settings.MEDIA_ROOT + 'test.txt', 'wb+') as destination:
-                for chunk in f.chunks():
-                    destination.write(chunk)
+            subida = form.save(commit=False)
+            subida.nombre = request.FILES['fichero'].name
+            subida.usuario = request.user
+            subida.save()
+
+            with open(subida.fichero.path, newline='') as archivo:
+                try:
+                    tipo = archivo.readline().split(';')[0]
+                    if tipo == 'DESCONOCIDOS':
+                        carga = cargaDesconocidos(subida.fichero.path)
+                        carga['tipo'] = 'desconocidos'
+                        print(carga['cargados'])
+
+                except:
+                    pass
+
     else:
         form = SubirFichero()
-    return render(request, 'desconocidos/upload.html', {'form': form})
+    return render(request, 'desconocidos/upload.html', {'form': form, 'carga':carga,})
 
 
 def pdftest(request):

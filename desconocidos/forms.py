@@ -102,8 +102,3 @@ class TramiteForm(forms.ModelForm):
     class Meta:
         model = tramites
         fields = ['tipo', 'tramite_agenda', 'ampliacion']
-
-
-class SubirFichero(forms.Form):
-    titulo = forms.CharField(max_length=50)
-    fichero = forms.FileField()
