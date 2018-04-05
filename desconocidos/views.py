@@ -905,6 +905,7 @@ def borrafichero(request, pk):
 def subefichero(request):
     carga = {}
     ficheros_cargados = None
+    respuesta = {}
     print('subida')
     print(request.method)
     if request.method == 'POST':
@@ -929,12 +930,14 @@ def subefichero(request):
             #
             #     except:
             #         pass
-            respuesta = {
-                'jare': 'jare',
-                'tabla_cargados': carga['tabla_cargados'],
-                'tabla_errores': carga['tabla_errores']
-            }
+                respuesta = {
+                    'jare': 'jare',
+                    'tabla_cargados': carga['tabla_cargados'],
+                    'tabla_errores': carga['tabla_errores']
+                }
             return JsonResponse(respuesta)
+        else:
+            return render(request, 'desconocidos/upload.html', {'form': form, 'carga':carga, 'ficheros': ficheros_cargados})
     else:
         form = SubirFichero()
         ficheros_cargados = SubidaFichero.objects.all()

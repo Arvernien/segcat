@@ -82,7 +82,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'segcat',
-        'HOST': '',
+        'HOST': 'localhost',
         'USER': 'django',
         'PASSWORD': 'djangodb',
     }

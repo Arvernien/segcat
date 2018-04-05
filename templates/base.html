@@ -23,7 +23,8 @@
     <script src="{% static 'polls/bs-dp/js/bootstrap-datepicker.es.min.js' %}"></script>
 
     <!-- CARGA DEL SCRIPT PARA EL USO DE ICONOS FONTAWESOME  -->
-    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <!--<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>-->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
 
 
     <!-- CARGA DEL SCRIPT PARA EL USO DE CHECKBOX TIPO TOGGLE  -->
@@ -54,27 +55,32 @@
     <div class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown">
         <ul class="navbar-nav navbar-left">
             {% if request.user|enGrupo:"DESCONOCIDOS" %}
-            <li class="nav-item {% if request.resolver_match.url_name == 'desconocidos' %} active {% endif %}">
-                <a class="nav-link" href="/desconocidos/">Desconocidos<span class="sr-only">(current)</span></a>
+            <li class="nav-item mr-2">
+                <a class="nav-link" href="/desconocidos/" data-toggle="tooltip" title="DESCONOCIDOS" data-placement="bottom"><!-- Desconocidos --><i class="fas fa-user-secret fa-lg  {% if request.resolver_match.url_name == 'desconocidos' %} text-primary {% endif %}"></i><span class="sr-only">(current)</span></a>
             </li>
             {% endif %}
-            <li class="nav-item {% if request.resolver_match.url_name == 'inicio' %} active {% endif %}">
-                <a class="nav-link" href="/inicio/">Expedientes<span class="sr-only">(current)</span></a>
+            <li class="nav-item mr-2">
+                <a class="nav-link" href="/inicio/" data-toggle="tooltip" title="EXPEDIENTES" data-placement="bottom"><!--Expedientes--><i class="fas fa-file-alt fa-lg  {% if request.resolver_match.url_name == 'inicio' %} text-primary {% endif %}"></i><span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Entregas</a>
+            <li class="nav-item mr-2">
+                <a class="nav-link" href="#" data-toggle="tooltip" title="ENTREGAS" data-placement="bottom"><!--Entregas--><i class="fas fa-box-open fa-lg"></i></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Gráficos</a>
+            <li class="nav-item mr-2">
+                <a class="nav-link" href="#" data-toggle="tooltip" title="ESTADÍSTICAS" data-placement="bottom"><!--Gráficos--><i class="fas fa-chart-pie fa-lg"></i></a>
             </li>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown mr-2">
+
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Informes
+                    <!-- Informes --><span data-toggle="tooltip"  title="INFORMES" data-placement="bottom"><i class="fas fa-clipboard fa-lg"></i></span>
                 </a>
+
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="#">Estadillo</a>
                     <a class="dropdown-item" href="#">Excel</a>
                 </div>
+            </li>
+            <li class="nav-item mr-2">
+                <a class="nav-link" href="/desconocidos/subir" data-toggle="tooltip" data-placement="bottom" title="CARGA DE FICHEROS"><!--Cargas--><i class="fas fa-upload fa-lg  {% if request.resolver_match.url_name == 'subir' %} text-primary {% endif %}"></i></a>
             </li>
         </ul>
 
