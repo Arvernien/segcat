@@ -1,8 +1,8 @@
-from desconocidos.script import cargaDesconocidos
+from polls.file_handler import AccessDesconocidos, IdentificaFichero
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from .models import Desconocido, actuaciones, tramites, tipoDesc
-from polls.models import organismo
+from polls.models import organismo, SubidaFichero
 from django.db.models import F, Q, Sum
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -15,6 +15,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from io import BytesIO
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
+from django.urls import reverse
 from django.conf import settings
 import uuid
 
@@ -896,30 +897,49 @@ def busqstats(request):
 
     return render(request, 'desconocidos/organismo.html', context)
 
+def borrafichero(request, pk):
+    fichero = SubidaFichero.objects.get(pk=pk)
+    fichero.delete()
+    return HttpResponseRedirect(reverse('desconocidos:subir'))
+
 def subefichero(request):
     carga = {}
+    ficheros_cargados = None
+    print('subida')
+    print(request.method)
     if request.method == 'POST':
         form = SubirFichero(request.POST, request.FILES)
+        print(form.is_valid())
         if form.is_valid():
             subida = form.save(commit=False)
             subida.nombre = request.FILES['fichero'].name
             subida.usuario = request.user
             subida.save()
 
-            with open(subida.fichero.path, newline='') as archivo:
-                try:
-                    tipo = archivo.readline().split(';')[0]
-                    if tipo == 'DESCONOCIDOS':
-                        carga = cargaDesconocidos(subida.fichero.path)
-                        carga['tipo'] = 'desconocidos'
-                        print(carga['cargados'])
+            if IdentificaFichero(subida.fichero.path) == 'DESCONOCIDOS':
+                carga = AccessDesconocidos(subida.fichero.path)
 
-                except:
-                    pass
-
+            # with open(subida.fichero.path, newline='') as archivo:
+            #     try:
+            #         tipo = archivo.readline().split(';')[0]
+            #         if tipo == 'DESCONOCIDOS':
+            #             carga = AccessDesconocidos(subida.fichero.path)
+            #             carga['tipo'] = 'desconocidos'
+            #             print(carga['cargados'])
+            #
+            #     except:
+            #         pass
+            respuesta = {
+                'jare': 'jare',
+                'tabla_cargados': carga['tabla_cargados'],
+                'tabla_errores': carga['tabla_errores']
+            }
+            return JsonResponse(respuesta)
     else:
         form = SubirFichero()
-    return render(request, 'desconocidos/upload.html', {'form': form, 'carga':carga,})
+        ficheros_cargados = SubidaFichero.objects.all()
+        return render(request, 'desconocidos/upload.html', {'form': form, 'carga':carga, 'ficheros': ficheros_cargados})
+
 
 
 def pdftest(request):

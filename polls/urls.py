@@ -1,5 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
+from django.conf.urls.static import static
+from django.conf import settings
 
 
 from . import views
@@ -13,5 +15,4 @@ urlpatterns = [
     path('inicio/', views.Inicio, name='inicio'),
     path('logout/', views.Logout, name='logout'),
     path('agenda/', views.agenda, name='agenda'),
-]
-
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

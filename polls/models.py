@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import Group, User
 from django.core.validators import MaxValueValidator
-from django.utils import timezone
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 import datetime
 
 
@@ -35,6 +36,11 @@ class municipio(models.Model):
 class SubidaFichero(models.Model):
     titulo = models.CharField(max_length=100)
     nombre = models.CharField(max_length=100, default='')
-    fecha_subida = models.DateField(default=datetime.datetime.today)
+    fecha_subida = models.DateTimeField(default=datetime.datetime.now)
     usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING, default='')
     fichero = models.FileField(upload_to='ficheros/')
+
+@receiver(pre_delete, sender=SubidaFichero)
+def borra_archivo(**kwargs):
+    instancia = kwargs.get('instance')
+    instancia.fichero.delete(save=False)

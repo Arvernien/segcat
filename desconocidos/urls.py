@@ -17,4 +17,5 @@ urlpatterns = [
     path('organismo/<int:pk>', views.orgstats, name='orgstats'),
     path('pdf', views.pdftest, name='pdf'),
     path('subir', views.subefichero, name='subir'),
+    path('delfichero/<int:pk>', views.borrafichero, name='borrafichero'),
 ]

@@ -1,5 +1,4 @@
 from polls.models import municipio, organismo
-from psycopg2 import IntegrityError
 from .models import Desconocido, usos, tipoDesc, tipo_finca
 from django.db.models import F
 from decimal import Decimal

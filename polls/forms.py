@@ -7,10 +7,11 @@ from .models import SubidaFichero
 class SubirFichero(forms.ModelForm):
     titulo = forms.CharField(required=False, label="Titulo", widget=forms.TextInput({
         'class': 'form-control',
-        'placeholder': 'Titulo'
+        'placeholder': 'Descripción del fichero'
     }))
     fichero = forms.FileField(widget=forms.FileInput({
-        'class': 'custom-file-input',
+        'class': 'cssfileinput',
+        'data-multiple-caption': "{count} files selected"
     }))
     class Meta:
         model = SubidaFichero

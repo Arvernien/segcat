@@ -2,45 +2,153 @@
 {% load static %}
 {% load custom_tags %}
 {% block contenido %}
-<form method="post" enctype="multipart/form-data">
+<form id="formcarga" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <div class="container-fluid card-header">
-
-        <div class="form-row">
-            <div class="form-group col-5">
-                <label for="{{form.titulo.id_for_label}}" class="text-primary">{{form.titulo.label}}</label>
+    <div class="container-fluid">
+        <div class="form-row justify-content-center">
+            <div class="col-6">
                 {{form.titulo}}
             </div>
-            <div class="form-group col-3">
-                <label for="{{form.fichero.id_for_label}}" class="text-primary">{{form.fichero.label}}</label>
-                <div class="input-group input-group-sm">
-                    <div class="custom-file">
-                        <!--<input type="file" class="custom-file-input" id="inputGroupFile04">-->
-                        {{form.fichero}}
-                        <label class="custom-file-label" for="{{form.fichero.id_for_label}}">Seleccione fichero</label>
-                    </div>
-                    <div class="input-group-append">
-                        <button class="btn btn-sm btn-primary " type="submit">Cargar</button>
-                    </div>
-                </div>
-                </div>
+            <div class="col-auto">
+                {{form.fichero}}
+                <label for="{{form.fichero.id_for_label}}" class="btn btn-outline-primary"><i class="far fa-folder-open"></i> Seleccionar fichero</label>
+            </div>
+            <div class="col-auto">
+                <button id="btncargar" class="btn btn-primary" type="submit"><i class="fas fa-upload"></i> Cargar</button>
             </div>
         </div>
-
+    </div>
 </form>
-{% if carga %}
-<div class="container-fluid alert-success">
-    {{form.titulo}}
+{% if ficheros %}
+<div class="container">
+    <div class="progress" id="progreso" style="display: none;">
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-gtt" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <table id="tabla_ficheros" class="table table-sm table-hover">
+        <thead>
+        <th></th>
+        <th scope="col">Descripción del fichero</th>
+        <th scope="col">Fichero</th>
+        <th scope="col">Fecha de carga</th>
+        <th></th>
+        </thead>
+{% for fichero in ficheros %}
+    <tr>
+        <td><a class="texto-peq" data-toggle="tooltip" title="{{fichero.usuario.first_name}} {{fichero.usuario.last_name}}" data-placement="left"><i class="fas fa-user text-secondary"></i></a></td>
+        <td>{{fichero.titulo}}</td>
+        <td><a href="/{{fichero.fichero.url}}" download>{{fichero.nombre}}</a></td>
+        <td>{{fichero.fecha_subida}}</td>
+        <td><span class="borrafichero" fichero="{{fichero.id}}" nombre="{{fichero.nombre}}" descr="{{fichero.titulo}}"><i class="fas fa-trash texto-peq text-secondary"></i></span></td>
+    </tr>
+{% endfor %}
+    </table>
 </div>
-{% autoescape off %}
-{% if carga.cargados > 0 %}
-{{carga.tabla_cargados}}
+
 {% endif %}
+<div id="tabla_cargados" style="display:none;">
+
+</div>
 &nbsp;
 &nbsp;
-{% if carga.cargados != carga.totales %}
-{{carga.tabla_errores}}
-{% endif %}
-{% endautoescape %}
-{% endif %}
+<div id="tabla_errores" style="display:none;">
+
+</div>
+
+
+<div class="modal fade" id="confirmacion" tabindex="-1" role="dialog" aria-labelledby="confirmacion" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tituloModal"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modalDatos">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="eliminar" class="btn btn-danger" data-dismiss="modal">Eliminar</button>
+        <button type="button" id="cancelar" class="btn btn-secondary">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+   'use strict';
+
+;( function ( document, window, index )
+{
+	var inputs = document.querySelectorAll( '.cssfileinput' );
+	Array.prototype.forEach.call( inputs, function( input )
+	{
+		var label	 = input.nextElementSibling,
+			labelVal = label.innerHTML;
+
+		input.addEventListener( 'change', function( e )
+		{
+			var fileName = '';
+			if( this.files && this.files.length > 1 )
+				fileName = ( this.getAttribute( 'data-multiple-caption' ) || '' ).replace( '{count}', this.files.length );
+			else
+				fileName = e.target.value.split( '\\' ).pop();
+
+			if( fileName )
+				label.innerHTML = fileName;
+			else
+				label.innerHTML = labelVal;
+		});
+
+		// Firefox bug fix
+		input.addEventListener( 'focus', function(){ input.classList.add( 'has-focus' ); });
+		input.addEventListener( 'blur', function(){ input.classList.remove( 'has-focus' ); });
+	});
+}( document, window, 0 ));
+
+    $('#tabla_ficheros').on('click', '.borrafichero', function(event){
+        var id = $(this).attr('fichero')
+        $('#tituloModal').html('Eliminar fichero ' + $(this).attr('nombre'))
+        $('#modalDatos').html('¿Está seguro de eliminar el siguiente fichero? <br><br> ' + $(this).attr('descr'))
+        $('#confirmacion').modal('show');
+        $('#eliminar').on('click', function() {
+            borrar(id);
+            });
+        $('#cancelar').on('click', function() {
+            $('#confirmacion').modal('hide');
+            });
+        console.log($(this).attr('fichero'));
+    });
+
+function borrar(pk) {
+    console.log(pk)
+    window.location.href="delfichero/" + pk
+};
+
+$('#formcarga').submit(function(){
+    $('#progreso').show();
+    var formData = new FormData($(this)[0]);
+    $.ajax({
+            url: 'subir',
+            type: 'POST',
+            data: formData,
+            async: false,
+            success: function (data) {
+                $('#progreso').hide();
+                $('#tabla_cargados').html(data.tabla_cargados);
+                $('#tabla_errores').html(data.tabla_errores);
+                $('#tabla_cargados').show();
+                $('#tabla_errores').show();
+                console.log(data);
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+    });
+    return false;
+});
+
+
+</script>
 {% endblock %}
