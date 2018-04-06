@@ -56,11 +56,11 @@
         <ul class="navbar-nav navbar-left">
             {% if request.user|enGrupo:"DESCONOCIDOS" %}
             <li class="nav-item mr-2">
-                <a class="nav-link" href="/desconocidos/" data-toggle="tooltip" title="DESCONOCIDOS" data-placement="bottom"><!-- Desconocidos --><i class="fas fa-user-secret fa-lg  {% if request.resolver_match.url_name == 'desconocidos' %} text-primary {% endif %}"></i><span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/desconocidos/" data-toggle="tooltip" title="DESCONOCIDOS" data-placement="bottom"><!-- Desconocidos --><i class="fas fa-user-secret fa-lg  {% if request.resolver_match.url_name == 'desconocidos' %} text-white {% endif %}"></i><span class="sr-only">(current)</span></a>
             </li>
             {% endif %}
             <li class="nav-item mr-2">
-                <a class="nav-link" href="/inicio/" data-toggle="tooltip" title="EXPEDIENTES" data-placement="bottom"><!--Expedientes--><i class="fas fa-file-alt fa-lg  {% if request.resolver_match.url_name == 'inicio' %} text-primary {% endif %}"></i><span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/inicio/" data-toggle="tooltip" title="EXPEDIENTES" data-placement="bottom"><!--Expedientes--><i class="fas fa-file-alt fa-lg  {% if request.resolver_match.url_name == 'inicio' %} text-white {% endif %}"></i><span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item mr-2">
                 <a class="nav-link" href="#" data-toggle="tooltip" title="ENTREGAS" data-placement="bottom"><!--Entregas--><i class="fas fa-box-open fa-lg"></i></a>
@@ -80,7 +80,7 @@
                 </div>
             </li>
             <li class="nav-item mr-2">
-                <a class="nav-link" href="/desconocidos/subir" data-toggle="tooltip" data-placement="bottom" title="CARGA DE FICHEROS"><!--Cargas--><i class="fas fa-upload fa-lg  {% if request.resolver_match.url_name == 'subir' %} text-primary {% endif %}"></i></a>
+                <a class="nav-link" href="/desconocidos/subir" data-toggle="tooltip" data-placement="bottom" title="CARGA DE FICHEROS"><!--Cargas--><i class="fas fa-upload fa-lg  {% if request.resolver_match.url_name == 'subir' %} text-white {% endif %}"></i></a>
             </li>
         </ul>
 

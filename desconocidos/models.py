@@ -81,6 +81,10 @@ class Desconocido(models.Model):
     telefono = models.CharField(max_length=20, blank=True, null=True)
     cuota = models.DecimalField(max_digits=15, decimal_places=2, null=True)
     tipo_finca = models.ForeignKey(tipo_finca, on_delete=models.DO_NOTHING, null=True, blank=True)
+    fecha_creacion = models.DateField(default=datetime.datetime.today)
+    fecha_finalizacion = models.DateField(null=True)
+    usuario_finalizacion = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
+
 
 
     def creaActuacion(self, user, descr, fecha, agendar):

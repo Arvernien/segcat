@@ -1,7 +1,15 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load custom_tags %}
-{% block org_selector %}
-{% for org in organismos %}
-<option>{{org.nombre}}</option>
-{% endfor %}
+{% block contenido %}
+<!--<div class="container text-secondary text-center">
+  <h1>SegCat-gtt, Seguimiento de expedientes catastrales</h1>
+</div>-->
+<div class="row justify-content-center" style="margin-top: 12em;">
+  <div class="col-6 text-center">
+      <img class="align-self-center" src="{% static 'img/fondo.svg' %}" style="opacity: 1;" width="100%" style="margin: auto;"/>
+    </div>
+    </div>
+
+
 {% endblock %}
