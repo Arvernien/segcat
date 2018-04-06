@@ -1,30 +1,63 @@
 import pyodbc
 from .models import municipio, organismo
 from desconocidos.models import Desconocido, tipoDesc, tipo_finca, usos
+from segcat.settings import BASE_DIR
 from decimal import Decimal
+from sys import platform
+import jaydebeapi
+
+def cnxnLinux(ruta):
+    ucanaccess_jars = [
+        ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/lib/hsqldb.jar']),
+        ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/lib/commons-lang-2.6.jar']),
+        ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/lib/commons-logging-1.1.3.jar']),
+        ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/lib/jackcess-2.1.9.jar']),
+        ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/loader/ucanload.jar']),
+        ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/ucanaccess-4.0.3.jar'])
+        ]
+
+    classpath = ":".join(ucanaccess_jars)
+    cnxn = jaydebeapi.connect(
+        "net.ucanaccess.jdbc.UcanaccessDriver",
+        "jdbc:ucanaccess://" + ruta + ";newDatabaseVersion=V2010",
+        ["", ""],
+        classpath
+        )
+    return cnxn
+
+def cnxnWindows(ruta):
+    conn_str = (
+        r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};'
+        r'DBQ=' + ruta + ';'
+    )
+    cnxn = pyodbc.connect(conn_str)
+    return cnxn
 
 def IdentificaFichero(ruta):
     tipo = 'NPI'
+    conn = ''
     if ruta[-3:] == 'mdb' or ruta[-5:] == 'accdb':
-        conn_str = (
-            r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};'
-            r'DBQ=' + ruta + ';'
-        )
-        conn = pyodbc.connect(conn_str)
+        if platform == 'windows':
+            conn = cnxnWindows(ruta)
+        else:
+            conn = cnxnLinux(ruta)
         cursor = conn.cursor()
-        for table_info in cursor.tables(tableType='TABLE'):
-            if table_info.table_name == 'DESCONOCIDOS':
-                tipo = 'DESCONOCIDOS'
+        try:
+            cursor.execute('SELECT * FROM DESCONOCIDOS')
+            tipo = 'DESCONOCIDOS'
+        except:
+            pass
+
     return tipo
 
 def AccessDesconocidos(ruta):
     # REALIZA CONEXIÓN CON PYODBC AL FICHERO ACCESS PROPORCIONADO Y SELECCIONA
     # TODOS LOS DESCONOCIDOS EN LA TABLA DESCONOCIDOS
-    conn_str = (
-            r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};'
-            r'DBQ=' + ruta + ';'
-    )
-    conn = pyodbc.connect(conn_str)
+    if platform == 'windows':
+        conn = cnxnWindows(ruta)
+    else:
+        conn = cnxnLinux(ruta)
+
     cursor = conn.cursor()
     sql = 'SELECT * FROM DESCONOCIDOS'
     cursor.execute(sql)
