@@ -17,6 +17,7 @@ def cnxnLinux(ruta):
         ]
 
     classpath = ":".join(ucanaccess_jars)
+    print(classpath)
     cnxn = jaydebeapi.connect(
         "net.ucanaccess.jdbc.UcanaccessDriver",
         "jdbc:ucanaccess://" + ruta + ";newDatabaseVersion=V2010",
@@ -47,7 +48,7 @@ def IdentificaFichero(ruta):
             tipo = 'DESCONOCIDOS'
         except:
             pass
-
+    conn.close()
     return tipo
 
 def AccessDesconocidos(ruta):
@@ -109,10 +110,11 @@ def AccessDesconocidos(ruta):
                     tabla_errores = ''.join([tabla_errores, '<tr><td>', row[2], '</td><td>', org[0].nombre, '</td><td>', row[1], '</td><td>', 'Ya existe el desconocido con ', estado, '</td></tr>', '\n'])
                 else:
                     print('No existe desconocido')
-                    if row[22] == '':
+                    print(row[21])
+                    if row[21] == '':
                         uso = usos.objects.get(pk='1')
                     else:
-                        uso = usos.objects.get(pk=row[22])
+                        uso = usos.objects.get(pk=row[21])
 
                     q = Desconocido(
                         fk_muni=muni[0],
