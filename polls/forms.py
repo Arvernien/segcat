@@ -3,9 +3,9 @@ from django.core.exceptions import ValidationError
 from .models import SubidaFichero
 
 
-
 class SubirFichero(forms.ModelForm):
-    titulo = forms.CharField(required=False, label="Titulo", widget=forms.TextInput({
+
+    titulo = forms.CharField(required=True, label="Titulo", widget=forms.TextInput({
         'class': 'form-control',
         'placeholder': 'Descripción del fichero'
     }))
@@ -13,6 +13,7 @@ class SubirFichero(forms.ModelForm):
         'class': 'cssfileinput',
         'data-multiple-caption': "{count} files selected"
     }))
+
     class Meta:
         model = SubidaFichero
         fields = ('titulo', 'fichero')

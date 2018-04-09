@@ -1,36 +1,36 @@
 {% if acts %}
 {% for a in acts %}
 <div class="alert mb-2 fd-verde">
-    <div class="row lineadebajo">
-        <div class="col-sm texto-peq text-secondary">
-            <i class="fas fa-pencil-alt text-secondary"></i> {{a.fecha}}
-        </div>
-        <div class="col-sm text-center texto-peq text-secondary">
-            <i class="fas fa-user text-secondary"></i> {{a.usuario.first_name}} {{a.usuario.last_name}}
-        </div>
-        <div class="col-sm text-right texto-peq text-secondary">
-            {{a.agendar|default_if_none:""}}
-            {% if a.agendar %}
-            {% if a.revisado == False %}
-            {% if a.usuario == request.user %}
-            <form method="post" id="nota{{a.pk}}" action="checknota" style="display:inline;">
-                {% csrf_token %}
-                <span class="agendanota" data="{{a.pk}}" desco="{{a.desconocido.pk}}"><i class="far fa-calendar-alt text-secondary"></i></span>
-            </form>
-            {% else %}
-            <i class="far fa-calendar-alt text-secondary"></i>
-            {% endif %}
-            {% else %}
-            <i class="fas fa-check"></i>
-            {% endif %}
-            {% endif %}
-        </div>
+  <div class="row lineadebajo">
+    <div class="col-sm texto-peq text-secondary">
+      <i class="fas fa-pencil-alt text-secondary"></i> {{a.fecha}}
     </div>
-    <div class="row">
-        <div class="col-12 col-sm">
-            {{a.descripcion}}
-        </div>
+    <div class="col-sm text-center texto-peq text-secondary">
+      <i class="fas fa-user text-secondary"></i> {{a.usuario.first_name}} {{a.usuario.last_name}}
     </div>
+    <div class="col-sm text-right texto-peq text-secondary">
+      {{a.agendar|default_if_none:""}}
+      {% if a.agendar %}
+      {% if a.revisado == False %}
+      {% if a.usuario == request.user %}
+      <form method="post" id="nota{{a.pk}}" action="checknota" style="display:inline;">
+        {% csrf_token %}
+        <span class="agendanota" data="{{a.pk}}" desco="{{a.desconocido.pk}}"><i class="far fa-calendar-alt text-secondary"></i></span>
+      </form>
+      {% else %}
+      <i class="far fa-calendar-alt text-secondary"></i>
+      {% endif %}
+      {% else %}
+      <i class="fas fa-check"></i>
+      {% endif %}
+      {% endif %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-sm">
+      {{a.descripcion}}
+    </div>
+  </div>
 </div>
 {% endfor %}
 {% else %}

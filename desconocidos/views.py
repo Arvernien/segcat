@@ -933,7 +933,8 @@ def subefichero(request):
                 respuesta = {
                     'jare': 'jare',
                     'tabla_cargados': carga['tabla_cargados'],
-                    'tabla_errores': carga['tabla_errores']
+                    'tabla_errores': carga['tabla_errores'],
+                    'tabla_finalizados': carga['tabla_finalizados']
                 }
             return JsonResponse(respuesta)
         else:

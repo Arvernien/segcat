@@ -3,512 +3,512 @@
 {% load custom_tags %}
 {% block contenido %}
 <div class="container clearfix">
-    <div class="card">
-        <div class="card-header clearfix text-center">
-            <h5 class="float-left mb-0 text-secondary">{{refcat}}</h5>
-            <!--<input class="float-none mt-0 mb-0" type="checkbox" data-toggle="toggle" data-on="Resuelto" data-off="Investigación" data-onstyle="success" data-offstyle="warning" data-size="mini"> -->
-            <h5 class="float-right mb-0 text-secondary">{{desconocido.tipo}}</h5>
-        </div>
-        <form class="card-body">
-            {% csrf_token %}
-            <!-- ---------------------------- DATOS GENERALES ----------------------------------->
-
-            <h5 class="card-title text-secondary">Datos generales</h5>
-            <div class="card-text">
-                <div class="row mb-2">
-                    <div class="col-sm-3">
-                        <label for="organismo" class="text-primary mb-0">Organismo</label>
-                        <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm" id="organismo" value="{{desconocido.fk_muni.org.nombre}}">
-                    </div>
-                    <div class="col-3">
-                        <label for="municipio" class="text-primary mb-0">Municipio</label>
-                        <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm col-md-auto" id="municipio" value="{{desconocido.fk_muni.nombre}}">
-                    </div>
-                    <div class="col-2">
-                        <label for="cod_postal" class="text-primary mb-0">Código postal</label>
-                        <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm" id="cod_postal" value="{{desconocido.cod_postal}}">
-                    </div>
-                    <div class="col-2">
-                        <label for="uso_principal" class="text-primary mb-0">Uso principal</label>
-                        <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm" id="uso_principal" value="{{desconocido.clave_uso.descripcion}}">
-                    </div>
-                    <div class="col-2">
-                        <label for="num_fijo" class="text-primary mb-0">Número fijo</label>
-                        <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm" id="num_fijo" value="{{desconocido.num_fijo}}">
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-6">
-                        <label for="direccion" class="text-primary mb-0">Dirección objeto tributario</label>
-                        <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm" id="direccion" value="{{desconocido.getDireccion}}">
-                    </div>
-                    <div class="col-6">
-                        <label for="dir_no_estructurada" class="text-primary mb-0">Dirección no estructurada</label>
-                        <input type="text mt-0" readonly class="form-control-plaintext text-secondary form-control-sm" id="dir_no_estructurada" value="{{ desconocido.dir_no_estruc}}">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-10">
-                        <label for="titular" class="text-primary mb-0">Titular</label>
-                        <input type="text mt-0" readonly class="form-control-plaintext text-secondary form-control-sm" id="titular" value="{{ desconocido.sujeto_pasivo}}">
-                    </div>
-                    <div class="col-2">
-                        <label for="Id_fiscal" class="text-primary mb-0">Id. Fiscal</label>
-                        <input type="text mt-0" readonly class="form-control-plaintext text-secondary form-control-sm" id="Id_fiscal" value="{{ desconocido.id_fiscal}}">
-                    </div>
-                </div>
-
-                <hr>
-                <!-- ---------------------------- DATOS ECONÓMICOS ----------------------------------->
-
-                <h5 class="card-title mt-2 text-secondary">Datos económicos</h5>
-                <div class="row justify-content-center">
-                    <div class="col-2 text-center">
-                        <label for="vsuelo" class="text-primary">Valor del suelo</label>
-                        <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="vsuelo" value="{{desconocido.getVsuelo}} €">
-                    </div>
-                    <div class="col-3 text-center">
-                        <label for="vcons" class="text-primary">Valor de la construcción</label>
-                        <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="vcons" value="{{desconocido.getVcons}} €">
-                    </div>
-                    <div class="col-2 text-center">
-                        <label for="vcat" class="text-primary">Valor catastral</label>
-                        <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="vcat" value="{{desconocido.getVcat}} €">
-                    </div>
-                    <div class="col-2 text-center">
-                        <label for="bliq" class="text-primary">Base liquidable</label>
-                        <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="bliq" value="{{desconocido.getBliq}} €">
-                    </div>
-                    <div class="col-2 text-center">
-                        <label for="ibi" class="text-primary">Cuota Ibi</label>
-                        <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="ibi" value="{{desconocido.cuota}} €">
-                    </div>
-                </div>
-            </div>
-        </form>
+  <div class="card">
+    <div class="card-header clearfix text-center">
+      <h5 class="float-left mb-0 text-secondary">{{refcat}}</h5>
+      <!--<input class="float-none mt-0 mb-0" type="checkbox" data-toggle="toggle" data-on="Resuelto" data-off="Investigación" data-onstyle="success" data-offstyle="warning" data-size="mini"> -->
+      <h5 class="float-right mb-0 text-secondary">{{desconocido.tipo}}</h5>
     </div>
-    <!-- ---------------------- INVESTIGACIÓN ------------------------------->
-    <div class="card mt-3" id="panel_investigacion">
-        <div class="card-header clearfix" id="cabecera_investigacion">
-            <h5 class="float-left mb-0 text-secondary"><i class="fas fa-user-secret text-secondary"></i> INVESTIGACIÓN</h5>
-            <a class="float-right mb-0" href="#" data-toggle="collapse" data-target="#collapse-investigacion" aria-expanded="true" aria-controls="collapseOne">
-                <i class="fas fa-chevron-circle-down text-secondary"></i>
-            </a>
-        </div>
-        <div id="collapse-investigacion" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-            <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active text-secondary" href="#tabdatos" data-toggle="tab" target="navegador"><i class="fas fa-key"></i> Datos</a>
-                    </li>
-                    <li class="nav-item" id="butActuaciones">
-                        <a class="nav-link text-secondary" href="#tabtramites" data-toggle="tab" target="navegador"><i class="fas fa-inbox"></i> Trámites</a>
-                    </li>
-                    <li class="nav-item" id="butNotas">
-                        <a class="nav-link text-secondary" href="#tabnotas" data-toggle="tab" target="navegador"><i class="fas fa-sticky-note"></i> Notas</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="tab-content" id="micontenido">
-                <!--------------------------- TRAMITES ------------------------------------------>
-                <div class="tab-pane fade" id="tabtramites" role="tabpanel" aria-labelledby="tabactuaciones">
-                    <div class="container-fluid pt-1 pb-1 card-header">
-                        <button type="button" class="btn btn-sm btn-light btn-verde" data-toggle="modal" data-target="#addActuacion"><i class="far fa-plus-square fa-lg"></i></button>
-                    </div>
-                    <!-- ----------------------------- MODAL TRAMITES ---------------------------------------->
-                        <div class="modal fade" id="addActuacion" tabindex="-1" role="dialog" aria-labelledby="actuacionModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="actuacionModal">Añadir trámite</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <!--<form id="formnota2" method="post" action="addnota">-->
-                                        <form id="formActuacion" method="post" action="addtramite">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="pk" value="{{desconocido.pk}}">
-                                            <div class="row mb-2">
-                                                <div class="col-3"><label for="{{tramiteform.tipo.id_for_label}}" class="text-primary mb-0">Tipo de actuación</label></div>
-                                            </div>
-                                            <div class="row mb-2">
-                                                <div class="col-4">{{tramiteform.tipo}}</div>
-                                            </div>
-                                            <div class="row mb-2">
-                                                <div class="col-2"><label for="{{tramiteform.tramite_agenda.id_for_label}}" class="text-primary mb-0">Fecha agenda</label></div>
-                                            </div>
-                                            <div class="row mb-2">
-                                                <div class="col-3">{{tramiteform.tramite_agenda}}</div>
-                                            </div>
-                                            <div class="row mb-2">
-                                                <div class="col-2"><label for="{{tramiteform.ampliacion.id_for_label}}" class="text-primary mb-0">Actuación</label></div>
-                                            </div>
-                                            <div class="row mb-2">
-                                                <div class="col-12">{{tramiteform.ampliacion}}</div>
-                                            </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary">Guardar</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="scroll-box" id="muestratramites">
-                        {% include 'desconocidos/actuaciones.html' %}
-                    </div>
-                    </div>
+    <form class="card-body">
+      {% csrf_token %}
+      <!------------------------------DATOS GENERALES----------------------------------->
 
-                <!--------------------------- PANEL DE NOTAS ------------------------------------------>
-                <div class="tab-pane fade" id="tabnotas" role="tabpanel" aria-labelledby="tabnotas">
-                    <div class="container-fluid pt-1 pb-1 card-header">
-                        <button type="button" class="btn btn-sm btn-light btn-verde" data-toggle="modal" data-target="#addNota"><i class="far fa-plus-square fa-lg"></i></button>
-                        <!------------------------------ MODAL NOTAS------------------------------------------->
-                        <div class="modal fade" id="addNota" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Añadir nota</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <!--<form id="formnota2" method="post" action="addnota">-->
-                                        <form id="formnota" method="post" action="addnotatest">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="pk" value="{{desconocido.pk}}">
-                                            <div class="row mb-2">
-                                                <div class="col-2"><label for="{{formactuacion.fecha_agenda.id_for_label}}" class="text-primary mb-0">Fecha agenda</label></div>
-                                            </div>
-                                            <div class="row mb-2">
-                                                <div class="col-3">{{formactuacion.fecha_agenda}}</div>
-                                            </div>
-                                            <div class="row mb-2">
-                                                <div class="col-2"><label for="{{formactuacion.descripcion.id_for_label}}" class="text-primary mb-0">Nota</label></div>
-                                            </div>
-                                            <div class="row mb-2">
-                                                <div class="col-12">{{formactuacion.descripcion}}</div>
-                                            </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary">Guardar</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="scroll-box" id="muestranotas">
-                        {% include 'desconocidos/notas.html' %}
-                    </div>
-                </div>
-                <!-------------------------- PANEL DE DATOS ----------------------------->
-                <div class="tab-pane fade show active" id="tabdatos" role="tabpanel" aria-labelledby="tabdatos">
-                    <div class="container-fluid pt-1 pb-1 card-body">
-                        <form method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="descopk" value="{{desconocido.pk}}">
-                            <div class="row mb-0">
-                                <div class="col-8">
-                                    <label class="text-primary" for="{{form.titular_candidato.id_for_label}}">Titular candidato</label>
-                                </div>
-                                <div class="col-2">
-                                    <label class="text-primary" for="{{form.nif_candidato.id_for_label}}">NIF</label>
-                                </div>
-                                <div class="col-2">
-                                    <label class="text-primary" for="{{form.telefono.id_for_label}}">Teléfono</label>
-                                </div>
-                            </div>
-                            <div class="row mt-0 mb-3">
-                                <div class="col-8">
-                                    {{form.titular_candidato}}
-                                </div>
-                                <div class="col-2">
-                                    {{form.nif_candidato}}
-                                </div>
-                                <div class="col-2">
-                                    {{form.telefono}}
-                                </div>
-                            </div>
+      <h5 class="card-title text-secondary">Datos generales</h5>
+      <div class="card-text">
+        <div class="row mb-2">
+          <div class="col-sm-3">
+            <label for="organismo" class="text-primary mb-0">Organismo</label>
+            <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm" id="organismo" value="{{desconocido.fk_muni.org.nombre}}">
+          </div>
+          <div class="col-3">
+            <label for="municipio" class="text-primary mb-0">Municipio</label>
+            <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm col-md-auto" id="municipio" value="{{desconocido.fk_muni.nombre}}">
+          </div>
+          <div class="col-2">
+            <label for="cod_postal" class="text-primary mb-0">Código postal</label>
+            <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm" id="cod_postal" value="{{desconocido.cod_postal}}">
+          </div>
+          <div class="col-2">
+            <label for="uso_principal" class="text-primary mb-0">Uso principal</label>
+            <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm" id="uso_principal" value="{{desconocido.clave_uso.descripcion}}">
+          </div>
+          <div class="col-2">
+            <label for="num_fijo" class="text-primary mb-0">Número fijo</label>
+            <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm" id="num_fijo" value="{{desconocido.num_fijo}}">
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-6">
+            <label for="direccion" class="text-primary mb-0">Dirección objeto tributario</label>
+            <input type="text" readonly class="form-control-plaintext text-secondary form-control-sm" id="direccion" value="{{desconocido.getDireccion}}">
+          </div>
+          <div class="col-6">
+            <label for="dir_no_estructurada" class="text-primary mb-0">Dirección no estructurada</label>
+            <input type="text mt-0" readonly class="form-control-plaintext text-secondary form-control-sm" id="dir_no_estructurada" value="{{ desconocido.dir_no_estruc}}">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-10">
+            <label for="titular" class="text-primary mb-0">Titular</label>
+            <input type="text mt-0" readonly class="form-control-plaintext text-secondary form-control-sm" id="titular" value="{{ desconocido.sujeto_pasivo}}">
+          </div>
+          <div class="col-2">
+            <label for="Id_fiscal" class="text-primary mb-0">Id. Fiscal</label>
+            <input type="text mt-0" readonly class="form-control-plaintext text-secondary form-control-sm" id="Id_fiscal" value="{{ desconocido.id_fiscal}}">
+          </div>
+        </div>
 
-                            <div class="row mt-3">
-                                <div class="col-3">
-                                    <div class="checkbox align-items-center">
-                                        {{form.mt}}
-                                        <span class="text-primary ml-2">Modificación de titular</span>
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                            {{form.expediente}}
-                                        </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-3">
-                                    <div class="checkbox align-items-center">
-                                        {{form.liq}}
-                                        <span class="text-primary ml-2">Liquidación realizada</span>
-                                        <!--<label class="form-check-label text-primary" for="{{form.mt.id_for_label}}">Modificación de titular realizada</label>-->
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    {{form.importe_liq}}
-                                </div>
-                            </div>
-                            <div class="row justify-content-center mt-1 mb-1">
-                                <div class="col-3 text-primary text-center">
-                                    Estado de la investigación
-                                </div>
-                            </div>
-                            <div class="row justify-content-center mb-4">
-                                <div class="col-3 text-center">
-                                    {{form.resuelto}}
-                                </div>
-                            </div>
-                            <div class="row justify-content-center mb-2">
-                                <div class="col-3 text-center">
-                                    <button type="submit" class="btn btn-primary btn-sm"><i class="far fa-save"></i> Guardar</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+        <hr>
+        <!-- ---------------------------- DATOS ECONÓMICOS ----------------------------------->
+
+        <h5 class="card-title mt-2 text-secondary">Datos económicos</h5>
+        <div class="row justify-content-center">
+          <div class="col-2 text-center">
+            <label for="vsuelo" class="text-primary">Valor del suelo</label>
+            <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="vsuelo" value="{{desconocido.getVsuelo}} €">
+          </div>
+          <div class="col-3 text-center">
+            <label for="vcons" class="text-primary">Valor de la construcción</label>
+            <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="vcons" value="{{desconocido.getVcons}} €">
+          </div>
+          <div class="col-2 text-center">
+            <label for="vcat" class="text-primary">Valor catastral</label>
+            <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="vcat" value="{{desconocido.getVcat}} €">
+          </div>
+          <div class="col-2 text-center">
+            <label for="bliq" class="text-primary">Base liquidable</label>
+            <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="bliq" value="{{desconocido.getBliq}} €">
+          </div>
+          <div class="col-2 text-center">
+            <label for="ibi" class="text-primary">Cuota Ibi</label>
+            <input type="text" readonly class="form-control-plaintext text-secondary text-center" id="ibi" value="{{desconocido.cuota}} €">
+          </div>
         </div>
+      </div>
+    </form>
+  </div>
+  <!-- ---------------------- INVESTIGACIÓN ------------------------------->
+  <div class="card mt-3" id="panel_investigacion">
+    <div class="card-header clearfix" id="cabecera_investigacion">
+      <h5 class="float-left mb-0 text-secondary"><i class="fas fa-user-secret text-secondary"></i> INVESTIGACIÓN</h5>
+      <a class="float-right mb-0" href="#" data-toggle="collapse" data-target="#collapse-investigacion" aria-expanded="true" aria-controls="collapseOne">
+        <i class="fas fa-chevron-circle-down text-secondary"></i>
+      </a>
     </div>
-    <!-- ---------------------- CARTOGRAFIA ------------------------------->
-    <div class="card mt-3">
-        <div class="card-header clearfix" id="headingOne">
-            <h5 class="float-left mb-0 text-secondary">
-                <i class="fas fa-map text-secondary"></i> CARTOGRAFÍA
-            </h5>
-            <a class="float-right mb-0" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                <i class="fas fa-chevron-circle-down text-secondary"></i>
-            </a>
-        </div>
-        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-            <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active text-secondary" href="#sedecatastro" data-toggle="tab" target="navegador"><img src="{% static 'img/sec.gif' %}" width="20" height="20"> Sede Electrónica de Catastro</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-secondary" href="#googlemaps" data-toggle="tab" target="navegador"><img src="{% static 'img/gmaps.png' %}" width="20" height="20"> Google Maps</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="card-body">
-                <div class="tab-content" id="mytabcontent">
-                    <div class="tab-pane fade show active" id="sedecatastro" role="tabpanel" aria-labelledby="SedeCatastro">
-                        <div class="embed-responsive embed-responsive-16by9">
-                            <iframe name="navegador" class="embed-responsive-item" src="{{desconocido.getCarto}}" allowfullscreen></iframe>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="googlemaps" role="tabpanel" aria-labelledby="GoogleMaps">
-                        <div class="embed-responsive embed-responsive-16by9" id="map"></div>
-                        <script>
-                            function initMap() {
-                                var a = {{desconocido.getGmaps}};
-                                var uluru = a;
-                                var map = new google.maps.Map(document.getElementById('map'), {
-                                    zoom: 18,
-                                    center: uluru,
-                                    mapTypeId: 'satellite'
-                                });
-                                var marker = new google.maps.Marker({
-                                    position: uluru,
-                                    map: map
-                                });
-                            }
-                        </script>
-                        <script async defer
-                                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBQljsL5eXkLS1pYEd6LO6u08bMKxTb6k&callback=initMap">
-                        </script>
-                    </div>
+    <div id="collapse-investigacion" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+          <li class="nav-item">
+            <a class="nav-link active text-secondary" href="#tabdatos" data-toggle="tab" target="navegador"><i class="fas fa-key"></i> Datos</a>
+          </li>
+          <li class="nav-item" id="butActuaciones">
+            <a class="nav-link text-secondary" href="#tabtramites" data-toggle="tab" target="navegador"><i class="fas fa-inbox"></i> Trámites</a>
+          </li>
+          <li class="nav-item" id="butNotas">
+            <a class="nav-link text-secondary" href="#tabnotas" data-toggle="tab" target="navegador"><i class="fas fa-sticky-note"></i> Notas</a>
+          </li>
+        </ul>
+      </div>
+      <div class="tab-content" id="micontenido">
+        <!--------------------------- TRAMITES ------------------------------------------>
+        <div class="tab-pane fade" id="tabtramites" role="tabpanel" aria-labelledby="tabactuaciones">
+          <div class="container-fluid pt-1 pb-1 card-header">
+            <button type="button" class="btn btn-sm btn-light btn-verde" data-toggle="modal" data-target="#addActuacion"><i class="far fa-plus-square fa-lg"></i></button>
+          </div>
+          <!-- ----------------------------- MODAL TRAMITES ---------------------------------------->
+          <div class="modal fade" id="addActuacion" tabindex="-1" role="dialog" aria-labelledby="actuacionModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="actuacionModal">Añadir trámite</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
+                <div class="modal-body">
+                  <!--<form id="formnota2" method="post" action="addnota">-->
+                  <form id="formActuacion" method="post" action="addtramite">
+                    {% csrf_token %}
+                    <input type="hidden" name="pk" value="{{desconocido.pk}}">
+                    <div class="row mb-2">
+                      <div class="col-3"><label for="{{tramiteform.tipo.id_for_label}}" class="text-primary mb-0">Tipo de actuación</label></div>
+                    </div>
+                    <div class="row mb-2">
+                      <div class="col-4">{{tramiteform.tipo}}</div>
+                    </div>
+                    <div class="row mb-2">
+                      <div class="col-2"><label for="{{tramiteform.tramite_agenda.id_for_label}}" class="text-primary mb-0">Fecha agenda</label></div>
+                    </div>
+                    <div class="row mb-2">
+                      <div class="col-3">{{tramiteform.tramite_agenda}}</div>
+                    </div>
+                    <div class="row mb-2">
+                      <div class="col-2"><label for="{{tramiteform.ampliacion.id_for_label}}" class="text-primary mb-0">Actuación</label></div>
+                    </div>
+                    <div class="row mb-2">
+                      <div class="col-12">{{tramiteform.ampliacion}}</div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                  </form>
+                </div>
+              </div>
             </div>
+          </div>
+          <div class="scroll-box" id="muestratramites">
+            {% include 'desconocidos/actuaciones.html' %}
+          </div>
         </div>
+
+        <!--------------------------- PANEL DE NOTAS ------------------------------------------>
+        <div class="tab-pane fade" id="tabnotas" role="tabpanel" aria-labelledby="tabnotas">
+          <div class="container-fluid pt-1 pb-1 card-header">
+            <button type="button" class="btn btn-sm btn-light btn-verde" data-toggle="modal" data-target="#addNota"><i class="far fa-plus-square fa-lg"></i></button>
+            <!------------------------------ MODAL NOTAS------------------------------------------->
+            <div class="modal fade" id="addNota" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Añadir nota</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <!--<form id="formnota2" method="post" action="addnota">-->
+                    <form id="formnota" method="post" action="addnotatest">
+                      {% csrf_token %}
+                      <input type="hidden" name="pk" value="{{desconocido.pk}}">
+                      <div class="row mb-2">
+                        <div class="col-2"><label for="{{formactuacion.fecha_agenda.id_for_label}}" class="text-primary mb-0">Fecha agenda</label></div>
+                      </div>
+                      <div class="row mb-2">
+                        <div class="col-3">{{formactuacion.fecha_agenda}}</div>
+                      </div>
+                      <div class="row mb-2">
+                        <div class="col-2"><label for="{{formactuacion.descripcion.id_for_label}}" class="text-primary mb-0">Nota</label></div>
+                      </div>
+                      <div class="row mb-2">
+                        <div class="col-12">{{formactuacion.descripcion}}</div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="scroll-box" id="muestranotas">
+            {% include 'desconocidos/notas.html' %}
+          </div>
+        </div>
+        <!-------------------------- PANEL DE DATOS ----------------------------->
+        <div class="tab-pane fade show active" id="tabdatos" role="tabpanel" aria-labelledby="tabdatos">
+          <div class="container-fluid pt-1 pb-1 card-body">
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="descopk" value="{{desconocido.pk}}">
+              <div class="row mb-0">
+                <div class="col-8">
+                  <label class="text-primary" for="{{form.titular_candidato.id_for_label}}">Titular candidato</label>
+                </div>
+                <div class="col-2">
+                  <label class="text-primary" for="{{form.nif_candidato.id_for_label}}">NIF</label>
+                </div>
+                <div class="col-2">
+                  <label class="text-primary" for="{{form.telefono.id_for_label}}">Teléfono</label>
+                </div>
+              </div>
+              <div class="row mt-0 mb-3">
+                <div class="col-8">
+                  {{form.titular_candidato}}
+                </div>
+                <div class="col-2">
+                  {{form.nif_candidato}}
+                </div>
+                <div class="col-2">
+                  {{form.telefono}}
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-3">
+                  <div class="checkbox align-items-center">
+                    {{form.mt}}
+                    <span class="text-primary ml-2">Modificación de titular</span>
+                  </div>
+                </div>
+                <div class="col-3">
+                  {{form.expediente}}
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-3">
+                  <div class="checkbox align-items-center">
+                    {{form.liq}}
+                    <span class="text-primary ml-2">Liquidación realizada</span>
+                    <!--<label class="form-check-label text-primary" for="{{form.mt.id_for_label}}">Modificación de titular realizada</label>-->
+                  </div>
+                </div>
+                <div class="col-3">
+                  {{form.importe_liq}}
+                </div>
+              </div>
+              <div class="row justify-content-center mt-1 mb-1">
+                <div class="col-3 text-primary text-center">
+                  Estado de la investigación
+                </div>
+              </div>
+              <div class="row justify-content-center mb-4">
+                <div class="col-3 text-center">
+                  {{form.resuelto}}
+                </div>
+              </div>
+              <div class="row justify-content-center mb-2">
+                <div class="col-3 text-center">
+                  <button type="submit" class="btn btn-primary btn-sm"><i class="far fa-save"></i> Guardar</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+  <!-- ---------------------- CARTOGRAFIA ------------------------------->
+  <div class="card mt-3">
+    <div class="card-header clearfix" id="headingOne">
+      <h5 class="float-left mb-0 text-secondary">
+        <i class="fas fa-map text-secondary"></i> CARTOGRAFÍA
+      </h5>
+      <a class="float-right mb-0" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        <i class="fas fa-chevron-circle-down text-secondary"></i>
+      </a>
+    </div>
+    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+          <li class="nav-item">
+            <a class="nav-link active text-secondary" href="#sedecatastro" data-toggle="tab" target="navegador"><img src="{% static 'img/sec.gif' %}" width="20" height="20"> Sede Electrónica de Catastro</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-secondary" href="#googlemaps" data-toggle="tab" target="navegador"><img src="{% static 'img/gmaps.png' %}" width="20" height="20"> Google Maps</a>
+          </li>
+        </ul>
+      </div>
+      <div class="card-body">
+        <div class="tab-content" id="mytabcontent">
+          <div class="tab-pane fade show active" id="sedecatastro" role="tabpanel" aria-labelledby="SedeCatastro">
+            <div class="embed-responsive embed-responsive-16by9">
+              <iframe name="navegador" class="embed-responsive-item" src="{{desconocido.getCarto}}" allowfullscreen></iframe>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="googlemaps" role="tabpanel" aria-labelledby="GoogleMaps">
+            <div class="embed-responsive embed-responsive-16by9" id="map"></div>
+            <script>
+            function initMap() {
+              var a = {{desconocido.getGmaps}};
+              var uluru = a;
+              var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 18,
+                center: uluru,
+                mapTypeId: 'satellite'
+              });
+              var marker = new google.maps.Marker({
+                position: uluru,
+                map: map
+              });
+            }
+            </script>
+            <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBQljsL5eXkLS1pYEd6LO6u08bMKxTb6k&callback=initMap">
+            </script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
 $(function() {
-    $('.toggle-btn').bootstrapToggle({
-        size: 'small',
-    });
-    disablegestion();
-    disableliq();
+  $('.toggle-btn').bootstrapToggle({
+    size: 'small',
   });
+  disablegestion();
+  disableliq();
+});
 
-    $('.datepicker').datepicker({
-        format: "dd/mm/yyyy",
-        weekStart: 1,
-        language: "es",
-        orientation: "auto right"
-    });
+$('.datepicker').datepicker({
+  format: "dd/mm/yyyy",
+  weekStart: 1,
+  language: "es",
+  orientation: "auto right"
+});
 
-    $(function () {
-        $('.form-check-input').change();
-        });
+$(function () {
+  $('.form-check-input').change();
+});
 
-    $('#formnota').on('submit', function(event){
-        event.preventDefault();
-        console.log("Formulario enviado") // Control sanidad
-        crear_nota();
-        });
+$('#formnota').on('submit', function(event){
+  event.preventDefault();
+  console.log("Formulario enviado") // Control sanidad
+  crear_nota();
+});
 
-    $('#formActuacion').on('submit', function(event){
-        event.preventDefault();
-        console.log("Formulario enviado") // Control sanidad
-        crear_tramite();
-        });
+$('#formActuacion').on('submit', function(event){
+  event.preventDefault();
+  console.log("Formulario enviado") // Control sanidad
+  crear_tramite();
+});
 
-    $('#panel_investigacion').on('click', '.agendanota', function(event){
-    nota = $(this).attr('data');
-    desco = $(this).attr('desco');
-    check_nota(nota, desco);
-    });
+$('#panel_investigacion').on('click', '.agendanota', function(event){
+  nota = $(this).attr('data');
+  desco = $(this).attr('desco');
+  check_nota(nota, desco);
+});
 
-    $('#panel_investigacion').on('click', '.agendatramite', function(event){
-    tram = $(this).attr('data');
-    desco = $(this).attr('desco');
-    check_tram(tram, desco);
-    });
+$('#panel_investigacion').on('click', '.agendatramite', function(event){
+  tram = $(this).attr('data');
+  desco = $(this).attr('desco');
+  check_tram(tram, desco);
+});
 
-    function check_tram(trampk, descopk) {
-        console.log("Marcar tramite funciona" + trampk + descopk)
-        $.ajax({
-            url: "checktram",
-            type: "POST",
-            data: {
-                pk: trampk,
-                desconocido: descopk,
-                csrfmiddlewaretoken: '{{ csrf_token }}',
+function check_tram(trampk, descopk) {
+  console.log("Marcar tramite funciona" + trampk + descopk)
+  $.ajax({
+    url: "checktram",
+    type: "POST",
+    data: {
+      pk: trampk,
+      desconocido: descopk,
+      csrfmiddlewaretoken: '{{ csrf_token }}',
 
-            },
+    },
 
-            success: function(json) {
-                console.log('tramite check');
-                $('#muestratramites').html(json.data);
-                $("#muestratramites").animate({scrollTop:$("#muestratramites")[0].scrollHeight}, 1000);
-                $('[data-toggle="tooltip"]').tooltip({'placement': 'right'});
-                $('.agendatramite').on('click', function(){check_tram($('.agendatramite').attr('data'), $('.agendatramite').attr('desco'));});
-            },
+    success: function(json) {
+      console.log('tramite check');
+      $('#muestratramites').html(json.data);
+      $("#muestratramites").animate({scrollTop:$("#muestratramites")[0].scrollHeight}, 1000);
+      $('[data-toggle="tooltip"]').tooltip({'placement': 'right'});
+      $('.agendatramite').on('click', function(){check_tram($('.agendatramite').attr('data'), $('.agendatramite').attr('desco'));});
+    },
 
-            error: function(xhr,errmsg,err) {
-                console.log(xhr.status + ": " + xhr.responseText);
-            }
-        });
-    };
+    error: function(xhr,errmsg,err) {
+      console.log(xhr.status + ": " + xhr.responseText);
+    }
+  });
+};
 
 
-    function crear_nota() {
-        console.log("Crear post funciona")
-        console.log($('#{{formactuacion.fecha_agenda.id_for_label}}').val())
-        $.ajax({
-            url: "addnotatest",
-            type: "POST",
-            data: {
-                pk: {{ desconocido.pk }},
-                descripcion: $('#{{formactuacion.descripcion.id_for_label}}').val(),
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                fecha_agenda: $('#{{formactuacion.fecha_agenda.id_for_label}}').val(),
-            },
+function crear_nota() {
+  console.log("Crear post funciona")
+  console.log($('#{{formactuacion.fecha_agenda.id_for_label}}').val())
+  $.ajax({
+    url: "addnotatest",
+    type: "POST",
+    data: {
+      pk: {{ desconocido.pk }},
+      descripcion: $('#{{formactuacion.descripcion.id_for_label}}').val(),
+      csrfmiddlewaretoken: '{{ csrf_token }}',
+      fecha_agenda: $('#{{formactuacion.fecha_agenda.id_for_label}}').val(),
+    },
 
-            success: function(json) {
-                $('#{{formactuacion.descripcion.id_for_label}}').val('');
-                console.log(json);
-                $('#addNota').modal('hide');
-                $('#muestranotas').html(json.data);
-                $("#muestranotas").animate({scrollTop:$("#muestranotas")[0].scrollHeight}, 1000);
-            },
+    success: function(json) {
+      $('#{{formactuacion.descripcion.id_for_label}}').val('');
+      console.log(json);
+      $('#addNota').modal('hide');
+      $('#muestranotas').html(json.data);
+      $("#muestranotas").animate({scrollTop:$("#muestranotas")[0].scrollHeight}, 1000);
+    },
 
-            error: function(xhr,errmsg,err) {
-                console.log(xhr.status + ": " + xhr.responseText);
-            }
-        });
-    };
-    function check_nota(notapk, descopk) {
-        console.log("Marcar nota funciona" + notapk + descopk)
-        $.ajax({
-            url: "checknota",
-            type: "POST",
-            data: {
-                pk: notapk,
-                desconocido: descopk,
-                csrfmiddlewaretoken: '{{ csrf_token }}',
+    error: function(xhr,errmsg,err) {
+      console.log(xhr.status + ": " + xhr.responseText);
+    }
+  });
+};
+function check_nota(notapk, descopk) {
+  console.log("Marcar nota funciona" + notapk + descopk)
+  $.ajax({
+    url: "checknota",
+    type: "POST",
+    data: {
+      pk: notapk,
+      desconocido: descopk,
+      csrfmiddlewaretoken: '{{ csrf_token }}',
 
-            },
+    },
 
-            success: function(json) {
-                console.log('exito');
-                $('#muestranotas').html(json.data);
-                $("#muestranotas").animate({scrollTop:$("#muestranotas")[0].scrollHeight}, 1000);
-                $('[data-toggle="tooltip"]').tooltip({'placement': 'right'});
-                $('.agendanota').on('click', function(){check_nota($('.agendanota').attr('data'), $('.agendanota').attr('desco'));});
-            },
+    success: function(json) {
+      console.log('exito');
+      $('#muestranotas').html(json.data);
+      $("#muestranotas").animate({scrollTop:$("#muestranotas")[0].scrollHeight}, 1000);
+      $('[data-toggle="tooltip"]').tooltip({'placement': 'right'});
+      $('.agendanota').on('click', function(){check_nota($('.agendanota').attr('data'), $('.agendanota').attr('desco'));});
+    },
 
-            error: function(xhr,errmsg,err) {
-                console.log(xhr.status + ": " + xhr.responseText);
-            }
-        });
-    };
-    function crear_tramite() {
-        console.log("Crear tramite funciona")
-        $.ajax({
-            url: "addtramite",
-            type: "POST",
-            data: {
-                pk: {{ desconocido.pk }},
-                ampliacion: $('#{{tramiteform.ampliacion.id_for_label}}').val(),
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                fecha_agenda: $('#{{tramiteform.tramite_agenda.id_for_label}}').val(),
-                tipo: $('#{{tramiteform.tipo.id_for_label}}').val(),
-            },
+    error: function(xhr,errmsg,err) {
+      console.log(xhr.status + ": " + xhr.responseText);
+    }
+  });
+};
+function crear_tramite() {
+  console.log("Crear tramite funciona")
+  $.ajax({
+    url: "addtramite",
+    type: "POST",
+    data: {
+      pk: {{ desconocido.pk }},
+      ampliacion: $('#{{tramiteform.ampliacion.id_for_label}}').val(),
+      csrfmiddlewaretoken: '{{ csrf_token }}',
+      fecha_agenda: $('#{{tramiteform.tramite_agenda.id_for_label}}').val(),
+      tipo: $('#{{tramiteform.tipo.id_for_label}}').val(),
+    },
 
-            success: function(json) {
-                $('#{{tramiteform.ampliacion.id_for_label}}').val('');
-                $('#{{tramiteform.tramite_agenda.id_for_label}}').val('');
-                console.log('exito');
-                $('#addActuacion').modal('hide');
-                $('#muestratramites').html(json.data);
-                $("#muestratramites").animate({scrollTop:$("#muestratramites")[0].scrollHeight}, 1000);
-                $('[data-toggle="tooltip"]').tooltip({'placement': 'right'});
-            },
+    success: function(json) {
+      $('#{{tramiteform.ampliacion.id_for_label}}').val('');
+      $('#{{tramiteform.tramite_agenda.id_for_label}}').val('');
+      console.log('exito');
+      $('#addActuacion').modal('hide');
+      $('#muestratramites').html(json.data);
+      $("#muestratramites").animate({scrollTop:$("#muestratramites")[0].scrollHeight}, 1000);
+      $('[data-toggle="tooltip"]').tooltip({'placement': 'right'});
+    },
 
-            error: function(xhr,errmsg,err) {
-                console.log(xhr.status + ": " + xhr.responseText);
-            }
-        });
-    };
-    function disablegestion() {
-        console.clear();
-        console.log($('#{{form.mt.id_for_label}}').prop('checked'));
-        estado = $('#{{form.mt.id_for_label}}').prop('checked')
-        if(estado) {
-        $('#{{form.liq.id_for_label}}').bootstrapToggle('enable');
-        $('#{{form.expediente.id_for_label}}').prop('disabled', !estado);
-        console.log('Activo toggle Liquidaciones')
-        } else {
-        $('#{{form.expediente.id_for_label}}').val('');
-        $('#{{form.importe_liq.id_for_label}}').val('');
-        $('#{{form.liq.id_for_label}}').bootstrapToggle('off');
-        $('#{{form.liq.id_for_label}}').bootstrapToggle('disable');
-        $('#{{form.importe_liq.id_for_label}}').prop('disabled', !estado);
-        $('#{{form.expediente.id_for_label}}').prop('disabled', !estado);
+    error: function(xhr,errmsg,err) {
+      console.log(xhr.status + ": " + xhr.responseText);
+    }
+  });
+};
+function disablegestion() {
+  console.clear();
+  console.log($('#{{form.mt.id_for_label}}').prop('checked'));
+  estado = $('#{{form.mt.id_for_label}}').prop('checked')
+  if(estado) {
+    $('#{{form.liq.id_for_label}}').bootstrapToggle('enable');
+    $('#{{form.expediente.id_for_label}}').prop('disabled', !estado);
+    console.log('Activo toggle Liquidaciones')
+  } else {
+    $('#{{form.expediente.id_for_label}}').val('');
+    $('#{{form.importe_liq.id_for_label}}').val('');
+    $('#{{form.liq.id_for_label}}').bootstrapToggle('off');
+    $('#{{form.liq.id_for_label}}').bootstrapToggle('disable');
+    $('#{{form.importe_liq.id_for_label}}').prop('disabled', !estado);
+    $('#{{form.expediente.id_for_label}}').prop('disabled', !estado);
 
-        }
-    };
-    function disableliq() {
-        estado = $('#{{form.liq.id_for_label}}').prop('checked')
-        if(estado) {
-            $('#{{form.importe_liq.id_for_label}}').prop('disabled', !estado);
-        } else {
-            $('#{{form.importe_liq.id_for_label}}').val('');
-            $('#{{form.importe_liq.id_for_label}}').prop('disabled', !estado);
-        }
-    };
+  }
+};
+function disableliq() {
+  estado = $('#{{form.liq.id_for_label}}').prop('checked')
+  if(estado) {
+    $('#{{form.importe_liq.id_for_label}}').prop('disabled', !estado);
+  } else {
+    $('#{{form.importe_liq.id_for_label}}').val('');
+    $('#{{form.importe_liq.id_for_label}}').prop('disabled', !estado);
+  }
+};
 </script>
 
 

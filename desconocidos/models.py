@@ -20,6 +20,7 @@ class tipotramite(models.Model):
     class Meta:
         verbose_name_plural = 'Tipos de trámite'
 
+
 class tipo_finca(models.Model):
     descripcion = models.CharField(max_length=15)
 
@@ -29,15 +30,17 @@ class tipo_finca(models.Model):
     class Meta:
         verbose_name_plural = "Tipos de finca"
 
+
 class usos(models.Model):
     clave = models.CharField(max_length=25, primary_key=True)
     descripcion = models.CharField(max_length=25)
 
     def __str__(self):
-        return self.descripcion +' (' + self.clave + ')'
+        return self.descripcion + ' (' + self.clave + ')'
 
     class Meta:
         verbose_name_plural = "Usos"
+
 
 class tipoDesc(models.Model):
     descripcion = models.CharField(max_length=30)
@@ -48,8 +51,10 @@ class tipoDesc(models.Model):
     class Meta:
         verbose_name_plural = 'Tipos de desconocido'
 
+
 class Desconocido(models.Model):
-    fk_muni = models.ForeignKey(municipio, on_delete=models.DO_NOTHING, default='')
+    fk_muni = models.ForeignKey(municipio, on_delete=models.DO_NOTHING,
+                                default='')
     refcat = models.CharField(max_length=20, blank=True)
     num_fijo = models.CharField(max_length=14, blank=True, null=True)
     sigla_via = models.CharField(max_length=5, blank=True, null=True)
@@ -67,23 +72,28 @@ class Desconocido(models.Model):
     v_suelo = models.IntegerField()
     v_constru = models.IntegerField()
     b_liquidable = models.IntegerField()
-    clave_uso = models.ForeignKey(usos, on_delete=models.DO_NOTHING, default='1')
+    clave_uso = models.ForeignKey(usos, on_delete=models.DO_NOTHING,
+                                  default='1')
     id_fiscal = models.CharField(max_length=10, blank=True, null=True)
     sujeto_pasivo = models.CharField(max_length=60, blank=True, null=True)
     resuelto = models.BooleanField(default=False)
-    tipo = models.ForeignKey(tipoDesc, on_delete=models.DO_NOTHING, default='1')
+    tipo = models.ForeignKey(tipoDesc, on_delete=models.DO_NOTHING,
+                             default='1')
     titular_candidato = models.CharField(max_length=100, blank=True, null=True)
     nif_candidato = models.CharField(max_length=9, blank=True, null=True)
     expediente = models.CharField(max_length=14, blank=True, null=True)
     mt = models.BooleanField(blank=True, default=False)
     liq = models.BooleanField(blank=True, default=False)
-    importe_liq = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True, default=0)
+    importe_liq = models.DecimalField(max_digits=8, decimal_places=2, null=True
+                                      , blank=True, default=0)
     telefono = models.CharField(max_length=20, blank=True, null=True)
     cuota = models.DecimalField(max_digits=15, decimal_places=2, null=True)
-    tipo_finca = models.ForeignKey(tipo_finca, on_delete=models.DO_NOTHING, null=True, blank=True)
+    tipo_finca = models.ForeignKey(tipo_finca, on_delete=models.DO_NOTHING,
+                                   null=True, blank=True)
     fecha_creacion = models.DateField(default=datetime.datetime.today)
     fecha_finalizacion = models.DateField(null=True)
-    usuario_finalizacion = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
+    usuario_finalizacion = models.ForeignKey(User, on_delete=models.DO_NOTHING,
+                                             null=True)
 
 
 
@@ -106,22 +116,26 @@ class Desconocido(models.Model):
 
     @property
     def getDireccion(self):
-        via = ' '.join([self.sigla_via, self.nombre_via, ])
+        via = ''
+        if self.sigla_via is not None and self.nombre_via is not None:
+            via = ' '.join([self.sigla_via, self.nombre_via, ])
         if self.num_pol != '0000':
+            print(self.num_pol, self.letra_pol)
             num = ' Nº ' + self.num_pol + self.letra_pol
         else:
             num = ''
-        if self.num_pol_2 != '':
+        if self.num_pol_2 is not None:
+            # if self.num_pol_2 != '':
             num2 = 'Bis ' + self.num_pol_2 + self.letra_pol_2
         else:
             num2 = ''
 
         direninmueble = ''
-        if self.escalera != '':
+        if self.escalera is not None:
             direninmueble = 'ES: ' + self.escalera
-        if self.planta != '':
+        if self.planta is not None:
             direninmueble = direninmueble + ' PL: ' + self.planta
-        if self.puerta != '':
+        if self.puerta is not None:
             direninmueble = direninmueble + ' PU: ' + self.puerta
 
         direccion = via

@@ -1,30 +1,33 @@
 import pyodbc
+import datetime
 from .models import municipio, organismo
-from desconocidos.models import Desconocido, tipoDesc, tipo_finca, usos
+from desconocidos.models import Desconocido, tipoDesc, tipo_finca, usos, tipotramite
+from django.contrib.auth.models import User
 from segcat.settings import BASE_DIR
 from decimal import Decimal
 from sys import platform
-import jaydebeapi
+# import jaydebeapi
 
-def cnxnLinux(ruta):
-    ucanaccess_jars = [
-        ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/lib/hsqldb.jar']),
-        ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/lib/commons-lang-2.6.jar']),
-        ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/lib/commons-logging-1.1.3.jar']),
-        ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/lib/jackcess-2.1.9.jar']),
-        ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/loader/ucanload.jar']),
-        ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/ucanaccess-4.0.3.jar'])
-        ]
+# def cnxnLinux(ruta):
+#     ucanaccess_jars = [
+#         ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/lib/hsqldb.jar']),
+#         ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/lib/commons-lang-2.6.jar']),
+#         ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/lib/commons-logging-1.1.3.jar']),
+#         ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/lib/jackcess-2.1.9.jar']),
+#         ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/loader/ucanload.jar']),
+#         ''.join([BASE_DIR,'/polls/static/polls/UCanAccess/ucanaccess-4.0.3.jar'])
+#         ]
+#
+#     classpath = ":".join(ucanaccess_jars)
+#     print(classpath)
+#     cnxn = jaydebeapi.connect(
+#         "net.ucanaccess.jdbc.UcanaccessDriver",
+#         "jdbc:ucanaccess://" + ruta + ";newDatabaseVersion=V2010",
+#         ["", ""],
+#         classpath
+#         )
+#     return cnxn
 
-    classpath = ":".join(ucanaccess_jars)
-    print(classpath)
-    cnxn = jaydebeapi.connect(
-        "net.ucanaccess.jdbc.UcanaccessDriver",
-        "jdbc:ucanaccess://" + ruta + ";newDatabaseVersion=V2010",
-        ["", ""],
-        classpath
-        )
-    return cnxn
 
 def cnxnWindows(ruta):
     conn_str = (
@@ -34,14 +37,16 @@ def cnxnWindows(ruta):
     cnxn = pyodbc.connect(conn_str)
     return cnxn
 
+
 def IdentificaFichero(ruta):
     tipo = 'NPI'
     conn = ''
     if ruta[-3:] == 'mdb' or ruta[-5:] == 'accdb':
-        if platform == 'windows':
+        if platform == 'win32':
             conn = cnxnWindows(ruta)
-        else:
-            conn = cnxnLinux(ruta)
+        # else:
+        #     conn = cnxnLinux(ruta)
+        print(conn)
         cursor = conn.cursor()
         try:
             cursor.execute('SELECT * FROM DESCONOCIDOS')
@@ -51,13 +56,14 @@ def IdentificaFichero(ruta):
     conn.close()
     return tipo
 
+
 def AccessDesconocidos(ruta):
     # REALIZA CONEXIÓN CON PYODBC AL FICHERO ACCESS PROPORCIONADO Y SELECCIONA
     # TODOS LOS DESCONOCIDOS EN LA TABLA DESCONOCIDOS
-    if platform == 'windows':
+    if platform == 'win32':
         conn = cnxnWindows(ruta)
-    else:
-        conn = cnxnLinux(ruta)
+    # else:
+    #     conn = cnxnLinux(ruta)
 
     cursor = conn.cursor()
     sql = 'SELECT * FROM DESCONOCIDOS'
@@ -69,10 +75,12 @@ def AccessDesconocidos(ruta):
     i = 0
     tabla_cargados = ''
     tabla_errores = ''
+    tabla_finalizados = ''
     tipo_antiecon = tipoDesc.objects.get(descripcion='ANTIECONÓMICO')
     tipo_investigable = tipoDesc.objects.get(descripcion='INVESTIGABLE')
     tipo_rustica = tipoDesc.objects.get(descripcion='RÚSTICA SOLAR')
     tipo_solar = tipoDesc.objects.get(descripcion='URBANA SOLAR')
+    tramite_finalizado = tipotramite.objects.get(descripcion='Finalización')
 
     # BUCLE QUE RECORRE LOS REGISTROS DEL ACCESS
     for row in rows:
@@ -93,7 +101,7 @@ def AccessDesconocidos(ruta):
             # DEL MUNICIPIO, SI NO EXISTE GENERA LA LINEA EN TABLA_ERRORES
             muni = municipio.objects.filter(org__cod=cod_delegacion, cod=int(str(row[0])[-3:]))
             if len(muni) == 0:
-                print('No existe municipio')
+                print('No existe municipio', cod_delegacion, int(str(row[0])[-3:]))
                 tabla_errores = ''.join([tabla_errores, '<tr><td>', row[2], '</td><td>', '</td><td>', row[1], '</td><td>', 'No existe municipio ', row[1], ' con código ', str(row[0])[-3:], '</td></tr>', '\n'])
             else:
                 print('Existe municipio')
@@ -103,10 +111,10 @@ def AccessDesconocidos(ruta):
                 if len(q) == 1:
                     print('Existe desconocido')
                     estado = ''
-                    if q[0].fecha_finalizacion == None:
+                    if q[0].fecha_finalizacion is None:
                         estado = 'investigación abierta'
                     else:
-                        estado = 'investigación cerrada el ' + q.fecha_finalizacion
+                        estado = 'investigación cerrada el ' + str(q[0].fecha_finalizacion)
                     tabla_errores = ''.join([tabla_errores, '<tr><td>', row[2], '</td><td>', org[0].nombre, '</td><td>', row[1], '</td><td>', 'Ya existe el desconocido con ', estado, '</td></tr>', '\n'])
                 else:
                     print('No existe desconocido')
@@ -114,7 +122,7 @@ def AccessDesconocidos(ruta):
                     if row[21] == '':
                         uso = usos.objects.get(pk='1')
                     else:
-                        uso = usos.objects.get(pk=row[21])
+                        uso = usos.objects.get(pk=row[22])
 
                     q = Desconocido(
                         fk_muni=muni[0],
@@ -172,6 +180,31 @@ def AccessDesconocidos(ruta):
                          '</td><td></tr>', '\n'])
 
                     i += 1
+
+    cod_delegacion = int(rows[0][0]) // 1000
+    cod_muni = int(str(rows[0][0])[-3:])
+    muni = municipio.objects.filter(org__cod=cod_delegacion, cod=cod_muni)
+    if len(muni) != 0:
+        desconocidos_organismo = Desconocido.objects.filter(fk_muni__org=muni[0].org)
+        system = User.objects.get(username='system')
+        for desco in desconocidos_organismo:
+            sql = "SELECT * FROM DESCONOCIDOS WHERE [Referencia Catastral] LIKE '" + desco.refcat + "'"
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            if len(rows) == 0:
+                if desco.fecha_finalizacion is None:
+                    print(desco.refcat)
+                    desco.fecha_finalizacion = datetime.datetime.today()
+                    desco.creaTramite(user=system, ampliacion='Resuelto por carga de fichero el día ' + str(datetime.datetime.today()),
+                    fecha=datetime.datetime.today(), tipo=tramite_finalizado.pk,
+                    agendar=None)
+                    desco.resuelto = True
+                    desco.save()
+                    tabla_finalizados = ''.join(
+                        [tabla_finalizados, '<tr><td>', desco.refcat, '</td><td>', desco.fk_muni.org.nombre, '</td><td>',
+                         desco.fk_muni.nombre,
+                         '</td><td></tr>', '\n'])
+
     tabla_cargados = ''.join(['<table class="table table-sm table-hover">'
                               '<thead>'
                               '<tr><th class="text-center" colspan="3">DESCONOCIDOS CARGADOS</th></tr>'
@@ -189,20 +222,19 @@ def AccessDesconocidos(ruta):
                              '<th scope="col">Motivo</th>'
                              '</tr>'
                              '</thead>', '\n', tabla_errores, '\n', '</table>'])
-    cod_delegacion = int(rows[0][0]) // 1000
-    cod_muni = int(str(rows[0][0])[-3:])
-    muni = municipio.objects.filter(org__cod=cod_delegacion, cod=cod_muni)
-    if len(muni) != 0:
-        desconocidos_organismo = Desconocido.objects.filter(fk_muni__org=muni[0].org)
-        for desco in desconocidos_organismo:
-            sql = "SELECT * FROM DESCONOCIDOS WHERE [Referencia Catastral] LIKE '" + desco.refcat + "'"
-            cursor.execute(sql)
-            rows = cursor.fetchall()
-            print(desco.refcat, len(rows))
+    tabla_finalizados = ''.join(['<table class="table table-sm table-hover">'
+                              '<thead>'
+                              '<tr><th class="text-center" colspan="3">DESCONOCIDOS FINALIZADOS</th></tr>'
+                              '<tr><th scope="col">Desconocido</th>'
+                              '<th scope="col">Organismo</th>'
+                              '<th scope="col">Municipio</th>'
+                              '</tr>'
+                              '</thead>', '\n', tabla_finalizados, '\n', '</table>'])
 
     resultado = {
         'tabla_cargados': tabla_cargados,
         'tabla_errores': tabla_errores,
+        'tabla_finalizados': tabla_finalizados,
         'cargados': i,
         'totales': filas
     }

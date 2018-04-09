@@ -47,14 +47,21 @@
 </div>
 
 {% endif %}
-<div id="tabla_cargados" style="display:none;">
 
-</div>
-&nbsp;
-&nbsp;
-<div id="tabla_errores" style="display:none;">
+  <div class="container" id="tabla_cargados" style="display:none;">
 
-</div>
+  </div>
+  &nbsp;
+  &nbsp;
+  <div class="container" id="tabla_finalizados" style="display:none;">
+
+  </div>
+  &nbsp;
+  &nbsp;
+  <div class="container" id="tabla_errores" style="display:none;">
+
+  </div>
+
 
 
 <div class="modal fade" id="confirmacion" tabindex="-1" role="dialog" aria-labelledby="confirmacion" aria-hidden="true">
@@ -135,13 +142,15 @@ $('#formcarga').submit(function(){
             url: 'subir',
             type: 'POST',
             data: formData,
-            async: false,
+            async: true,
             success: function (data) {
                 $('#progreso').hide();
                 $('#tabla_cargados').html(data.tabla_cargados);
                 $('#tabla_errores').html(data.tabla_errores);
+                $('#tabla_finalizados').html(data.tabla_finalizados);
                 $('#tabla_cargados').show();
                 $('#tabla_errores').show();
+                $('#tabla_finalizados').show();
                 console.log(data);
             },
             cache: false,

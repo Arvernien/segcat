@@ -8,293 +8,293 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" type="text/javascript"></script>
 
 <!-- MUESTRA EL GRÁFICO DE DE LOS RESULTADOS DE BÚSQUEDA SI SE HA REALIZADO (COMPRUEBA LA EXISTENCIA DE "MODO" ) -->
-        {% if modo %}
+{% if modo %}
 <div class="row justify-content-center">
-    <div class="card ml-3 mb-2 live__scroll--box" style="width: 18rem; background-color: #e9fcc2;">
-        <canvas class="card-img-top" id="Grafresultados" width="400" height="400"></canvas>
-        <form method="post">{% csrf_token %}</form>
-        <div class="card-body">
-            <h6 class="card-title text-center">Resultados búsqueda</h6>
-            <ul class="card-text">
-                <li class="texto-peq">Desconocidos: <span class="texto-peq" id="descocount">{{total}}</span></li>
-                <li class="texto-peq">Mod. Titular: <span class="texto-peq" id="mtresultados">{{mt}}</span></li>
-                <li class="texto-peq">Liquidaciones: <span class="texto-peq" id="liqresultados">{{liq}}</span></li>
-                <li class="texto-peq">Importe liquidado: <span class="texto-peq" id="i_liqresultados">{{importe_liq}} €</span></li>
-                <li class="texto-peq">IBI Desconocido: <span class="texto-peq" id="i_descresultados">{{pendiente}} €</span></li>
-            </ul>
-        </div>
-        <div class="row align-items-end mb-1">
-            <div class="col text-center align-self-end"><a class="btn btn-sm btn-outline-primary" href="{{busqhref}}"><i class="fas fa-info"></i> Más datos</a></div>
-        </div>
+  <div class="card ml-3 mb-2 live__scroll--box" style="width: 18rem; background-color: #e9fcc2;">
+    <canvas class="card-img-top" id="Grafresultados" width="400" height="400"></canvas>
+    <form method="post">{% csrf_token %}</form>
+    <div class="card-body">
+      <h6 class="card-title text-center">Resultados búsqueda</h6>
+      <ul class="card-text">
+        <li class="texto-peq">Desconocidos: <span class="texto-peq" id="descocount">{{total}}</span></li>
+        <li class="texto-peq">Mod. Titular: <span class="texto-peq" id="mtresultados">{{mt}}</span></li>
+        <li class="texto-peq">Liquidaciones: <span class="texto-peq" id="liqresultados">{{liq}}</span></li>
+        <li class="texto-peq">Importe liquidado: <span class="texto-peq" id="i_liqresultados">{{importe_liq}} €</span></li>
+        <li class="texto-peq">IBI Desconocido: <span class="texto-peq" id="i_descresultados">{{pendiente}} €</span></li>
+      </ul>
     </div>
-        <script>
-            //ESTE SCRIPT ES EL ENCARGADO DE MOSTRAR EL GRÁFICO DE LOS RESULTADOS DE BÚSQUEDA
+    <div class="row align-items-end mb-1">
+      <div class="col text-center align-self-end"><a class="btn btn-sm btn-outline-primary" href="{{busqhref}}"><i class="fas fa-info"></i> Más datos</a></div>
+    </div>
+  </div>
+  <script>
+  //ESTE SCRIPT ES EL ENCARGADO DE MOSTRAR EL GRÁFICO DE LOS RESULTADOS DE BÚSQUEDA
 
-            var ctxresultados = document.getElementById("Grafresultados").getContext('2d');
-            var myChart = new Chart(ctxresultados, {
-                type: 'doughnut',
-                    data: {
-                    datasets: [{
-                        data: [{{antieconomicos}},{{rusticas}},{{solares}},{{investigables}}],
-                        backgroundColor: [
-                            'rgba(255, 0, 0, 0.6)',
-                            'rgba(252, 176, 0, 0.6)',
-                            'rgba(255, 225, 0, 0.6)',
-                            'rgba(143, 212, 0, 0.6)'
-                        ],
-                        borderColor:[
-                            'rgba(255, 0, 0, 1)',
-                            'rgba(252, 176, 0, 1)',
-                            'rgba(255, 225, 0, 1)',
-                            'rgba(143, 212, 0, 1)'
-                        ]
-                    }],
+  var ctxresultados = document.getElementById("Grafresultados").getContext('2d');
+  var myChart = new Chart(ctxresultados, {
+    type: 'doughnut',
+    data: {
+      datasets: [{
+        data: [{{antieconomicos}},{{rusticas}},{{solares}},{{investigables}}],
+        backgroundColor: [
+          'rgba(255, 0, 0, 0.6)',
+          'rgba(252, 176, 0, 0.6)',
+          'rgba(255, 225, 0, 0.6)',
+          'rgba(143, 212, 0, 0.6)'
+        ],
+        borderColor:[
+          'rgba(255, 0, 0, 1)',
+          'rgba(252, 176, 0, 1)',
+          'rgba(255, 225, 0, 1)',
+          'rgba(143, 212, 0, 1)'
+        ]
+      }],
 
-                        // Etiquetas
-                        labels: [
-                        'Antieconmicos',
-                        'Rústica solar',
-                        'Urbana solar',
-                        'Investigables'
-                    ]
+      // Etiquetas
+      labels: [
+        'Antieconmicos',
+        'Rústica solar',
+        'Urbana solar',
+        'Investigables'
+      ]
 
-                },
-            });
+    },
+  });
 </script>
 </div>
 
 <!-- SI NO SE HA REALIZADO BÚSQUEDA MUESTRA UN GRÁFICO PARA CADA ORGANISMO QUE FIGURE EN LA BASE DE DATOS -->
-        {% else %}
+{% else %}
 <div class="live__scroll">
-    <div class="row justify-content-center">
-        {% for organismo in organismos %}
-        <div class="card ml-3 mb-2 live__scroll--box" style="width: 18rem;">
-            <img id="img{{organismo.pk}}" class="card-img-top" src="{% static 'img/loading.svg' %}">
-            <canvas class="card-img-top" id="Graf{{organismo.pk}}" width="400" height="400"></canvas>
-            <form method="post">{% csrf_token %}</form>
-            <div class="card-body row">
-                <div class="col-12 d-flex justify-content-center text-center align-items-center" style="white-space:normal; height: 2.5rem; vertical-align: middle;">
-                    <h6>{{organismo.nombre}}</h6>
-                </div>
-                <ul class="card-text row">
-                    <li class="texto-peq">Desconocidos: <span class="texto-peq" id="desc{{organismo.pk}}">--</span></li>
-                    <li class="texto-peq">Mod. Titular: <span class="texto-peq" id="mt{{organismo.pk}}">--</span></li>
-                    <li class="texto-peq">Liquidaciones: <span class="texto-peq" id="liq{{organismo.pk}}">--</span></li>
-                    <li class="texto-peq">Importe liquidado: <span class="texto-peq" id="i_liq{{organismo.pk}}">--</span></li>
-                    <li class="texto-peq">IBI Desconocido: <span class="texto-peq" id="i_desc{{organismo.pk}}">--</span></li>
-                </ul>
-            </div>
-            <div class="row align-items-end mb-1">
-                <div class="col text-center align-self-end"><a class="btn btn-sm btn-outline-primary" href="organismo/{{organismo.pk}}"><i class="fas fa-info"></i> Más datos</a></div>
-            </div>
+  <div class="row justify-content-center">
+    {% for organismo in organismos %}
+    <div class="card ml-3 mb-2 live__scroll--box" style="width: 18rem;">
+      <img id="img{{organismo.pk}}" class="card-img-top" src="{% static 'img/loading.svg' %}">
+      <canvas class="card-img-top" id="Graf{{organismo.pk}}" width="400" height="400"></canvas>
+      <form method="post">{% csrf_token %}</form>
+      <div class="card-body row">
+        <div class="col-12 d-flex justify-content-center text-center align-items-center" style="white-space:normal; height: 2.5rem; vertical-align: middle;">
+          <h6>{{organismo.nombre}}</h6>
         </div>
-        <script>
-        //ESTE SCRIPT ES EL ENCARGADO DE MOSTRAR EL GRÁFICO DE CADA ORGANISMO
+        <ul class="card-text row">
+          <li class="texto-peq">Desconocidos: <span class="texto-peq" id="desc{{organismo.pk}}">--</span></li>
+          <li class="texto-peq">Mod. Titular: <span class="texto-peq" id="mt{{organismo.pk}}">--</span></li>
+          <li class="texto-peq">Liquidaciones: <span class="texto-peq" id="liq{{organismo.pk}}">--</span></li>
+          <li class="texto-peq">Importe liquidado: <span class="texto-peq" id="i_liq{{organismo.pk}}">--</span></li>
+          <li class="texto-peq">IBI Desconocido: <span class="texto-peq" id="i_desc{{organismo.pk}}">--</span></li>
+        </ul>
+      </div>
+      <div class="row align-items-end mb-1">
+        <div class="col text-center align-self-end"><a class="btn btn-sm btn-outline-primary" href="organismo/{{organismo.pk}}"><i class="fas fa-info"></i> Más datos</a></div>
+      </div>
+    </div>
+    <script>
+    //ESTE SCRIPT ES EL ENCARGADO DE MOSTRAR EL GRÁFICO DE CADA ORGANISMO
 
-        $('#Graf{{organismo.pk}}').hide();
-        $.ajax({
-            type: "POST",
-            url: "orgdatos",
-            data: {
-                pk: {{ organismo.pk }},
+    $('#Graf{{organismo.pk}}').hide();
+    $.ajax({
+      type: "POST",
+      url: "orgdatos",
+      data: {
+        pk: {{ organismo.pk }},
         csrfmiddlewaretoken: '{{ csrf_token }}'},
 
         success: function(json) {
-                $('#desc{{organismo.pk}}').html(json["total"]);
-                $('#mt{{organismo.pk}}').html(json["mt"]);
-                $('#liq{{organismo.pk}}').html(json["liq"]);
-                $('#i_liq{{organismo.pk}}').html(json["importe_liq"]+' €');
-                $('#i_desc{{organismo.pk}}').html(json["pendiente"]+' €');
-            var ctx{{organismo.pk}} = document.getElementById("Graf{{organismo.pk}}").getContext('2d');
-            var myChart = new Chart(ctx{{organismo.pk}}, {
-                type: 'doughnut',
-                    data: {
-                    datasets: [{
-                        data: [json["antieconomicos"],json["rusticas"],json["solares"],json["investigables"]],
-                        backgroundColor: [
-                            'rgba(255, 0, 0, 0.6)',
-                            'rgba(252, 176, 0, 0.6)',
-                            'rgba(255, 225, 0, 0.6)',
-                            'rgba(143, 212, 0, 0.6)'
-                        ],
-                        borderColor:[
-                            'rgba(255, 0, 0, 1)',
-                            'rgba(252, 176, 0, 1)',
-                            'rgba(255, 225, 0, 1)',
-                            'rgba(143, 212, 0, 1)'
-                        ]
-                    }],
+          $('#desc{{organismo.pk}}').html(json["total"]);
+          $('#mt{{organismo.pk}}').html(json["mt"]);
+          $('#liq{{organismo.pk}}').html(json["liq"]);
+          $('#i_liq{{organismo.pk}}').html(json["importe_liq"]+' €');
+          $('#i_desc{{organismo.pk}}').html(json["pendiente"]+' €');
+          var ctx{{organismo.pk}} = document.getElementById("Graf{{organismo.pk}}").getContext('2d');
+          var myChart = new Chart(ctx{{organismo.pk}}, {
+            type: 'doughnut',
+            data: {
+              datasets: [{
+                data: [json["antieconomicos"],json["rusticas"],json["solares"],json["investigables"]],
+                backgroundColor: [
+                  'rgba(255, 0, 0, 0.6)',
+                  'rgba(252, 176, 0, 0.6)',
+                  'rgba(255, 225, 0, 0.6)',
+                  'rgba(143, 212, 0, 0.6)'
+                ],
+                borderColor:[
+                  'rgba(255, 0, 0, 1)',
+                  'rgba(252, 176, 0, 1)',
+                  'rgba(255, 225, 0, 1)',
+                  'rgba(143, 212, 0, 1)'
+                ]
+              }],
 
-                        // Etiquetas
-                        labels: [
-                        'Antieconómicos',
-                        'Rústica solar',
-                        'Urbana solar',
-                        'Investigables'
-                    ]
+              // Etiquetas
+              labels: [
+                'Antieconómicos',
+                'Rústica solar',
+                'Urbana solar',
+                'Investigables'
+              ]
 
-                },
-            });
-            $('#img{{organismo.pk}}').hide();
-            $('#Graf{{organismo.pk}}').show();
+            },
+          });
+          $('#img{{organismo.pk}}').hide();
+          $('#Graf{{organismo.pk}}').show();
         },
         error: function(xhr,errmsg,err) {
-            console.log(xhr.status + ": " + xhr.responseText);
+          console.log(xhr.status + ": " + xhr.responseText);
         }
-        });
-</script>
-        {% endfor %}
-            </div>
-</div>
-        {% endif %}
-
-<!-- PANEL DE BÚSQUEDAS -->
-
-<link rel="stylesheet" type="text/css" href="{% static 'polls/styles.css' %}" />
-<div class="container-fluid mb-3">
-    <div class="card mt-3">
-        <div class="card-header" id="cabecera_investigacion">
-            <div class="row justify-content-between align-items-center">
-                <div class="col-2">
-                    <h5 class="mb-0 text-secondary"><i class="fas fa-search"></i> BÚSQUEDAS</h5>
-                </div>
-                <div class="col">
-                    <form method="get" class="">
-                        <fieldset id="busqrapida">
-                            <div class="form-row no-gutters">
-                                <input type="hidden" name="modo" value="s">
-                                <input type="text" id="idCriterio" name="q" class="form-control col-4 offset-md-7 form-control-sm" placeholder="Búsqueda rápida" value="{{q}}">
-                                <button type="submit" class="btn btn-sm btn-primary ml-2 float-right"><i class="fas fa-search"></i> Buscar</button>
-                            </div>
-                        </fieldset>
-                    </form>
-                </div>
-                <div class="col-1 text-right">
-                    <a class="mb-0" href="#" data-toggle="collapse" data-target="#panelbusquedas" aria-expanded="true" aria-controls="collapseOne" id="flechabusquedas">
-                        <i class="fas fa-chevron-circle-down text-secondary"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div id="panelbusquedas" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-            <div class="card-text">
-                <div class="container-fluid mt-3">
-                    <form method="GET">
-                        <input type="hidden" name="modo" value="a">
-                        <div class="form-row">
-                            <div class="form-group col-3">
-                                <label for="inputOrganismo" class="text-primary">Organismo</label>
-                                <select type="text" class="form-control form-control-sm" name="inputOrganismo" id="inputOrganismo" placeholder="Organismo">
-                                    <option value="">Cualquiera</option>
-                                    {% for organismo in organismos %}
-                                    <option value="{{organismo.pk}}">{{organismo.nombre}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="form-group col-3">
-                                <label for="inputMunicipio" class="text-primary">Municipio</label>
-                                <input type="text" class="form-control form-control-sm" id="inputMunicipio" name="inputMunicipio" placeholder="Municipio" value="{{inputMunicipio}}">
-                            </div>
-                            <div class="form-group col-3">
-                                <label for="inputSP" class="text-primary">Sujeto Pasivo</label>
-                                <input type="text" class="form-control form-control-sm" id="inputSP" name="inputSP" placeholder="Sujeto Pasivo">
-                            </div>
-                            <div class="form-group col-3">
-                                <label for="inputCandidato" class="text-primary">Titular candidato</label>
-                                <input type="text" class="form-control form-control-sm" id="inputCandidato" name="inputCandidato" placeholder="Titular candidato">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-1">
-                                <label for="inputTipoFinca" class="text-primary">Ámbito</label>
-                                <select class="form-control form-control-sm" id="inputTipoFinca" name="inputTipoFinca">
-                                    <option value="">Cualquiera</option>
-                                    <option value="URBANA">Urbana</option>
-                                    <option value="RÚSTICA">Rústica</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-2">
-                                <label for="inputTipo" class="text-primary">Tipo</label>
-                                <select class="form-control form-control-sm" id="inputTipo" name="inputTipo">
-                                    <option value="">Cualquiera</option>
-                                    {% for tipo in tipos %}
-                                    <option value="{{tipo.id}}">{{tipo.descripcion}}</option>
-                                    <!--
-                                    <option value="INVESTIGACIÓN">En investigación</option>
-                                    <option value="FICTICIO">Nif Ficticio</option> -->
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="form-group col-2">
-                                <label for="inputIbiMin" class="text-primary">Cuota mínima IBI</label>
-                                <input type="number" step="0.01" class="form-control form-control-sm" id="inputIbiMin" name="inputIbiMin" placeholder="Cuota mínima IBI">
-                            </div>
-                            <div class="form-group col-2">
-                                <label for="inputIbiMax" class="text-primary">Cuota máxima IBI</label>
-                                <input type="number" step="0.01" class="form-control form-control-sm" id="inputIbiMax" name="inputIbiMax" placeholder="Cuota máxima IBI">
-                            </div>
-                            <div class="form-group col-1">
-                                <label for="inputMt" class="text-primary">Mod. Titular</label>
-                                <select class="form-control form-control-sm" id="inputMt" name="inputMt">
-                                    <option value="">N/A</option>
-                                    <option value="True">Sí</option>
-                                    <option value="False">No</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-1">
-                                <label for="inputLiq" class="text-primary">Liquidación</label>
-                                <select class="form-control form-control-sm" id="inputLiq" name="inputLiq">
-                                    <option value="">N/A</option>
-                                    <option value="True">Sí</option>
-                                    <option value="False">No</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-1">
-                                <label for="inputAntiecon" class="text-primary">Antieconómicos</label>
-                                <select class="form-control form-control-sm" id="inputAntiecon" name="inputAntiecon">
-                                    <option value="True">Mostrar</option>
-                                    <option value="False" selected="selected">Ocultar</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row justify-content-center mb-3">
-                            <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-search"></i> Buscar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+      });
+      </script>
+      {% endfor %}
     </div>
-</div>
+  </div>
+  {% endif %}
 
-<!-- SI SE PASA UNA LISTA DE DESCONOCIDOS PAGINADA DESDE LA VISTA GENERA LA TABLA CON LOS RESULTADOS -->
+  <!-- PANEL DE BÚSQUEDAS -->
 
-{% if lista_desc %}
-<div class="container-fluid">
+  <link rel="stylesheet" type="text/css" href="{% static 'polls/styles.css' %}" />
+  <div class="container-fluid mb-3">
+    <div class="card mt-3">
+      <div class="card-header" id="cabecera_investigacion">
+        <div class="row justify-content-between align-items-center">
+          <div class="col-2">
+            <h5 class="mb-0 text-secondary"><i class="fas fa-search"></i> BÚSQUEDAS</h5>
+          </div>
+          <div class="col">
+            <form method="get" class="">
+              <fieldset id="busqrapida">
+                <div class="form-row no-gutters">
+                  <input type="hidden" name="modo" value="s">
+                  <input type="text" id="idCriterio" name="q" class="form-control col-4 offset-md-7 form-control-sm" placeholder="Búsqueda rápida" value="{{q}}">
+                  <button type="submit" class="btn btn-sm btn-primary ml-2 float-right"><i class="fas fa-search"></i> Buscar</button>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+          <div class="col-1 text-right">
+            <a class="mb-0" href="#" data-toggle="collapse" data-target="#panelbusquedas" aria-expanded="true" aria-controls="collapseOne" id="flechabusquedas">
+              <i class="fas fa-chevron-circle-down text-secondary"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div id="panelbusquedas" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+        <div class="card-text">
+          <div class="container-fluid mt-3">
+            <form method="GET">
+              <input type="hidden" name="modo" value="a">
+              <div class="form-row">
+                <div class="form-group col-3">
+                  <label for="inputOrganismo" class="text-primary">Organismo</label>
+                  <select type="text" class="form-control form-control-sm" name="inputOrganismo" id="inputOrganismo" placeholder="Organismo">
+                    <option value="">Cualquiera</option>
+                    {% for organismo in organismos %}
+                    <option value="{{organismo.pk}}">{{organismo.nombre}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group col-3">
+                  <label for="inputMunicipio" class="text-primary">Municipio</label>
+                  <input type="text" class="form-control form-control-sm" id="inputMunicipio" name="inputMunicipio" placeholder="Municipio" value="{{inputMunicipio}}">
+                </div>
+                <div class="form-group col-3">
+                  <label for="inputSP" class="text-primary">Sujeto Pasivo</label>
+                  <input type="text" class="form-control form-control-sm" id="inputSP" name="inputSP" placeholder="Sujeto Pasivo">
+                </div>
+                <div class="form-group col-3">
+                  <label for="inputCandidato" class="text-primary">Titular candidato</label>
+                  <input type="text" class="form-control form-control-sm" id="inputCandidato" name="inputCandidato" placeholder="Titular candidato">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-1">
+                  <label for="inputTipoFinca" class="text-primary">Ámbito</label>
+                  <select class="form-control form-control-sm" id="inputTipoFinca" name="inputTipoFinca">
+                    <option value="">Cualquiera</option>
+                    <option value="URBANA">Urbana</option>
+                    <option value="RÚSTICA">Rústica</option>
+                  </select>
+                </div>
+                <div class="form-group col-2">
+                  <label for="inputTipo" class="text-primary">Tipo</label>
+                  <select class="form-control form-control-sm" id="inputTipo" name="inputTipo">
+                    <option value="">Cualquiera</option>
+                    {% for tipo in tipos %}
+                    <option value="{{tipo.id}}">{{tipo.descripcion}}</option>
+                    <!--
+                    <option value="INVESTIGACIÓN">En investigación</option>
+                    <option value="FICTICIO">Nif Ficticio</option> -->
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group col-2">
+                  <label for="inputIbiMin" class="text-primary">Cuota mínima IBI</label>
+                  <input type="number" step="0.01" class="form-control form-control-sm" id="inputIbiMin" name="inputIbiMin" placeholder="Cuota mínima IBI">
+                </div>
+                <div class="form-group col-2">
+                  <label for="inputIbiMax" class="text-primary">Cuota máxima IBI</label>
+                  <input type="number" step="0.01" class="form-control form-control-sm" id="inputIbiMax" name="inputIbiMax" placeholder="Cuota máxima IBI">
+                </div>
+                <div class="form-group col-1">
+                  <label for="inputMt" class="text-primary">Mod. Titular</label>
+                  <select class="form-control form-control-sm" id="inputMt" name="inputMt">
+                    <option value="">N/A</option>
+                    <option value="True">Sí</option>
+                    <option value="False">No</option>
+                  </select>
+                </div>
+                <div class="form-group col-1">
+                  <label for="inputLiq" class="text-primary">Liquidación</label>
+                  <select class="form-control form-control-sm" id="inputLiq" name="inputLiq">
+                    <option value="">N/A</option>
+                    <option value="True">Sí</option>
+                    <option value="False">No</option>
+                  </select>
+                </div>
+                <div class="form-group col-1">
+                  <label for="inputAntiecon" class="text-primary">Antieconómicos</label>
+                  <select class="form-control form-control-sm" id="inputAntiecon" name="inputAntiecon">
+                    <option value="True">Mostrar</option>
+                    <option value="False" selected="selected">Ocultar</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row justify-content-center mb-3">
+                <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-search"></i> Buscar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SI SE PASA UNA LISTA DE DESCONOCIDOS PAGINADA DESDE LA VISTA GENERA LA TABLA CON LOS RESULTADOS -->
+
+  {% if lista_desc %}
+  <div class="container-fluid">
     <table class="table table-sm table-hover">
-        <thead>
+      <thead>
         <tr>
-            <th scope="col">#</th>
-            <th scope="col">ÁMBITO</th>
-            <th scope="col">ORGANISMO</th>
-            <th scope="col">MUNICIPIO</th>
-            <th scope="col">REFERENCIA CATASTRAL</th>
-            <th scope="col">TIPO</th>
-            <th scope="col">CUOTA IBI</th>
-            <th scope=""col>RESUELTO</th>
+          <th scope="col">#</th>
+          <th scope="col">ÁMBITO</th>
+          <th scope="col">ORGANISMO</th>
+          <th scope="col">MUNICIPIO</th>
+          <th scope="col">REFERENCIA CATASTRAL</th>
+          <th scope="col">TIPO</th>
+          <th scope="col">CUOTA IBI</th>
+          <th scope=""col>RESUELTO</th>
         </tr>
-        </thead>
+      </thead>
 
-        <!-- BUCLE PARA MOSTRAR CADA UNO DE LOS DESCONOCIDOS EN UNA LINEA DE LA TABLA -->
+      <!-- BUCLE PARA MOSTRAR CADA UNO DE LOS DESCONOCIDOS EN UNA LINEA DE LA TABLA -->
 
-{% for desc in lista_desc %}
-    <tr>
+      {% for desc in lista_desc %}
+      <tr>
         <td>{{forloop.counter0|add:lista_desc.start_index }}</td>
         <td><a class="" data-toggle="tooltip" title="{{desc.tipo_finca.descripcion}}" data-placement="right">{% if desc.tipo_finca.descripcion == 'RÚSTICA' %}
-            <i class="fas fa-tree text-secondary ml-4"></i>
-            {% else %}
-            <i class="fas fa-building text-secondary ml-4"></i>
-            {% endif %}</a>
+          <i class="fas fa-tree text-secondary ml-4"></i>
+          {% else %}
+          <i class="fas fa-building text-secondary ml-4"></i>
+          {% endif %}</a>
         </td>
         <td>{{ desc.fk_muni.org.nombre }}</td>
         <td>{{ desc.fk_muni.nombre }}</td>
@@ -302,70 +302,70 @@
         <td>{{ desc.tipo }}</td>
         <td>{{ desc.cuota }} €</td>
         {% if desc.resuelto == True %}
-            <td><img class="ml-4" src="{% static 'img/ok.svg' %}" width="25" height="25"></td>
+        <td><img class="ml-4" src="{% static 'img/ok.svg' %}" width="25" height="25"></td>
         {% else %}
-            <td><img class="ml-4" src="{% static 'img/fail.svg' %}" width="25" height="25"></td>
+        <td><img class="ml-4" src="{% static 'img/fail.svg' %}" width="25" height="25"></td>
         {% endif %}
-    </tr>
-{% endfor %}
-</table>
-</div>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
 
-<!-- PAGINADOR AL FINAL DE LA PÁGINA -->
+  <!-- PAGINADOR AL FINAL DE LA PÁGINA -->
 
-<div class="container-fluid -mb-6">
+  <div class="container-fluid -mb-6">
     <nav>
-        <ul class="pagination pagination-sm justify-content-center">
-                {% if lista_desc.has_previous %}
+      <ul class="pagination pagination-sm justify-content-center">
+        {% if lista_desc.has_previous %}
 
-                    <li class="page-item"><a class="page-link" href="?pag=1{% for nombre, valor in request.GET.items %}{% if nombre != 'pag' %}&{{nombre}}={{valor}}{% endif %}{% endfor %}">Primera</a></li>
-                    <li><a class="page-link" href="?pag={{ lista_desc.previous_page_number }}{% for nombre, valor in request.GET.items %}{% if nombre != 'pag' %}&{{nombre}}={{valor}}{% endif %}{% endfor %}">Anterior</a></li>
+        <li class="page-item"><a class="page-link" href="?pag=1{% for nombre, valor in request.GET.items %}{% if nombre != 'pag' %}&{{nombre}}={{valor}}{% endif %}{% endfor %}">Primera</a></li>
+        <li><a class="page-link" href="?pag={{ lista_desc.previous_page_number }}{% for nombre, valor in request.GET.items %}{% if nombre != 'pag' %}&{{nombre}}={{valor}}{% endif %}{% endfor %}">Anterior</a></li>
 
-                {% endif %}
+        {% endif %}
 
-                {% for i in paginas %}
+        {% for i in paginas %}
 
-                    <li {% if lista_desc.number == i %} class="page-item active" {% else %} class="page-item"{% endif %}><a class="page-link" href="?pag={{i}}{% for nombre, valor in request.GET.items %}{% if nombre != 'pag' %}&{{nombre}}={{valor}}{% endif %}{% endfor %}">{{i}}</a></li>
+        <li {% if lista_desc.number == i %} class="page-item active" {% else %} class="page-item"{% endif %}><a class="page-link" href="?pag={{i}}{% for nombre, valor in request.GET.items %}{% if nombre != 'pag' %}&{{nombre}}={{valor}}{% endif %}{% endfor %}">{{i}}</a></li>
 
-                {% endfor %}
+        {% endfor %}
 
-                {% if lista_desc.has_next %}
+        {% if lista_desc.has_next %}
 
-                    <li class="page-item"><a class="page-link" href="?pag={{ lista_desc.next_page_number }}{% for nombre, valor in request.GET.items %}{% if nombre != 'pag' %}&{{nombre}}={{valor}}{% endif %}{% endfor %}">Siguiente</a></li>
-                    <li class="page-item"><a class="page-link" href="?pag={{ lista_desc.paginator.num_pages }}{% for nombre, valor in request.GET.items %}{% if nombre != 'pag' %}&{{nombre}}={{valor}}{% endif %}{% endfor %}">Última</a></li>
+        <li class="page-item"><a class="page-link" href="?pag={{ lista_desc.next_page_number }}{% for nombre, valor in request.GET.items %}{% if nombre != 'pag' %}&{{nombre}}={{valor}}{% endif %}{% endfor %}">Siguiente</a></li>
+        <li class="page-item"><a class="page-link" href="?pag={{ lista_desc.paginator.num_pages }}{% for nombre, valor in request.GET.items %}{% if nombre != 'pag' %}&{{nombre}}={{valor}}{% endif %}{% endfor %}">Última</a></li>
 
-                {% endif %}
-            </ul>
+        {% endif %}
+      </ul>
     </nav>
-</div>
-<div class="container-fluid text-center -mt-6">
+  </div>
+  <div class="container-fluid text-center -mt-6">
     Mostrando {{inicio}} a {{final}} de {{total}}
-</div>
-{% else %}
-{% endif %}
-<script>
+  </div>
+  {% else %}
+  {% endif %}
+  <script>
 
-    // DESACTIVA BÚSQUEDA RÁPIDA SI SE DESPLIEGA EL PANEL DE BÚSQUEDAS
+  // DESACTIVA BÚSQUEDA RÁPIDA SI SE DESPLIEGA EL PANEL DE BÚSQUEDAS
 
-    $('#panelbusquedas').on('show.bs.collapse', function() {
-        $('#busqrapida').prop('disabled', true);
-        });
+  $('#panelbusquedas').on('show.bs.collapse', function() {
+    $('#busqrapida').prop('disabled', true);
+  });
 
-    // ACTIVA BÚSQUEDA RÁPIDA SI SE CONTRAE EL PANEL DE BÚSQUEDAS
+  // ACTIVA BÚSQUEDA RÁPIDA SI SE CONTRAE EL PANEL DE BÚSQUEDAS
 
-    $('#panelbusquedas').on('hide.bs.collapse', function() {
-        $('#busqrapida').prop('disabled', false);
-        });
+  $('#panelbusquedas').on('hide.bs.collapse', function() {
+    $('#busqrapida').prop('disabled', false);
+  });
 
-    // INICIALIZA EL SCROLL HORIZONTAL EN EL DIV DE LOS GRÁFICOS DE ORGANISMO
+  // INICIALIZA EL SCROLL HORIZONTAL EN EL DIV DE LOS GRÁFICOS DE ORGANISMO
 
-    $(document).ready(function(){
-      $('.live__scroll').mousewheel(function(event, delta) {
-         this.scrollLeft -= (delta * 60);
-        event.preventDefault();
+  $(document).ready(function(){
+    $('.live__scroll').mousewheel(function(event, delta) {
+      this.scrollLeft -= (delta * 60);
+      event.preventDefault();
 
- });
-});
+    });
+  });
 
 </script>
 {% endblock %}
