@@ -6,7 +6,7 @@ from polls.models import organismo, SubidaFichero
 from django.db.models import F, Q, Sum
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator
 from .forms import DesconocidoForm, ActuacionForm, TramiteForm
 from polls.forms import SubirFichero
 from django.shortcuts import get_object_or_404
@@ -16,20 +16,25 @@ from io import BytesIO
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 from django.urls import reverse
-from django.conf import settings
 import uuid
 
 
 # Create your views here.
 
 
-# VISTA PRINCIPAL DE LOS DESCONOCIDOS, SE RENDERIZA A TRAVÉS DE LA PLANTILLA DESCONOCIDOS.HTML
+
 @login_required
 def Desconocidos(request):
-    investigacion = 0
-    ficticios = 0
-    resueltos = 0
-    candidatos = 0
+    """
+    VISTA PRINCIPAL DE LOS DESCONOCIDOS, SE RENDERIZA A TRAVÉS DE LA PLANTILLA DESCONOCIDOS.HTML
+
+    :param request:
+    :return:
+    """
+    # investigacion = 0
+    # ficticios = 0
+    # resueltos = 0
+    # candidatos = 0
     investigables = 0
     rusticas = 0
     solares = 0
@@ -65,7 +70,7 @@ def Desconocidos(request):
             # GENERA LA CADENA DE BÚSQUEDA PARA AÑADIRLA AL ENLACE DEL BOTON EN EL GRÁFICO DE BÚSQUEDA
             busqhref = 'busqstats/?modo=s&q=' + q
 
-        # ---------------------- Búsqueda avanzada, usa los parámetros proporcionados en el formulario para aplicar filtros recursivamente
+        # ---- Búsqueda avanzada, usa los parámetros proporcionados en el formulario para aplicar filtros recursivamente
 
         elif modo == 'a':
             desc = Desconocido.objects.all().order_by('-cuota')
@@ -237,6 +242,12 @@ def Desconocidos(request):
 
 @login_required
 def addnota(request):
+    """
+    AÑADE NOTA A UN DESCONOCIDO
+
+    :param request:
+    :return:
+    """
     form = request.POST
     desconocido = Desconocido.objects.get(pk=form.get('pk'))
     user = User.objects.get(username=request.user)
@@ -250,6 +261,12 @@ def addnota(request):
 
 @login_required
 def orgdatos(request):
+    """
+    EXTRAE LAS ESTADÍSTICAS DE UN ORGANISMO
+
+    :param request:
+    :return: Devuelve respuesta Json con las estadísticas.
+    """
     form = request.POST
     org = organismo.objects.get(pk=form.get('pk'))
     tipo_antiecon = tipoDesc.objects.get(descripcion='ANTIECONÓMICO')
@@ -331,28 +348,40 @@ def orgdatos(request):
 
     return JsonResponse(respuesta)
 
-@login_required
-def addtramite(request):
-    form = request.POST
-    # a = TramiteForm(request.POST)
-    # if a.is_valid():
-    #     print(a.cleaned_data['tramite_agenda'])
-    desconocido = Desconocido.objects.get(pk=form.get('pk'))
-    user = User.objects.get(username=request.user)
-    getagenda = form.get('fecha_agenda') or None
-    if getagenda is not None:
-        agenda = datetime.strptime(getagenda, '%d/%m/%Y').strftime('%Y-%m-%d')
-    else:
-        agenda = None
-    desconocido.creaTramite(user, form.get('ampliacion'), datetime.now(), form.get('tipo'), agenda)
-    listatramites = tramites.objects.filter(desconocido=desconocido).order_by('pk')
-    respuesta = {}
-    respuesta['data'] = render_to_string('desconocidos/actuaciones.html', {'listatramites': listatramites, 'request': request})
 
-    return JsonResponse(respuesta)
+# @login_required
+# def addtramite(request):
+#     """
+#     AÑADE UN TRÁMITE A UN DESCONOCIDO
+#     :param request:
+#     :return:
+#     """
+#     form = request.POST
+#     # a = TramiteForm(request.POST)
+#     # if a.is_valid():
+#     #     print(a.cleaned_data['tramite_agenda'])
+#     desconocido = Desconocido.objects.get(pk=form.get('pk'))
+#     user = User.objects.get(username=request.user)
+#     getagenda = form.get('fecha_agenda') or None
+#     if getagenda is not None:
+#         agenda = datetime.strptime(getagenda, '%d/%m/%Y').strftime('%Y-%m-%d')
+#     else:
+#         agenda = None
+#     desconocido.creaTramite(user, form.get('ampliacion'), datetime.now(), form.get('tipo'), agenda)
+#     listatramites = tramites.objects.filter(desconocido=desconocido).order_by('pk')
+#     respuesta = {}
+#     respuesta['data'] = render_to_string('desconocidos/actuaciones.html', {'listatramites': listatramites, 'request': request})
+#
+#     return JsonResponse(respuesta)
 
 @login_required
 def addnotatest(request):
+    """
+    AÑADE UNA NOTA A UN DESCONOCIDO
+
+    :param request:
+    :return: Devuelve respuesta Json con el template notas.html renderizado
+    """
     form = request.POST
     desconocido = Desconocido.objects.get(pk=form.get('pk'))
     user = User.objects.get(username=request.user)
@@ -374,6 +403,11 @@ def addnotatest(request):
 
 @login_required
 def checknota(request):
+    """
+    MARCA LA REVISIÓN DE UNA NOTA AGENDADA
+    :param request:
+    :return: Devuelve la totalidad de las notas del desconocido renderizadas en html
+    """
     form = request.POST
     print(form.get('desconocido'))
     desconocido = Desconocido.objects.get(pk=form.get('desconocido'))
@@ -388,6 +422,11 @@ def checknota(request):
 
 @login_required
 def checktramite(request):
+    """
+    MARCA LA REVISIÓN DE UN TRÁMITE AGENDADO
+    :param request:
+    :return: Devuelve la totalidad de los trámites de un desconocido renderizados en html.
+    """
     form = request.POST
     desconocido = Desconocido.objects.get(pk=form.get('desconocido'))
     tram = tramites.objects.get(pk=form.get('pk'))
@@ -401,6 +440,11 @@ def checktramite(request):
 
 @login_required
 def grabadatos(request):
+    """
+    GRABA LOS DATOS DE RESOLUCIÓN DE UN DESCONOCIDO CONTENIDOS EN EL PANEL DATOS.
+    :param request:
+    :return: Recarga la página del desconocido.
+    """
     form = request.POST
     print(form.get('descopk'))
     desco = Desconocido.objects.get(pk=form.get('descopk'))
@@ -413,6 +457,12 @@ def grabadatos(request):
 
 @login_required
 def detalle(request, pk):
+    """
+    PROPORCIONA LA PÁGINA DE DETALLE DE UN DESCONOCIDO.
+    :param request:
+    :param pk:
+    :return:
+    """
     datos = request.POST or None
     a = get_object_or_404(Desconocido, pk=pk)
     if datos:
@@ -688,7 +738,7 @@ def busqstats(request):
                                               Q(fk_muni__nombre__icontains=q) |
                                               Q(fk_muni__org__nombre__icontains=q)
                                               ).order_by('-cuota')
-            #desc = desc.filter(cuota__gte=F('fk_muni__org__antieconomico'))
+            # desc = desc.filter(cuota__gte=F('fk_muni__org__antieconomico'))
             busqhref = '/busqstats/?modo=s&q=' + q
             print('busqueda simple')
         # ---------------------- Búsqueda avanzada, usa los parámetros proporcionados en el formulario para buscar
