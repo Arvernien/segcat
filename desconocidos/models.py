@@ -84,8 +84,8 @@ class Desconocido(models.Model):
     expediente = models.CharField(max_length=14, blank=True, null=True)
     mt = models.BooleanField(blank=True, default=False)
     liq = models.BooleanField(blank=True, default=False)
-    importe_liq = models.DecimalField(max_digits=8, decimal_places=2, null=True
-                                      , blank=True, default=0)
+    importe_liq = models.DecimalField(max_digits=8, decimal_places=2,
+                                      null=True, blank=True, default=0)
     telefono = models.CharField(max_length=20, blank=True, null=True)
     cuota = models.DecimalField(max_digits=15, decimal_places=2, null=True)
     tipo_finca = models.ForeignKey(tipo_finca, on_delete=models.DO_NOTHING,
@@ -95,15 +95,15 @@ class Desconocido(models.Model):
     usuario_finalizacion = models.ForeignKey(User, on_delete=models.DO_NOTHING,
                                              null=True)
 
-
-
     def creaActuacion(self, user, descr, fecha, agendar):
-        q = actuaciones(desconocido=self, usuario=user, descripcion=descr, agendar=agendar)
+        q = actuaciones(desconocido=self, usuario=user, descripcion=descr,
+                        agendar=agendar)
         q.save()
 
     def creaTramite(self, user, ampliacion, fecha, tipo, agendar):
         t = tipotramite.objects.get(pk=tipo)
-        q = tramites(desconocido=self, tipo=t, fecha=fecha, usuario=user, ampliacion=ampliacion, agendar=agendar)
+        q = tramites(desconocido=self, tipo=t, fecha=fecha, usuario=user,
+                     ampliacion=ampliacion, agendar=agendar)
         q.save()
 
     def __str__(self):
@@ -111,7 +111,8 @@ class Desconocido(models.Model):
 
     @property
     def getIbi(self):
-        ibi = round(Decimal((self.b_liquidable/100)) * self.fk_muni.tipo_impositivo / 100, 2)
+        ibi = round(Decimal((self.b_liquidable/100)) *
+                    self.fk_muni.tipo_impositivo / 100, 2)
         return ibi
 
     @property
@@ -148,7 +149,7 @@ class Desconocido(models.Model):
 
     @property
     def getVcat(self):
-        vcat = round(Decimal(self.v_cat/100),2)
+        vcat = round(Decimal(self.v_cat/100), 2)
         return vcat
 
     @property
@@ -177,7 +178,6 @@ class Desconocido(models.Model):
             tree = ET.parse(urllib.request.urlopen(url))
             root = tree.getroot()
 
-
             for a in root.iter():
                 if a.tag == '{http://www.catastro.meh.es/}xcen':
                     xcen = str(round(float(a.text), 3))
@@ -192,21 +192,18 @@ class Desconocido(models.Model):
 
     @property
     def getCarto(self):
-        url ='https://www1.sedecatastro.gob.es/Cartografia/mapa.aspx?refcat=' + self.refcat[:14]
+        url = 'https://www1.sedecatastro.gob.es/Cartografia/mapa.aspx?refcat='
+        + self.refcat[:14]
         print(url)
         return url
-
-
-
-
-
-
 
     class Meta:
         unique_together = (('fk_muni', 'refcat'),)
 
+
 class actuaciones(models.Model):
-    desconocido = models.ForeignKey(Desconocido, on_delete=models.CASCADE, default='')
+    desconocido = models.ForeignKey(Desconocido, on_delete=models.CASCADE,
+                                    default='')
     usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING, default='')
     fecha = models.DateTimeField(default=datetime.datetime.today)
     descripcion = models.CharField(max_length=400)
@@ -227,11 +224,14 @@ class actuaciones(models.Model):
     def get_link_name(self):
         return self.desconocido.refcat
 
+
 class tramites(models.Model):
-    desconocido = models.ForeignKey(Desconocido, on_delete=models.CASCADE, default='')
+    desconocido = models.ForeignKey(Desconocido, on_delete=models.CASCADE,
+                                    default='')
     usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING, default='')
     fecha = models.DateTimeField(default=datetime.datetime.today)
-    tipo = models.ForeignKey(tipotramite, on_delete=models.DO_NOTHING, default='')
+    tipo = models.ForeignKey(tipotramite, on_delete=models.DO_NOTHING,
+                             default='')
     ampliacion = models.TextField(default='')
     agendar = models.DateField(null=True)
     revisado = models.BooleanField(default=False)
