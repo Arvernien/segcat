@@ -73,6 +73,7 @@ def AccessDesconocidos(ruta):
     # INICIALIZA LAS VARIABLES NECESARIAS Y LOS TIPOS DE DESCONOCIDO
     filas = 0
     i = 0
+    fin = 0
     tabla_cargados = ''
     tabla_errores = ''
     tabla_finalizados = ''
@@ -114,7 +115,7 @@ def AccessDesconocidos(ruta):
                     if q[0].fecha_finalizacion is None:
                         estado = 'investigación abierta'
                     else:
-                        estado = 'investigación cerrada el ' + str(q[0].fecha_finalizacion)
+                        estado = 'investigación cerrada el ' + str(q[0].fecha_finalizacion.strftime('%d/%m/%Y'))
                     tabla_errores = ''.join([tabla_errores, '<tr><td>', row[2], '</td><td>', org[0].nombre, '</td><td>', row[1], '</td><td>', 'Ya existe el desconocido con ', estado, '</td></tr>', '\n'])
                 else:
                     print('No existe desconocido')
@@ -181,6 +182,7 @@ def AccessDesconocidos(ruta):
 
                     i += 1
 
+    # COMPRUEBA SI EXISTEN DESCONOCIDOS PARA ESE ORGANISMO QUE NO ESTÉN EN EL FICHERO: DESCONOCIDOS FINALIZADOS
     cod_delegacion = int(rows[0][0]) // 1000
     cod_muni = int(str(rows[0][0])[-3:])
     muni = municipio.objects.filter(org__cod=cod_delegacion, cod=cod_muni)
@@ -195,11 +197,13 @@ def AccessDesconocidos(ruta):
                 if desco.fecha_finalizacion is None:
                     print(desco.refcat)
                     desco.fecha_finalizacion = datetime.datetime.today()
-                    desco.creaTramite(user=system, ampliacion='Resuelto por carga de fichero el día ' + str(datetime.datetime.today()),
+                    desco.creaTramite(user=system, ampliacion='Resuelto por carga de fichero el día '
+                                                              + str(datetime.datetime.today().strftime('%d/%m/%Y')),
                     fecha=datetime.datetime.today(), tipo=tramite_finalizado.pk,
                     agendar=None)
                     desco.resuelto = True
                     desco.save()
+                    fin += 1
                     tabla_finalizados = ''.join(
                         [tabla_finalizados, '<tr><td>', desco.refcat, '</td><td>', desco.fk_muni.org.nombre, '</td><td>',
                          desco.fk_muni.nombre,
@@ -207,7 +211,6 @@ def AccessDesconocidos(ruta):
 
     tabla_cargados = ''.join(['<table class="table table-sm table-hover">'
                               '<thead>'
-                              '<tr><th class="text-center" colspan="3">DESCONOCIDOS CARGADOS</th></tr>'
                               '<tr><th scope="col">Desconocido</th>'
                               '<th scope="col">Organismo</th>'
                               '<th scope="col">Municipio</th>'
@@ -215,7 +218,6 @@ def AccessDesconocidos(ruta):
                               '</thead>', '\n', tabla_cargados, '\n', '</table>'])
     tabla_errores = ''.join(['<table class="table table-sm table-hover">'
                              '<thead>'
-                             '<tr><th class="text-center" colspan="4">DESCONOCIDOS NO CARGADOS</th></tr>'
                              '<tr><th scope="col">Desconocido</th>'
                              '<th scope="col">Organismo</th>'
                              '<th scope="col">Municipio</th>'
@@ -223,19 +225,20 @@ def AccessDesconocidos(ruta):
                              '</tr>'
                              '</thead>', '\n', tabla_errores, '\n', '</table>'])
     tabla_finalizados = ''.join(['<table class="table table-sm table-hover">'
-                              '<thead>'
-                              '<tr><th class="text-center" colspan="3">DESCONOCIDOS FINALIZADOS</th></tr>'
-                              '<tr><th scope="col">Desconocido</th>'
-                              '<th scope="col">Organismo</th>'
-                              '<th scope="col">Municipio</th>'
-                              '</tr>'
-                              '</thead>', '\n', tabla_finalizados, '\n', '</table>'])
+                                 '<thead>'
+                                 '<tr><th scope="col">Desconocido</th>'
+                                 '<th scope="col">Organismo</th>'
+                                 '<th scope="col">Municipio</th>'
+                                 '</tr>'
+                                 '</thead>', '\n', tabla_finalizados, '\n', '</table>'])
 
     resultado = {
         'tabla_cargados': tabla_cargados,
         'tabla_errores': tabla_errores,
         'tabla_finalizados': tabla_finalizados,
-        'cargados': i,
+        'cargados': '/'.join([str(i), str(filas)]),
+        'finalizados': str(fin),
+        'nocargados': '/'.join([str(filas - i), str(filas)]),
         'totales': filas
     }
     conn.close()

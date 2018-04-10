@@ -48,19 +48,48 @@
 
 {% endif %}
 
-  <div class="container" id="tabla_cargados" style="display:none;">
-
-  </div>
-  &nbsp;
-  &nbsp;
-  <div class="container" id="tabla_finalizados" style="display:none;">
-
-  </div>
-  &nbsp;
-  &nbsp;
-  <div class="container" id="tabla_errores" style="display:none;">
-
-  </div>
+<div class="container" id="resultado_cargados" style="display:none;">
+    <div class="card mt-3" id="panel_cargados">
+        <div class="card-header clearfix" id="cabecera_cargados">
+            <h5 class="float-left mb-0 text-secondary"><i class="fas fa-user-secret text-secondary"></i> DESCONOCIDOS CARGADOS: <span id="cuenta_cargados"></span></h5>
+            <a class="float-right mb-0" href="#" data-toggle="collapse" data-target="#collapse-cargados" aria-expanded="true" aria-controls="collapseOne">
+                <i class="fas fa-chevron-circle-down text-secondary"></i>
+            </a>
+        </div>
+        <div id="collapse-cargados" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="scroll-box" id="tabla_cargados">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" id="resultado_finalizados" style="display:none;">
+    <div class="card mt-3" id="panel_finalizados">
+        <div class="card-header clearfix" id="cabecera_finalizados">
+            <h5 class="float-left mb-0 text-secondary"><i class="fas fa-flag-checkered text-secondary"></i> DESCONOCIDOS FINALIZADOS: <span id="cuenta_finalizados"></span></h5>
+            <a class="float-right mb-0" href="#" data-toggle="collapse" data-target="#collapse-finalizados" aria-expanded="true" aria-controls="collapseOne">
+                <i class="fas fa-chevron-circle-down text-secondary"></i>
+            </a>
+        </div>
+        <div id="collapse-finalizados" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="scroll-box" id="tabla_finalizados">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" id="resultado_nocargados" style="display:none;">
+    <div class="card mt-3" id="panel_nocargados">
+        <div class="card-header clearfix" id="cabecera_nocargados">
+            <h5 class="float-left mb-0 text-secondary"><i class="fas fa-exclamation-triangle text-secondary"></i> DESCONOCIDOS NO CARGADOS: <span id="cuenta_nocargados"></span></h5>
+            <a class="float-right mb-0" href="#" data-toggle="collapse" data-target="#collapse-nocargados" aria-expanded="true" aria-controls="collapseOne">
+                <i class="fas fa-chevron-circle-down text-secondary"></i>
+            </a>
+        </div>
+        <div id="collapse-nocargados" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="scroll-box" id="tabla_nocargados">
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -145,12 +174,15 @@ $('#formcarga').submit(function(){
             async: true,
             success: function (data) {
                 $('#progreso').hide();
+                $('#cuenta_cargados').html(data.cargados);
+                $('#cuenta_finalizados').html(data.finalizados);
+                $('#cuenta_nocargados').html(data.nocargados);
                 $('#tabla_cargados').html(data.tabla_cargados);
-                $('#tabla_errores').html(data.tabla_errores);
+                $('#tabla_nocargados').html(data.tabla_errores);
                 $('#tabla_finalizados').html(data.tabla_finalizados);
-                $('#tabla_cargados').show();
-                $('#tabla_errores').show();
-                $('#tabla_finalizados').show();
+                $('#resultado_cargados').show();
+                $('#resultado_nocargados').show();
+                $('#resultado_finalizados').show();
                 console.log(data);
             },
             cache: false,

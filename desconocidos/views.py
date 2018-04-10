@@ -349,30 +349,30 @@ def orgdatos(request):
     return JsonResponse(respuesta)
 
 
-# @login_required
-# def addtramite(request):
-#     """
-#     AÑADE UN TRÁMITE A UN DESCONOCIDO
-#     :param request:
-#     :return:
-#     """
-#     form = request.POST
-#     # a = TramiteForm(request.POST)
-#     # if a.is_valid():
-#     #     print(a.cleaned_data['tramite_agenda'])
-#     desconocido = Desconocido.objects.get(pk=form.get('pk'))
-#     user = User.objects.get(username=request.user)
-#     getagenda = form.get('fecha_agenda') or None
-#     if getagenda is not None:
-#         agenda = datetime.strptime(getagenda, '%d/%m/%Y').strftime('%Y-%m-%d')
-#     else:
-#         agenda = None
-#     desconocido.creaTramite(user, form.get('ampliacion'), datetime.now(), form.get('tipo'), agenda)
-#     listatramites = tramites.objects.filter(desconocido=desconocido).order_by('pk')
-#     respuesta = {}
-#     respuesta['data'] = render_to_string('desconocidos/actuaciones.html', {'listatramites': listatramites, 'request': request})
-#
-#     return JsonResponse(respuesta)
+@login_required
+def addtramite(request):
+    """
+    AÑADE UN TRÁMITE A UN DESCONOCIDO
+    :param request:
+    :return:
+    """
+    form = request.POST
+    # a = TramiteForm(request.POST)
+    # if a.is_valid():
+    #     print(a.cleaned_data['tramite_agenda'])
+    desconocido = Desconocido.objects.get(pk=form.get('pk'))
+    user = User.objects.get(username=request.user)
+    getagenda = form.get('fecha_agenda') or None
+    if getagenda is not None:
+        agenda = datetime.strptime(getagenda, '%d/%m/%Y').strftime('%Y-%m-%d')
+    else:
+        agenda = None
+    desconocido.creaTramite(user, form.get('ampliacion'), datetime.now(), form.get('tipo'), agenda)
+    listatramites = tramites.objects.filter(desconocido=desconocido).order_by('pk')
+    respuesta = {}
+    respuesta['data'] = render_to_string('desconocidos/actuaciones.html', {'listatramites': listatramites, 'request': request})
+
+    return JsonResponse(respuesta)
 
 @login_required
 def addnotatest(request):
@@ -984,7 +984,11 @@ def subefichero(request):
                     'jare': 'jare',
                     'tabla_cargados': carga['tabla_cargados'],
                     'tabla_errores': carga['tabla_errores'],
-                    'tabla_finalizados': carga['tabla_finalizados']
+                    'tabla_finalizados': carga['tabla_finalizados'],
+                    'cargados': carga['cargados'],
+                    'finalizados': carga['finalizados'],
+                    'nocargados': carga['nocargados'],
+                    'totales': carga['totales']
                 }
             return JsonResponse(respuesta)
         else:

@@ -192,8 +192,8 @@ class Desconocido(models.Model):
 
     @property
     def getCarto(self):
-        url = 'https://www1.sedecatastro.gob.es/Cartografia/mapa.aspx?refcat='
-        + self.refcat[:14]
+        url = 'https://www1.sedecatastro.gob.es/Cartografia/mapa.aspx?refcat=' \
+              + self.refcat[:14]
         print(url)
         return url
 
