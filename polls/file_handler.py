@@ -221,7 +221,7 @@ def AccessDesconocidos(ruta):
                              '<tr><th scope="col">Desconocido</th>'
                              '<th scope="col">Organismo</th>'
                              '<th scope="col">Municipio</th>'
-                             '<th scope="col">Motivo</th>'
+                             '<th scope="col">Observaciones</th>'
                              '</tr>'
                              '</thead>', '\n', tabla_errores, '\n', '</table>'])
     tabla_finalizados = ''.join(['<table class="table table-sm table-hover">'
